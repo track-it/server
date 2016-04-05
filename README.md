@@ -1,4 +1,4 @@
-# TrackIt Web Client
+# TrackIt Server 
 
 ## Instructions for commits
 
