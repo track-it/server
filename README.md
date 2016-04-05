@@ -1,7 +1,5 @@
 # TrackIt Web Client
 
-For information regarding the boilerplate, visit https://github.com/jakemmarsh/angularjs-gulp-browserify-boilerplate
-
 ## Instructions for commits
 
 * Never commit directly on `master`. Always create a separate branch, with a name that is mapped to the issue you are working on. For example, when working on issue #39, then create a new branch with `git checkout -b [branch-name]` and name the branch `issue-39`.
