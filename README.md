@@ -22,7 +22,7 @@ git clone https://github.com/laravel/homestead.git Homestead
 
 Once the repo has been downloaded, cd into the `Homestead` directory and run `bash init.sh`. When you run the `init` script a new `.homestead` directory will be created in your home directory. Inside this directory you will have a file called `Homestead.yaml`. Replace this one with the [file included in this repository](https://github.com/track-it/server/blob/master/Homestead.yaml), but make sure you copy it and **leave the file in the repository untouched**. Only make the necessary changes once you have copied it.
 
-When you have updated your `Homestead.yaml` file, run `vagrant provision` from your `~/.homestead` directory.
+When you have updated your `Homestead.yaml` file, run `vagrant provision` from the cloned `Homestead` directory.
 
 ### Hosts file
 To finish the installation, edit your `hosts` file and include the following line inside it:
