@@ -51,6 +51,14 @@ php artisan key:generate
 
 `artisan` is a command that will let you generate a lot of boilerplates, run your migrations and other stuff. Documentation can be found at `https://laravel.com/docs/5.2/artisan`, but you can get a lot of information by just running `php artisan --help`.
 
+When the key has been generated, run the following command:
+
+```
+composer install
+```
+
+This will install all the dependencies for the Laravel project.
+
 ## Instructions for commits
 
 * Never commit directly on `master`. Always create a separate branch, with a name that is mapped to the issue you are working on. For example, when working on issue #39, then create a new branch with `git checkout -b [branch-name]` and name the branch `issue-39`.
