@@ -37,7 +37,13 @@ On Mac OSX and Linux, your `hosts` file is located at `/etc/hosts`. On Windows, 
 
 Once Vagrant is setup, you can SSH into your virtual machine by running `vagrant ssh` from your `Homestead` directory. You can do everything related to the project from here as everything required is installed. If you want to, you can install php on your local machine to run, for example `artisan`, but that's not required and I won't include any walkthrough here.
 
-First thing you want to do when you have setup your virtual machine is to cd into the trackit directory, located at `/home/vagrant/trackit`. Here, you should make a copy of the environment file:
+First thing you want to do when you have setup your virtual machine is to cd into the trackit directory, located at `/home/vagrant/trackit`. Start by running the following command:
+
+```
+composer install
+```
+
+This will install all the dependencies for the Laravel project. When this is done, you should make a copy of the environment file:
 
 ```
 cp .env.example .env
@@ -50,14 +56,6 @@ php artisan key:generate
 ```
 
 `artisan` is a command that will let you generate a lot of boilerplates, run your migrations and other stuff. Documentation can be found at `https://laravel.com/docs/5.2/artisan`, but you can get a lot of information by just running `php artisan --help`.
-
-When the key has been generated, run the following command:
-
-```
-composer install
-```
-
-This will install all the dependencies for the Laravel project.
 
 ## Instructions for commits
 
