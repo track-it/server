@@ -35,7 +35,7 @@ On Mac OSX and Linux, your `hosts` file is located at `/etc/hosts`. On Windows, 
 
 ### Setup
 
-Once Vagrant is setup, you can SSH into your virtual machine by running `vagrant ssh` from your `.homestead` directory. You can do everything related to the project from here as everything required is installed. If you want to, you can install php on your local machine to run, for example `artisan`, but that's not required and I won't include any walkthrough here.
+Once Vagrant is setup, you can SSH into your virtual machine by running `vagrant ssh` from your `Homestead` directory. You can do everything related to the project from here as everything required is installed. If you want to, you can install php on your local machine to run, for example `artisan`, but that's not required and I won't include any walkthrough here.
 
 First thing you want to do when you have setup your virtual machine is to cd into the trackit directory, located at `/home/vagrant/trackit`. Here, you should make a copy of the environment file:
 
