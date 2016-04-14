@@ -19,3 +19,10 @@ $factory->define(Trackit\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word(3,true),
+        'description' => $faker->paragraph(3,true),
+    ];
+});
