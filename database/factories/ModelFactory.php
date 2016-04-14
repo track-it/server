@@ -22,8 +22,8 @@ $factory->define(Trackit\User::class, function (Faker\Generator $faker) {
 
 $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $faker) {
     return [
-        'title' => $faker->word(3,true),
-        'description' => $faker->paragraph(3,true),
+        'title' => $faker->sentence(3, true),
+        'description' => $faker->paragraph(6, true),
         'status' => array_rand(Trackit\Models\Proposal::STATUSES, 1),
     ];
 });
