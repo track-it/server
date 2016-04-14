@@ -12,7 +12,6 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_has_a_status()
     {
-        // Given
         $proposal = factory(Proposal::class)->create();
         
         $hasStatus = in_array($proposal->status, Proposal::STATUSES);
@@ -23,8 +22,6 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_has_a_creator()
     {
-        // Given
-        // $role = Role::byName('customer')->first();
         $proposal = factory(Proposal::class)->create();
         
         $hasCreator = !! $proposal->creator();
