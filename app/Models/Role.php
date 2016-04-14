@@ -22,4 +22,10 @@ class Role extends Model
     {
         return $this->hasMany(Permission::class);
     }
+
+    public function givePermissionTo()
+    {
+        //DO THE TEST FIRST!
+        
+    }
 }

@@ -12,8 +12,7 @@ class RolesTest extends TestCase
     public function it_has_a_set_of_permissions()
     {
         // Given
-        // $role = Role::byName('customer')->first();
-        $role = factory(Role::class)->create(['name' => 'customer']);
+        $role = Role::byName('customer')->first();
 
         // When
         $canSubmit = $role->can('submit');
