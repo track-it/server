@@ -13,6 +13,6 @@
 
 $factory->define(Trackit\Models\Role::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
+        'name' => $faker->word,
     ];
 });
