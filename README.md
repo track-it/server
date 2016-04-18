@@ -1,4 +1,5 @@
 # TrackIt Server 
+![Travis CI](https://travis-ci.org/track-it/server.svg?branch=master)
 
 ## Installation
 
