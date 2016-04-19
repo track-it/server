@@ -15,7 +15,7 @@ class Comment extends Model
 		return $this->belongsTo(User::class);
 	}
 
-	public function removeComment($comment_id, $user_id)
+	public function removeComment($comment_id)
 	{
 		$this->hasMany(Comment::class)->whereCommentId($comment_id)->whereUserId($user_id)->delete();
 	}
