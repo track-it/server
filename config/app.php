@@ -149,6 +149,11 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * Third-party Service Providers
+         */
+        Barryvdh\Cors\ServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
         Trackit\Providers\AppServiceProvider::class,

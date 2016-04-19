@@ -6,11 +6,15 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ResponseTest extends TestCase
 {
+	
     /** @test */
-    public function it_has_a_accept_control_allow_origin_header()
+    public function it_has_a_access_control_allow_origin_header()
     {
-    	 $response = $this->visit('/');
-         dd(this->header());     
-				 
+		$response = $this->get('/', [ 'Origin' => 'http://test.com' ])->response;
+
+		$header = !! $response->headers->get('Access-Control-Allow-Origin');
+
+		$this->assertTrue($header);
     }
+
 }
