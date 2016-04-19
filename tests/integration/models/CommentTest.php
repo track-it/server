@@ -41,6 +41,6 @@ class CommentTest extends TestCase
     	$comment = Comment::create([
     		'user_id' => $user->id,
     	]);
-    	$this->assertEquals($comment->user->id, $user->id);
+    	$this->assertEquals($user->id, $comment->user->id);
     }
 }
