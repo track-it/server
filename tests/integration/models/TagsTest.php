@@ -8,7 +8,7 @@ use Trackit\Models\Proposal;
 
 class TagsTest extends TestCase
 {
-	use DatabaseMigrations;
+	use DatabaseTransactions;
 
     /** @test */
     public function it_has_a_name()
