@@ -23,15 +23,15 @@ class Role extends Model
         return $this->hasMany(Permission::class);
     }
 
-    public function givePermissionTo($permission)
+    public function givePermissionTo($action)
     {
         $this->permissions()->create([
-            'name' => $permission,
+            'name' => $action,
         ]);
     }
 
-    public function removePermissionTo($permission)
+    public function removePermissionTo($action)
     {
-        $this->permissions()->whereName($permission)->delete();
+        $this->permissions()->whereName($action)->delete();
     }
 }
