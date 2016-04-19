@@ -11,11 +11,17 @@
 |
 */
 
-$factory->define(Trackit\User::class, function (Faker\Generator $faker) {
+$factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->safeEmail,
-        'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
+        'username' => $faker->name,
+    ];
+});
+
+$factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence(3, true),
+        'description' => $faker->paragraph(6, true),
+        'status' => collect(Trackit\Models\Proposal::STATUSES)->random(),
+        'user_id' => factory(Trackit\Models\User::class)->create()->id,
     ];
 });
