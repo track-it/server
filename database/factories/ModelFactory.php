@@ -34,8 +34,16 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
     ];
 });
 
+
 $factory->define(Trackit\Models\Comment::class, function (Faker\Generator $faker) {
     return [
         'body' => $faker->sentence,
+    ];
+});
+
+$factory->define(Trackit\Models\Attachment::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence(3, true),
+        'url' => $faker->url(),
     ];
 });
