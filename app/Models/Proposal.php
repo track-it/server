@@ -25,7 +25,7 @@ class Proposal extends Model
     
     public function attachments()
     {
-        return $this->hasMany(Attachment::class);
+        return $this->morphMany(Attachment::class, 'source');
     }
 
     public function tags()

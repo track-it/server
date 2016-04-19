@@ -33,3 +33,10 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
         'user_id' => factory(Trackit\Models\User::class)->create()->id,
     ];
 });
+
+$factory->define(Trackit\Models\Attachment::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence(3, true),
+        'url' => $faker->url(),
+    ];
+});
