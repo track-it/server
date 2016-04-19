@@ -27,6 +27,6 @@ class TagsTest extends TestCase
 
         $tag->proposals()->attach($proposal->id);
 
-        $this->assertEquals('test' ,$tag->name) ;
+        $this->assertTrue($tag->proposals->count() == 1) ;
     }
 }
