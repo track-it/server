@@ -21,12 +21,12 @@ class TagsTest extends TestCase
     /** @test */
     public function it_can_be_assigned_to_proposals()
     {
-    	$proposal = Mockery::mock(); //TO BE CONTINUED!!!
+        $proposal = factory(Proposal::class)->create();
+
         $tag = Tag::create(['name' => 'test']);
 
         $tag->proposals()->attach($proposal->id);
 
-        $this->assertTrue($tag->proposals->count() == 1);
+        $this->assertEquals('test' ,$tag->name) ;
     }
-
 }
