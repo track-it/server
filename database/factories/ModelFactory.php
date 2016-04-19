@@ -11,8 +11,25 @@
 |
 */
 
+
 $factory->define(Trackit\Models\Role::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
+    ];
+});
+
+
+$factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
+    return [
+        'username' => $faker->name,
+    ];
+});
+
+$factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence(3, true),
+        'description' => $faker->paragraph(6, true),
+        'status' => collect(Trackit\Models\Proposal::STATUSES)->random(),
+        'user_id' => factory(Trackit\Models\User::class)->create()->id,
     ];
 });
