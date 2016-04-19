@@ -9,6 +9,7 @@ use Trackit\Models\User;
 
 class CommentTest extends TestCase
 {
+    use DatabaseTransactions;
 
     /** @test */
     public function it_should_have_a_body()
