@@ -11,6 +11,14 @@
 |
 */
 
+
+$factory->define(Trackit\Models\Role::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+    ];
+});
+
+
 $factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
     return [
         'username' => $faker->name,

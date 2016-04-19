@@ -4,9 +4,9 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Permission extends Model
 {
     protected $fillable = [
-        'name',
+    	'name',
     ];
 }
