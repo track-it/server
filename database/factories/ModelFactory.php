@@ -25,3 +25,9 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
         'user_id' => factory(Trackit\Models\User::class)->create()->id,
     ];
 });
+
+$factory->define(Trackit\Models\Comment::class, function (Faker\Generator $faker) {
+    return [
+        'body' => $faker->sentence,
+    ];
+});
