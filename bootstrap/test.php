@@ -5,4 +5,4 @@
 
 require __DIR__.'/autoload.php';
 
-exec('php artisan migrate:refresh --seed --database=test');
+echo exec('php artisan migrate:refresh --seed --database=test');

@@ -4,10 +4,11 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Proposal;
+use Trackit\Models\Attachment;
 
 class ProposalsTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseTransactions;
 
     /** @test */
     public function it_has_a_status()
@@ -27,5 +28,17 @@ class ProposalsTest extends TestCase
         $hasCreator = !! $proposal->creator();
 
         $this->assertTrue($hasCreator);
+    }
+
+    /** @test */
+    public function it_can_have_an_attachment()
+    {
+        $attachment = factory(Attachment::class)->create();
+
+        $proposal = factory(Proposal::class)->create();
+        
+        $proposal->attachments()->save($attachment);
+
+        $this->assertTrue($proposal->attachments->count() == 1);
     }
 }
