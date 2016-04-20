@@ -5,6 +5,7 @@ namespace Trackit\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Trackit\Http\Requests;
+use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Models\Proposal;
 use Trackit\Support\JsonResponse;
 
@@ -17,9 +18,7 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        // return Proposal::all();
-        // return json_encode(['items' => Proposal::all()]);
-        return new JsonResponse(Proposal::all());
+        return JsonResponse::success(Proposal::all());
     }
 
     /**
@@ -27,9 +26,13 @@ class ProposalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(CreateProposalRequest $request)
     {
-        //
+        $proposal = Proposal::create([
+            'title' => $request->title,    
+        ]);
+
+        return JsonResponse::success($proposal);
     }
 
     /**
@@ -49,9 +52,9 @@ class ProposalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Proposal $proposal)
     {
-        //
+        return JsonResponse::success($proposal);
     }
 
     /**
@@ -85,6 +88,6 @@ class ProposalController extends Controller
      */
     public function destroy($id)
     {
-        //
+
     }
 }
