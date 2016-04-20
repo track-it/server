@@ -17,4 +17,8 @@ Route::group(['middleware' => ['web']], function () {
     });
 
     Route::get('/proposals', 'ProposalController@index');
+
+    Route::get('/proposals/{proposal}', 'ProposalController@show');
+
+    Route::post('/proposals', 'ProposalController@create');
 });
