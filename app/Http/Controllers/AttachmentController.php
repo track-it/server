@@ -11,31 +11,28 @@ use Trackit\Support\JsonResponse;
 use Trackit\Http\Requests\CreateAttachmentRequest;
 use Trackit\Contracts\Attachmentable;
 
-abstract class AttachmentController extends Controller
+class AttachmentController extends Controller
 {
-    // protected $user;
-    // protected $attachment;
+    protected $user;
 
-    // public function __construct(Attachmentable $attachmentable, User $user)
-    // {
-    //     $this->user = $user;
-    //     $this->attachmentable = $attachmentable;
-    // }
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function storeAttachment(Attachmentable $attachmentable, CreateAttachmentRequest $request)
+    public function store(Attachmentable $attachmentable, CreateAttachmentRequest $request)
     {
         $attachments = [];
 
         foreach ($request->allFiles() as $file) {
             $data = [
-                'title' => $file->getFilename(),
-                'url' => $file->getPath(),
-                'uploader_id' => 0,
+                'title' => $file->getClientOriginalName(),
+                'uploader_id' => $this->user->id ? $this->user->id : 0,
                 'source_id' => $attachmentable->getId(),
                 'source_type' => get_class($attachmentable),
             ];
@@ -52,7 +49,7 @@ abstract class AttachmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showAttachment(Attachmentable $attachmentable, Attachment $attachment)
+    public function show(Attachmentable $attachmentable, Attachment $attachment)
     {
         return JsonResponse::success($attachment);
     }

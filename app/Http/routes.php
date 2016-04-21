@@ -16,5 +16,11 @@ Route::group(['middleware' => ['web']], function () {
         return view('welcome');
     });
 
-    Route::resource('proposals/{proposal}/attachments', 'ProposalAttachmentController', ['only' => ['show', 'store']]);
+    Route::singularResourceParameters();
+
+    Route::model('proposal', 'Trackit\Models\Proposal');
+    Route::resource('proposals/{proposal}/attachments', 'AttachmentController');
+
+    Route::get('attachments/{attachment}/download', [ 'as' => 'attachments.download', 'uses' => 'AttachmentController@download']);
+
 });
