@@ -8,6 +8,14 @@ use Trackit\Models\User;
 class Attachment extends Model
 {
 
+    protected $fillable = [
+        'title',
+        'url',
+        'uploader_id',
+        'source_id',
+        'source_type',
+    ];
+
 	/*
 	 *
 	 */
