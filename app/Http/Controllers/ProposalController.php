@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Trackit\Http\Requests;
 use Trackit\Http\Requests\CreateProposalRequest;
+use Trackit\Http\Requests\UpdateProposalRequest;
 use Trackit\Models\Proposal;
 use Trackit\Support\JsonResponse;
 
@@ -36,17 +37,6 @@ class ProposalController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -58,26 +48,16 @@ class ProposalController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Proposal $proposal, UpdateProposalRequest $request)
     {
-        //
+        $proposal->update($request->all());
+        return JsonResponse::success($proposal);
     }
 
     /**
@@ -86,8 +66,9 @@ class ProposalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Proposal $proposal)
     {
-
+        $proposal->delete();
+        return response('', 204);
     }
 }

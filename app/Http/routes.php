@@ -20,5 +20,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/proposals/{proposal}', 'ProposalController@show');
 
+    Route::put('/proposals/{proposal}', 'ProposalController@update');
+
+    Route::delete('/proposals/{proposal}', 'ProposalController@destroy');
+
     Route::post('/proposals', 'ProposalController@create');
 });

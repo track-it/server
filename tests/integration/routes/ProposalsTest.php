@@ -12,8 +12,7 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_return_a_collection_of_proposals()
     {
-        $response = $this->visit('/proposals')->response;
-
+        $response = $this->get('proposals')->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertObjectHasAttribute('items', $jsonObject);
@@ -25,8 +24,7 @@ class ProposalsTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
 
-        $response = $this->get('/proposals/'.$proposal->id)->response;
-
+        $response = $this->get('proposals/'.$proposal->id)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertObjectHasAttribute('items', $jsonObject);
@@ -37,7 +35,7 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_return_a_failure_for_a_non_existing_proposal()
     {
-        $response = $this->get('/proposals/9999999999')->response;
+        $response = $this->get('proposals/9999999999')->response;
 
         $this->assertEquals(404, $response->getStatusCode());
     }
@@ -45,9 +43,30 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_proposal()
     {
-        $response = $this->post('/proposals', ['title' => 'Kebab'])->response;
+        $response = $this->post('proposals', ['title' => 'Kebab'])->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals('Kebab', $jsonObject->items[0]->title);
+    }
+
+    /** @test */
+    public function it_should_update_an_existing_proposal()
+    {
+        $proposal = factory(Proposal::class)->create();
+
+        $response = $this->put('proposals/'.$proposal->id, ['title' => 'Ost'])->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals('Ost', $jsonObject->items[0]->title);
+    }
+
+    /** @test */
+    public function it_should_delete_an_existing_proposal()
+    {
+        $proposal = factory(Proposal::class)->create();
+
+        $response = $this->delete('proposals/'.$proposal->id)->response;
+
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }
