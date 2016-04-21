@@ -7,7 +7,7 @@ use Trackit\Models\Attachment;
 use Trackit\Models\Proposal;
 use Trackit\Models\User;
 
-class AttachmentsTest extends TestCase
+class AttachmentTest extends TestCase
 {
     use DatabaseTransactions;
 
