@@ -1,5 +1,5 @@
 # TrackIt Server 
-![Travis CI](https://travis-ci.org/track-it/server)
+[![Build Status](https://travis-ci.org/track-it/server.svg?branch=master)](https://travis-ci.org/track-it/server)
 
 ## Installation
 
