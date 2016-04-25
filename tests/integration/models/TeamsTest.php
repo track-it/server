@@ -7,14 +7,12 @@ use Illuminate\Support\Collection;
 use Trackit\Models\User;
 use Trackit\Models\Team;
 
-
 class TeamsTest extends TestCase
 {
 	use DatabaseTransactions;
 
 	private $team;
 	private $users;
-
 
 	/** @test */
 	public function team_contains_users()
