@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
 });
