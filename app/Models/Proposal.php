@@ -18,6 +18,13 @@ class Proposal extends Model
         self::APPROVED,
     ];
 
+    protected $fillable = [
+        'title',
+        'description',
+        'user_id',
+        'status',
+    ];
+
     public function creator()
     {
         return $this->belongsTo(User::class);

@@ -15,6 +15,10 @@ class User extends Model implements Authenticatable
         'name',
     ];
 
+    protected $hidden = [
+        'password'
+    ];
+
     public static function boot()
     {
     	parent::boot();

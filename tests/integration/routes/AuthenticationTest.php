@@ -29,4 +29,23 @@ class AuthenticationTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($user->api_token, $jsonObject->items[0]->api_token);
     }
+
+    /** @test */
+    public function it_should_return_error_using_incorrect_credentials()
+    {
+		$user = factory(Trackit\Models\User::class)->create(['password' => 'nisse']);
+
+        $data = [
+        	'username'	=> $user->username,
+        	'password'  => 'olle',
+        ];
+
+        $server = [
+        	'X-CSRF-TOKEN'	=> csrf_token(),
+        ];
+
+        $response = $this->post('/auth/login', $data, $server)->response;
+
+        $this->assertEquals(401, $response->getStatusCode());
+    }
 }
