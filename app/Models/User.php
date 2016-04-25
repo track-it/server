@@ -3,9 +3,14 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Hash;
 
-class User extends Model
+class User extends Model implements Authenticatable
 {
+    use AuthenticatableTrait;
+
     protected $fillable = [
         'name',
     ];
@@ -17,6 +22,15 @@ class User extends Model
     	static::created(function ($user) {
     		$user->refreshApiToken();
     	});
+
+        static::creating(function($user) {
+            $user->password = Hash::make($user->password);
+        });
+    }
+
+    public static function scopeByUsername($query, $username)
+    {
+        return $query->where('username', $username);
     }
 
     public function refreshApiToken()

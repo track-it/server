@@ -15,4 +15,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/', function () {
         return view('welcome');
     });
+
+});
+
+Route::group([], function() {
+	Route::post('/auth/login', 'AuthController@login');
 });
