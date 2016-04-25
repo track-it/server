@@ -15,6 +15,7 @@ class ProposalsTest extends TestCase
         $response = $this->get('proposals')->response;
         $jsonObject = json_decode($response->getContent());
 
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('items', $jsonObject);
         $this->assertInternalType('array', $jsonObject->items);
     }
@@ -27,6 +28,7 @@ class ProposalsTest extends TestCase
         $response = $this->get('proposals/'.$proposal->id)->response;
         $jsonObject = json_decode($response->getContent());
 
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('items', $jsonObject);
         $this->assertInternalType('array', $jsonObject->items);
         $this->assertCount(1, $jsonObject->items);
@@ -46,6 +48,7 @@ class ProposalsTest extends TestCase
         $response = $this->post('proposals', ['title' => 'Kebab'])->response;
         $jsonObject = json_decode($response->getContent());
 
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Kebab', $jsonObject->items[0]->title);
     }
 
@@ -57,6 +60,7 @@ class ProposalsTest extends TestCase
         $response = $this->put('proposals/'.$proposal->id, ['title' => 'Ost'])->response;
         $jsonObject = json_decode($response->getContent());
 
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Ost', $jsonObject->items[0]->title);
     }
 
