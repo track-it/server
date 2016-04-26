@@ -39,6 +39,6 @@ class ProposalTest extends TestCase
         
         $proposal->attachments()->save($attachment);
 
-        $this->assertTrue($proposal->attachments->count() == 1);
+        $this->assertEquals(1, $proposal->attachments->count());
     }
 }
