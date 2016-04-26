@@ -22,4 +22,15 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $app;
     }
+
+    public function createAuthHeader()
+    {
+        $user = Factory(Trackit\Models\User::class)->create();
+                
+        $server = [
+            'Authorization' => "Bearer $user->api_token",
+        ];
+
+        return $server;
+    }
 }
