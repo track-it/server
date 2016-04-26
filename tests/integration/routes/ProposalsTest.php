@@ -45,7 +45,9 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_proposal()
     {
-        $response = $this->post('proposals', ['title' => 'Kebab'])->response;
+        $header = $this->createAuthHeader();
+
+        $response = $this->post('proposals', ['title' => 'Kebab'], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -55,9 +57,11 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_update_an_existing_proposal()
     {
+        $header = $this->createAuthHeader();
+
         $proposal = factory(Proposal::class)->create();
 
-        $response = $this->put('proposals/'.$proposal->id, ['title' => 'Ost'])->response;
+        $response = $this->put('proposals/'.$proposal->id, ['title' => 'Ost'], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -66,10 +70,12 @@ class ProposalsTest extends TestCase
 
     /** @test */
     public function it_should_delete_an_existing_proposal()
-    {
+    {      
+        $header = $this->createAuthHeader();
+
         $proposal = factory(Proposal::class)->create();
 
-        $response = $this->delete('proposals/'.$proposal->id)->response;
+        $response = $this->delete('proposals/'.$proposal->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
     }
