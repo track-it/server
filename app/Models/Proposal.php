@@ -3,8 +3,8 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-class Proposal extends Model
+use Trackit\Contracts\Commentable;
+class Proposal extends Model implements Commentable
 {
     const NOT_REVIEWED = 1;
     const UNDER_REVIEW = 2;
@@ -24,6 +24,11 @@ class Proposal extends Model
         'user_id',
         'status',
     ];
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function creator()
     {
