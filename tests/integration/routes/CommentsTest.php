@@ -12,13 +12,16 @@ class CommentsTest extends TestCase
 	use DatabaseTransactions;
 
 	/** @test */
-	public function it_should_create_a_new_comment_on_commentable_resource()
+	public function it_should_create_a_new_comment_on_a_commentable_resource()
 	{	
 		$proposal = factory(Proposal::class)->create();
 		$user = factory(User::class)->create();
 
 		$url = 'proposals/'.$proposal->id.'/comments';
-        $response = $this->post($url, ['body' => 'This is a body.', 'author_id' => $user->id])->response;
+		$content = ['body' => 'This is a body.', 'author_id' => $user->id];
+		$header = $this->createAuthHeader();
+
+        $response = $this->post($url, $content, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
