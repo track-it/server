@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Role;
 
-class RolesTest extends TestCase
+class RoleTest extends TestCase
 {
     use DatabaseTransactions;
 
