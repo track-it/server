@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
 
-class ProposalsTest extends TestCase
+class ProposalTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -39,6 +39,6 @@ class ProposalsTest extends TestCase
         
         $proposal->attachments()->save($attachment);
 
-        $this->assertTrue($proposal->attachments->count() == 1);
+        $this->assertEquals(1, $proposal->attachments->count());
     }
 }

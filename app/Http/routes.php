@@ -11,17 +11,25 @@
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
+Route::group([], function() {
+	Route::post('/auth/login', 'AuthController@login');
+});
+
+Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/', function () {
         return view('welcome');
     });
 
     Route::singularResourceParameters();
 
+    // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
+
+    // Proposal routes
+    Route::resource('proposals', 'ProposalController');
     Route::resource('proposals/{proposal}/attachments', 'AttachmentController', ['only' => ['index', 'store']]);
+    
+    // Global Attachment routes
     Route::resource('attachments', 'AttachmentController', ['only' => ['show', 'update', 'destroy']]);
-
     Route::get('attachments/{attachment}/download', [ 'as' => 'attachments.download', 'uses' => 'AttachmentController@download']);
-
 });
