@@ -16,6 +16,7 @@ class CreateAttachmentsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('url');
+            $table->string('mime_type');
             $table->integer('uploader_id')->unsigned()->index();
             $table->integer('source_id')->unsigned()->index();
             $table->string('source_type');

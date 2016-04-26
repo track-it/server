@@ -4,8 +4,9 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Taggable;
+use Trackit\Contracts\Attachmentable;
 
-class Proposal extends Model implements Taggable
+class Proposal extends Model implements Attachmentable, Taggable
 {
     const NOT_REVIEWED = 1;
     const UNDER_REVIEW = 2;
