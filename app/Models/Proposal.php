@@ -38,7 +38,7 @@ class Proposal extends Model implements Taggable
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function comments()

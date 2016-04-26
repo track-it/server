@@ -42,7 +42,7 @@ class TagController extends Controller
             }
 
             $newTag = Tag::whereName($tag)->first();
-            $newTag->proposals()->attach($taggable);
+            $taggable->tags()->attach($newTag->id);
         }
 
         return JsonResponse::success($taggable->tags);
