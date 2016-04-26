@@ -2,6 +2,8 @@
 
 namespace Trackit\Support;
 
+use Illuminate\Support\Collection;
+
 class JsonResponse
 {
     var $items = [];
@@ -11,7 +13,7 @@ class JsonResponse
     {
         $jsonResponse = new JsonResponse();
 
-        if (is_array($items)) {
+        if (is_array($items) || $items instanceof Collection) {
             $jsonResponse->items = $items;
         } else {
             array_push($jsonResponse->items, $items);

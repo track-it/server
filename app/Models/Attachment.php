@@ -7,8 +7,6 @@ use Trackit\Models\User;
 
 class Attachment extends Model
 {
-    protected $appends = array('url');
-
     protected $fillable = [
         'title',
         'url',
@@ -16,14 +14,6 @@ class Attachment extends Model
         'source_id',
         'source_type',
     ];
-
-    /**
-     *
-     */
-    public function getUrlAttribute()
-    {
-        return route('attachments.download', ['attachment' => $this->id]);
-    }
 
     /*
      *

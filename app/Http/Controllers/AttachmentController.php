@@ -3,12 +3,15 @@
 namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Storage;
+use Response;
 
 use Trackit\Http\Requests;
 use Trackit\Models\Attachment;
 use Trackit\Models\User;
 use Trackit\Support\JsonResponse;
 use Trackit\Http\Requests\CreateAttachmentRequest;
+use Trackit\Http\Requests\UpdateAttachmentRequest;
 use Trackit\Contracts\Attachmentable;
 
 class AttachmentController extends Controller
@@ -18,6 +21,18 @@ class AttachmentController extends Controller
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * List all attachments for an attachmentable
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Attachmentable $attachmentable)
+    {
+        $attachments = $attachmentable->attachments;
+
+        return JsonResponse::success($attachments);
     }
 
     /**
@@ -35,9 +50,14 @@ class AttachmentController extends Controller
                 'uploader_id' => $this->user->id ? $this->user->id : 0,
                 'source_id' => $attachmentable->getId(),
                 'source_type' => get_class($attachmentable),
+                'mime_type' => $file->getMimeType(),
             ];
 
-            $attachments[] = Attachment::create($data);
+            $attachment = Attachment::create($data);
+
+            $attachments[] = $attachment;
+
+            Storage::put('attachments/'.$attachment->id.'/'.$file->getClientOriginalName(), file_get_contents($file));
         }
 
         return JsonResponse::success($attachments);
@@ -49,20 +69,24 @@ class AttachmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Attachmentable $attachmentable, Attachment $attachment)
+    public function show(Attachment $attachment)
     {
         return JsonResponse::success($attachment);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Download a file attached to an attachment.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function download(Attachment $attachment)
     {
-        //
+        $content = Storage::get($attachment->url);
+        $headers = [
+          'Content-Type' => $attachment->mime_type,
+        ];
+        return response($content, 200, $headers);
     }
 
     /**
@@ -72,9 +96,11 @@ class AttachmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Attachment $attachment, UpdateAttachmentRequest $request)
     {
-        //
+        $attachment->update($request->all());
+
+        return JsonResponse::success($attachment);
     }
 
     /**
@@ -83,8 +109,10 @@ class AttachmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Attachment $attachment)
     {
-        //
+        $attachment->delete();
+
+        return response('', 204);
     }
 }

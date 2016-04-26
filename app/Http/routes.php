@@ -19,7 +19,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::singularResourceParameters();
 
     Route::model('proposal', 'Trackit\Models\Proposal');
-    Route::resource('proposals/{proposal}/attachments', 'AttachmentController');
+    Route::resource('proposals/{proposal}/attachments', 'AttachmentController', ['only' => ['index', 'store']]);
+    Route::resource('attachments', 'AttachmentController', ['only' => ['show', 'update', 'destroy']]);
 
     Route::get('attachments/{attachment}/download', [ 'as' => 'attachments.download', 'uses' => 'AttachmentController@download']);
 
