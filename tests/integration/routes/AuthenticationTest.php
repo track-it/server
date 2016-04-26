@@ -9,12 +9,12 @@ class AuthenticationTest extends TestCase
 	use DatabaseTransactions;
 
     /** @test */
-    public function it_should_allow_user_to_log_in()
+    public function it_should_allow_user_to_log_in_with_valid_credentials()
     {
         $user = factory(Trackit\Models\User::class)->create(['password' => 'nisse']);
 
         $data = [
-        	'username'	=> $user->username,
+        	'username' 	=> $user->username,
         	'password'  => 'nisse',
         ];
 
