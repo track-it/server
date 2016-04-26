@@ -7,20 +7,27 @@ use Trackit\Models\User;
 
 class Attachment extends Model
 {
+    protected $fillable = [
+        'title',
+        'url',
+        'uploader_id',
+        'source_id',
+        'source_type',
+    ];
 
-	/*
-	 *
-	 */
+    /*
+     *
+     */
     public function uploader()
     {
-    	return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
-	/*
-	 *
-	 */
+    /*
+     *
+     */
     public function source()
     {
-    	return $this->morphTo();
+        return $this->morphTo();
     }
 }
