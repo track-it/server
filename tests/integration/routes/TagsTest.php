@@ -53,7 +53,7 @@ class TagsTest extends TestCase
     }
 
     /** @test */
-    public function is_should_return_an_existing_tag()
+    public function it_should_return_an_existing_tag()
     {
         $tag = factory(Tag::class)->create();
 
@@ -66,7 +66,7 @@ class TagsTest extends TestCase
     }
 
     /** @test */
-    public function is_should_update_an_existing_tag()
+    public function it_should_update_an_existing_tag()
     {
         $tag = factory(Tag::class)->create();
         $data = [
@@ -82,7 +82,7 @@ class TagsTest extends TestCase
     }
 
     /** @test */
-    public function is_should_delete_an_existing_tag()
+    public function it_should_delete_an_existing_tag()
     {
         $tag = factory(Tag::class)->create();
 
@@ -93,7 +93,7 @@ class TagsTest extends TestCase
     }
 
     /** @test */
-    public function is_should_return_all_tags_for_a_proposal()
+    public function it_should_return_all_tags_for_a_proposal()
     {
         $proposal = factory(Proposal::class)->create();
         $tag = factory(Tag::class)->create();
