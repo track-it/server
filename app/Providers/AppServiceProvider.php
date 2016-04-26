@@ -3,8 +3,6 @@
 namespace Trackit\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Trackit\Contracts\Attachmentable;
-use Trackit\Models\Proposal;
 
 class AppServiceProvider extends ServiceProvider
 {

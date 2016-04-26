@@ -5,6 +5,7 @@ namespace Trackit\Http\Controllers;
 use Illuminate\Http\Request;
 use Storage;
 use Response;
+use Auth;
 
 use Trackit\Http\Requests;
 use Trackit\Models\Attachment;
@@ -43,6 +44,9 @@ class AttachmentController extends Controller
     public function store(Attachmentable $attachmentable, CreateAttachmentRequest $request)
     {
         $attachments = [];
+
+        dd(Auth::user());
+        dd($this->user);
 
         foreach ($request->allFiles() as $file) {
             $data = [
