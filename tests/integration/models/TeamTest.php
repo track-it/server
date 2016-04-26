@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Trackit\Models\User;
 use Trackit\Models\Team;
 
-class TeamsTest extends TestCase
+class TeamTest extends TestCase
 {
 	use DatabaseTransactions;
 

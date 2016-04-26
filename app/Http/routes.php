@@ -10,7 +10,6 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
 Route::group([], function () {
     Route::post('/auth/login', 'AuthController@login');
     Route::get('proposals', 'ProposalController@index');
@@ -23,6 +22,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
 
     Route::singularResourceParameters();
+    Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
+    Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
 
     // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');

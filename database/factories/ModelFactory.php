@@ -47,3 +47,9 @@ $factory->define(Trackit\Models\Attachment::class, function (Faker\Generator $fa
         'url' => $faker->url(),
     ];
 });
+
+$factory->define(Trackit\Models\Tag::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+    ];
+});

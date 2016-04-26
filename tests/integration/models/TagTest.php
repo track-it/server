@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Tag;
 use Trackit\Models\Proposal;
 
-class TagsTest extends TestCase
+class TagTest extends TestCase
 {
 	use DatabaseTransactions;
 

@@ -2,7 +2,6 @@
 
 namespace Trackit\Support;
 
-
 use Illuminate\Support\Collection;
 
 class JsonResponse
@@ -13,7 +12,6 @@ class JsonResponse
     public static function success($items)
     {
         $jsonResponse = new JsonResponse();
-
 
         if (is_array($items) || $items instanceof Collection) {
             $jsonResponse->items = $items;

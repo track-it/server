@@ -12,6 +12,6 @@ class Tag extends Model
 
     public function proposals()
     {
-    	return $this->belongsToMany(Proposal::class);
+    	return $this->morphedByMany(Proposal::class, 'taggable');
     }
 }
