@@ -45,13 +45,10 @@ class AttachmentController extends Controller
     {
         $attachments = [];
 
-        dd(Auth::user());
-        dd($this->user);
-
         foreach ($request->allFiles() as $file) {
             $data = [
                 'title' => $file->getClientOriginalName(),
-                'uploader_id' => $this->user->id ? $this->user->id : 0,
+                'uploader_id' => $this->user->id,
                 'source_id' => $attachmentable->getId(),
                 'source_type' => get_class($attachmentable),
                 'mime_type' => $file->getMimeType(),

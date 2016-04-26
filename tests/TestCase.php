@@ -28,7 +28,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $user = Factory(Trackit\Models\User::class)->create();
                 
         $server = [
-            'Authorization' => "Bearer $user->api_token",
+            'HTTP_AUTHORIZATION' => "Bearer $user->api_token",
         ];
 
         return $server;

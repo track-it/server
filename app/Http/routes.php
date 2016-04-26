@@ -11,8 +11,10 @@
 |
 */
 
-Route::group([], function() {
-	Route::post('/auth/login', 'AuthController@login');
+Route::group([], function () {
+    Route::post('/auth/login', 'AuthController@login');
+    Route::get('proposals', 'ProposalController@index');
+    Route::get('proposals/{proposal}', 'ProposalController@show');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -26,7 +28,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::model('proposal', 'Trackit\Models\Proposal');
 
     // Proposal routes
-    Route::resource('proposals', 'ProposalController');
+    Route::resource('proposals', 'ProposalController', ['except' => ['index', 'show']]);
     Route::resource('proposals/{proposal}/attachments', 'AttachmentController', ['only' => ['index', 'store']]);
     
     // Global Attachment routes

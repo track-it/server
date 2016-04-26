@@ -28,10 +28,10 @@ class AttachmentsTest extends TestCase
         $response = $this->call(
             'POST',
             'proposals/'.$proposal->id.'/attachments',
-            [],
-            [],
-            [$file],
-            $header
+            [], // parameters
+            [], // cookies
+            [$file], // files
+            $header // server
         );
         $jsonObject = json_decode($response->getContent());
 
@@ -73,7 +73,7 @@ class AttachmentsTest extends TestCase
         $attachment = factory(Attachment::class)->create();
 
         $header = $this->createAuthHeader();
-        $response = $this->delete('attachments/'.$attachment->id, $header)->response;
+        $response = $this->delete('attachments/'.$attachment->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
     }

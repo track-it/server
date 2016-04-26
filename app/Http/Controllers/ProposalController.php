@@ -27,7 +27,7 @@ class ProposalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(CreateProposalRequest $request)
+    public function store(CreateProposalRequest $request)
     {
         $proposal = Proposal::create([
             'title' => $request->title,    
