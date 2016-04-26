@@ -11,17 +11,21 @@
 |
 */
 
+
 Route::group([], function() {
 	Route::post('/auth/login', 'AuthController@login');
 });
+
+Route::get('/proposals', 'ProposalController@index');
+
+Route::get('/proposals/{proposal}', 'ProposalController@show');
+
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/', function () {
         return view('welcome');
     });
 
-    Route::get('/proposals', 'ProposalController@index');
-    Route::get('/proposals/{proposal}', 'ProposalController@show');
     Route::put('/proposals/{proposal}', 'ProposalController@update');
     Route::delete('/proposals/{proposal}', 'ProposalController@destroy');
     Route::post('/proposals', 'ProposalController@create');
