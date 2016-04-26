@@ -12,6 +12,8 @@
 */
 
 
+
+
 Route::group([], function() {
 	Route::post('/auth/login', 'AuthController@login');
 });
@@ -26,7 +28,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         return view('welcome');
     });
 
+    Route::singularResourceParameters();
+	Route::model('proposal', 'Trackit\Models\Proposal');
+
     Route::put('/proposals/{proposal}', 'ProposalController@update');
     Route::delete('/proposals/{proposal}', 'ProposalController@destroy');
     Route::post('/proposals', 'ProposalController@create');
+
+    Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
+    Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
 });

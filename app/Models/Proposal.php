@@ -3,8 +3,9 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Trackit\Contracts\Taggable;
 
-class Proposal extends Model
+class Proposal extends Model implements Taggable
 {
     const NOT_REVIEWED = 1;
     const UNDER_REVIEW = 2;
@@ -53,5 +54,10 @@ class Proposal extends Model
     public function interestedGroups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 }
