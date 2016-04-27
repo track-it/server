@@ -62,9 +62,4 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     {
         return $this->belongsToMany(Group::class);
     }
-
-    public function getId()
-    {
-        return $this->id;
-    }
 }

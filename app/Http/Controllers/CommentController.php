@@ -21,6 +21,18 @@ class CommentController extends Controller
         $this->user = $user;
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Commentable $commentable)
+    {
+        $comments = $commentable->comments;
+
+        return JsonResponse::success($comments);
+    }
+
     public function store(Commentable $commentable, CreateCommentRequest $request)
     {	
     	

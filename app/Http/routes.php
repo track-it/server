@@ -28,7 +28,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::model('comment', 'Trackit\Models\comment');
 
     // Comment routes
-    Route::resource('proposals/{proposal}/comments', 'CommentController');
+    Route::resource('proposals/{proposal}/comments', 'CommentController', ['only' => ['index', 'store']]);
+    Route::resource('comments', 'CommentController', ['only' => ['show', 'update', 'destroy']]);
 
     // Tag routes
     Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
