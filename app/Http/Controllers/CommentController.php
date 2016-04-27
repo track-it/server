@@ -11,6 +11,7 @@ use Trackit\Models\User;
 use Trackit\Support\JsonResponse;
 use Trackit\Contracts\Commentable;
 use Trackit\Http\Requests\CreateCommentRequest;
+use Trackit\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
@@ -33,6 +34,22 @@ class CommentController extends Controller
         return JsonResponse::success($comments);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Comment $comment)
+    {
+        return JsonResponse::success($comment);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function store(Commentable $commentable, CreateCommentRequest $request)
     {	
     	
@@ -43,7 +60,36 @@ class CommentController extends Controller
             'source_type' => get_class($commentable),
         ]);
 
+        return JsonResponse::success($comment);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Comment $comment, UpdateCommentRequest $request)
+    {
+
+        $data = $request->all();
+
+        $comment->update($data);
 
         return JsonResponse::success($comment);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Comment $comment)
+    {
+        $comment->delete();
+
+        return response('', 204);
     }
 }
