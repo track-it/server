@@ -25,7 +25,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
-    Route::model('comment', 'Trackit\Models\comment');
+    Route::model('comment', 'Trackit\Models\Comment');
 
     // Comment routes
     Route::resource('proposals/{proposal}/comments', 'CommentController', ['only' => ['index', 'store']]);
