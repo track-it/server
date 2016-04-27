@@ -46,7 +46,6 @@ class ProposalsTest extends TestCase
     public function it_should_create_a_new_proposal()
     {
         $header = $this->createAuthHeader();
-
         $response = $this->post('proposals', ['title' => 'Kebab'], $header)->response;
         $jsonObject = json_decode($response->getContent());
 

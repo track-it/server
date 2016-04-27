@@ -4,7 +4,10 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Commentable;
-class Proposal extends Model implements Commentable
+use Trackit\Contracts\Taggable;
+use Trackit\Contracts\Attachmentable;
+
+class Proposal extends Model implements Attachmentable, Taggable, Commentable
 {
     const NOT_REVIEWED = 1;
     const UNDER_REVIEW = 2;
@@ -42,7 +45,7 @@ class Proposal extends Model implements Commentable
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function comments()
@@ -58,5 +61,10 @@ class Proposal extends Model implements Commentable
     public function interestedGroups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 }

@@ -10,29 +10,35 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
-
-Route::group([], function() {
-	Route::post('/auth/login', 'AuthController@login');
+Route::group([], function () {
+    Route::post('/auth/login', 'AuthController@login');
+    Route::get('proposals', 'ProposalController@index');
+    Route::get('proposals/{proposal}', 'ProposalController@show');
 });
 
-Route::get('/proposals', 'ProposalController@index');
-
-Route::get('/proposals/{proposal}', 'ProposalController@show');
-
-
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/', function () {
         return view('welcome');
     });
 
     Route::singularResourceParameters();
-
-    Route::put('/proposals/{proposal}', 'ProposalController@update');
-    Route::delete('/proposals/{proposal}', 'ProposalController@destroy');
-    Route::post('/proposals', 'ProposalController@create');
-
+    
+    // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
     Route::model('comment', 'Trackit\Models\comment');
+
+    // Comment routes
     Route::resource('proposals/{proposal}/comments', 'CommentController');
+
+    // Tag routes
+    Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
+    Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
+
+    // Proposal routes
+    Route::resource('proposals', 'ProposalController', ['except' => ['index', 'show']]);
+    Route::resource('proposals/{proposal}/attachments', 'AttachmentController', ['only' => ['index', 'store']]);
+    
+    // Global Attachment routes
+    Route::resource('attachments', 'AttachmentController', ['only' => ['show', 'update', 'destroy']]);
+    Route::get('attachments/{attachment}/download', [ 'as' => 'attachments.download', 'uses' => 'AttachmentController@download']);
 });
