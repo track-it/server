@@ -35,12 +35,12 @@ class CommentTest extends TestCase
     }
 
     /** @test */
-    public function it_should_have_a_user()
+    public function it_should_have_an_author()
     {
     	$user = factory(User::class)->create();
     	$comment = Comment::create([
-    		'user_id' => $user->id,
+    		'author_id' => $user->id,
     	]);
-    	$this->assertEquals($user->id, $comment->user->id);
+    	$this->assertEquals($user->id, $comment->author->id);
     }
 }

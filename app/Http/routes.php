@@ -22,11 +22,18 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
 
     Route::singularResourceParameters();
-    Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
-    Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
-
+    
     // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
+    Route::model('comment', 'Trackit\Models\Comment');
+
+    // Comment routes
+    Route::resource('proposals/{proposal}/comments', 'CommentController', ['only' => ['index', 'store']]);
+    Route::resource('comments', 'CommentController', ['only' => ['show', 'update', 'destroy']]);
+
+    // Tag routes
+    Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
+    Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
 
     // Proposal routes
     Route::resource('proposals', 'ProposalController', ['except' => ['index', 'show']]);
