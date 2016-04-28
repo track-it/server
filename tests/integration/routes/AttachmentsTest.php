@@ -35,7 +35,7 @@ class AttachmentsTest extends TestCase
         );
         $jsonObject = json_decode($response->getContent());
 
-        $this->assertEquals($file->getClientOriginalName(), $jsonObject->items[0]->title);
+        $this->assertEquals($file->getClientOriginalName(), $jsonObject->data[0]->title);
     }
 
     /** @test */
@@ -48,7 +48,7 @@ class AttachmentsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($attachment->id, $jsonObject->items[0]->id);
+        $this->assertEquals($attachment->id, $jsonObject->data->id);
     }
 
     /** @test */
@@ -64,7 +64,7 @@ class AttachmentsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($data['title'], $jsonObject->items[0]->title);
+        $this->assertEquals($data['title'], $jsonObject->data->title);
     }
 
     /** @test */
@@ -108,6 +108,6 @@ class AttachmentsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(2, count($jsonObject->items));
+        $this->assertEquals(2, count($jsonObject->data));
     }
 }

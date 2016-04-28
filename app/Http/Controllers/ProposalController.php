@@ -3,13 +3,13 @@
 namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Response;
 
 use Trackit\Http\Requests;
 use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Http\Requests\UpdateProposalRequest;
 use Trackit\Models\Proposal;
 use Trackit\Models\Tag;
-use Trackit\Support\JsonResponse;
 
 class ProposalController extends Controller
 {
@@ -20,8 +20,8 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        // return JsonResponse::success(Proposal::all());
-        return JsonResponse::success(Proposal::orderBy('created_at', 'desc')->paginate(10));
+        // return Response::json(Proposal::all());
+        return Response::json(Proposal::orderBy('created_at', 'desc')->paginate(10));
     }
 
     /**
@@ -44,7 +44,7 @@ class ProposalController extends Controller
 
         $proposal->load('tags');
 
-        return JsonResponse::success($proposal);
+        return Response::json($proposal);
     }
 
     /**
@@ -55,7 +55,7 @@ class ProposalController extends Controller
      */
     public function show(Proposal $proposal)
     {
-        return JsonResponse::success($proposal);
+        return Response::json($proposal);
     }
 
     /**
@@ -68,7 +68,7 @@ class ProposalController extends Controller
     public function update(Proposal $proposal, UpdateProposalRequest $request)
     {
         $proposal->update($request->all());
-        return JsonResponse::success($proposal);
+        return Response::json($proposal);
     }
 
     /**

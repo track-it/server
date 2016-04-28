@@ -3,12 +3,12 @@
 namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Response;
 
 use Trackit\Http\Requests\CreateTagRequest;
 use Trackit\Http\Requests\UpdateTagRequest;
 use Trackit\Contracts\Taggable;
 use Trackit\Models\Tag;
-use Trackit\Support\JsonResponse;
 
 class TagController extends Controller
 {
@@ -21,7 +21,7 @@ class TagController extends Controller
     {
         $tags = $taggable->tags;
 
-        return JsonResponse::success($tags);
+        return Response::json($tags);
     }
 
     /**
@@ -39,8 +39,7 @@ class TagController extends Controller
             $taggable->tags()->attach($newTag->id);
         }
 
-
-        return JsonResponse::success($taggable->tags);
+        return Response::json($taggable->tags);
     }
 
     /**
@@ -51,7 +50,7 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        return JsonResponse::success($tag);
+        return Response::json($tag);
     }
 
     /**
@@ -67,7 +66,7 @@ class TagController extends Controller
 
         $tag->update($data);
 
-        return JsonResponse::success($tag);
+        return Response::json($tag);
     }
 
     /**
