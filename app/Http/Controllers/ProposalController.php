@@ -8,6 +8,7 @@ use Trackit\Http\Requests;
 use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Http\Requests\UpdateProposalRequest;
 use Trackit\Models\Proposal;
+use Trackit\Models\Tag;
 use Trackit\Support\JsonResponse;
 
 class ProposalController extends Controller
@@ -30,8 +31,17 @@ class ProposalController extends Controller
     public function store(CreateProposalRequest $request)
     {
         $proposal = Proposal::create([
-            'title' => $request->title,    
+            'title' => $request->title,
         ]);
+
+        $tags = $request->tags == null ? [] : $request->tags; 
+
+        foreach ($tags as $tag) {
+            $newTag = Tag::firstOrCreate(['name' => $tag]);
+            $proposal->tags()->attach($newTag->id);
+        }
+
+        $proposal->load('tags');
 
         return JsonResponse::success($proposal);
     }
