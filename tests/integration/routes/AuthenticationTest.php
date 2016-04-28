@@ -27,7 +27,7 @@ class AuthenticationTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($user->api_token, $jsonObject->items[0]->api_token);
+        $this->assertEquals($user->api_token, $jsonObject->data->api_token);
     }
 
     /** @test */

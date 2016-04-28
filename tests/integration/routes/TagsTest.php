@@ -23,7 +23,7 @@ class TagsTest extends TestCase
         $response = $this->post('proposals/'.$proposal->id.'/tags', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
         $tags = [];
-        foreach ($jsonObject->items as $item) {
+        foreach ($jsonObject->data as $item) {
             $tags[] = $item->name;
         }
 
@@ -44,7 +44,7 @@ class TagsTest extends TestCase
         $response = $this->post('proposals/'.$proposal->id.'/tags', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
         $tags = [];
-        foreach ($jsonObject->items as $item) {
+        foreach ($jsonObject->data as $item) {
             $tags[] = $item->name;
         }
 
@@ -62,7 +62,7 @@ class TagsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($tag->id, $jsonObject->items[0]->id);
+        $this->assertEquals($tag->id, $jsonObject->data->id);
     }
 
     /** @test */
@@ -78,7 +78,7 @@ class TagsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($data['name'], $jsonObject->items[0]->name);
+        $this->assertEquals($data['name'], $jsonObject->data->name);
     }
 
     /** @test */
@@ -106,6 +106,6 @@ class TagsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(2, count($jsonObject->items));
+        $this->assertEquals(2, count($jsonObject->data));
     }
 }

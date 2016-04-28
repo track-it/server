@@ -10,7 +10,6 @@ use Auth;
 use Trackit\Http\Requests;
 use Trackit\Models\Attachment;
 use Trackit\Models\User;
-use Trackit\Support\JsonResponse;
 use Trackit\Http\Requests\CreateAttachmentRequest;
 use Trackit\Http\Requests\UpdateAttachmentRequest;
 use Trackit\Contracts\Attachmentable;
@@ -33,7 +32,7 @@ class AttachmentController extends Controller
     {
         $attachments = $attachmentable->attachments;
 
-        return JsonResponse::success($attachments);
+        return Response::json($attachments);
     }
 
     /**
@@ -43,8 +42,6 @@ class AttachmentController extends Controller
      */
     public function store(Attachmentable $attachmentable, CreateAttachmentRequest $request)
     {
-        $attachments = [];
-
         foreach ($request->allFiles() as $file) {
             $data = [
                 'title' => $file->getClientOriginalName(),
@@ -56,12 +53,10 @@ class AttachmentController extends Controller
 
             $attachment = Attachment::create($data);
 
-            $attachments[] = $attachment;
-
             Storage::put('attachments/'.$attachment->id.'/'.$file->getClientOriginalName(), file_get_contents($file));
         }
-
-        return JsonResponse::success($attachments);
+        
+        return Response::json($attachmentable->attachments);
     }
 
     /**
@@ -72,7 +67,7 @@ class AttachmentController extends Controller
      */
     public function show(Attachment $attachment)
     {
-        return JsonResponse::success($attachment);
+        return Response::json($attachment);
     }
 
     /**
@@ -101,7 +96,7 @@ class AttachmentController extends Controller
     {
         $attachment->update($request->all());
 
-        return JsonResponse::success($attachment);
+        return Response::json($attachment);
     }
 
     /**
