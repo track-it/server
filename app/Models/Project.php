@@ -18,13 +18,23 @@ class Project extends Model
         'status',
     ];
 
-    public function assignTeam($team)
-    {
-        $this->team()->associate($team);
-    }
-
     public function team()
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 }
