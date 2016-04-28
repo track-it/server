@@ -35,15 +35,10 @@ class TagController extends Controller
         $tags = $request->tags;
 
         foreach ($tags as $tag) {
-            if (!Tag::whereName($tag)->exists()) {
-                Tag::create([
-                    'name' => $tag,
-                ]);
-            }
-
-            $newTag = Tag::whereName($tag)->first();
+            $newTag = Tag::firstOrCreate(['name' => $tag]);
             $taggable->tags()->attach($newTag->id);
         }
+
 
         return JsonResponse::success($taggable->tags);
     }
