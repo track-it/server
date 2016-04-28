@@ -14,4 +14,9 @@ class Comment extends Model
 	{
 		return $this->belongsTo(User::class);
 	}
+
+	public function commentable()
+	{
+		$this->morphTo(Project::class);
+	}
 }
