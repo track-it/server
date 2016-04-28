@@ -70,4 +70,9 @@ class User extends Model implements Authenticatable
     {
         return $this->belongsToMany(Team::class, 'user_teams');
     }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class);
+    }
 }
