@@ -3,10 +3,11 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Taggable;
 use Trackit\Contracts\Attachmentable;
 
-class Proposal extends Model implements Attachmentable, Taggable
+class Proposal extends Model implements Attachmentable, Taggable, Commentable
 {
     const NOT_REVIEWED = 1;
     const UNDER_REVIEW = 2;
@@ -26,6 +27,11 @@ class Proposal extends Model implements Attachmentable, Taggable
         'user_id',
         'status',
     ];
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function creator()
     {
@@ -55,10 +61,5 @@ class Proposal extends Model implements Attachmentable, Taggable
     public function interestedGroups()
     {
         return $this->belongsToMany(Group::class);
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 }
