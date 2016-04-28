@@ -88,4 +88,17 @@ class CommentsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($data['body'], $jsonObject->items[0]->body);
     }
+
+    /** @test */
+    public function it_should_return_a_comment_on_commments_endpoint()
+    {
+        $comment = factory(Comment::class)->create();
+
+        $header = $this->createAuthHeader();
+
+        $response = $this->get('comments/'.$comment->id, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
