@@ -10,14 +10,17 @@ class ProposalsTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function it_should_return_a_collection_of_proposals()
+    public function it_should_return_a_collection_of_proposals_with_pagination()
     {
+        $proposals = factory(Proposal::class, 30)->create();
+
         $response = $this->get('proposals')->response;
         $jsonObject = json_decode($response->getContent());
-
+        $pages = $jsonObject->items[0]->last_page;
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('items', $jsonObject);
         $this->assertInternalType('array', $jsonObject->items);
+        $this->assertEquals(3, $pages);
     }
 
     /** @test */
@@ -51,6 +54,26 @@ class ProposalsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Kebab', $jsonObject->items[0]->title);
+    }
+
+    /** @test */
+    public function it_should_create_a_new_proposal_with_tags()
+    {
+        $header = $this->createAuthHeader();
+        $proposalContent = [
+            'title' => 'Kebab',
+            'tags' => [
+                'tagOne',
+                'tagTwo',
+            ],
+        ];
+        $response = $this->post('proposals', $proposalContent, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Kebab', $jsonObject->items[0]->title);
+        $this->assertEquals('tagOne', $jsonObject->items[0]->tags[0]->name);
+        $this->assertEquals('tagTwo', $jsonObject->items[0]->tags[1]->name);
     }
 
     /** @test */
