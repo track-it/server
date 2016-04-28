@@ -19,7 +19,8 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        return JsonResponse::success(Proposal::all());
+        // return JsonResponse::success(Proposal::all());
+        return JsonResponse::success(Proposal::orderBy('created_at', 'desc')->paginate(10));
     }
 
     /**
