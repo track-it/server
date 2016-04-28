@@ -54,6 +54,26 @@ class ProposalsTest extends TestCase
     }
 
     /** @test */
+    public function it_should_create_a_new_proposal_with_tags()
+    {
+        $header = $this->createAuthHeader();
+        $proposalContent = [
+            'title' => 'Kebab',
+            'tags' => [
+                'tagOne',
+                'tagTwo',
+            ],
+        ];
+        $response = $this->post('proposals', $proposalContent, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Kebab', $jsonObject->items[0]->title);
+        $this->assertEquals('tagOne', $jsonObject->items[0]->tags[0]->name);
+        $this->assertEquals('tagTwo', $jsonObject->items[0]->tags[1]->name);
+    }
+
+    /** @test */
     public function it_should_update_an_existing_proposal()
     {
         $header = $this->createAuthHeader();
