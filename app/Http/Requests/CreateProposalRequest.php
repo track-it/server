@@ -32,7 +32,8 @@ class CreateProposalRequest extends Request
     public function rules()
     {
         return [
-            //
+            'title' => 'required|max:100',
+            'description' => 'required|max:5000',
         ];
     }
 }
