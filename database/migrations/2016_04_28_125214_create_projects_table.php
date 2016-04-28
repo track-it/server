@@ -15,6 +15,7 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('owner_id')->unsigned()->index();
             $table->integer('proposal_id')->unsigned()->index();
             $table->integer('team_id')->unsigned()->index();
             $table->integer('course_id')->unsigned()->index();
