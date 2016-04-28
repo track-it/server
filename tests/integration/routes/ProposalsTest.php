@@ -10,14 +10,17 @@ class ProposalsTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function it_should_return_a_collection_of_proposals()
+    public function it_should_return_a_collection_of_proposals_with_pagination()
     {
+        $proposals = factory(Proposal::class, 30)->create();
+
         $response = $this->get('proposals')->response;
         $jsonObject = json_decode($response->getContent());
-
+        $pages = $jsonObject->items[0]->last_page;
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('items', $jsonObject);
         $this->assertInternalType('array', $jsonObject->items);
+        $this->assertEquals(3, $pages);
     }
 
     /** @test */
