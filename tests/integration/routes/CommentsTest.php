@@ -23,9 +23,10 @@ class CommentsTest extends TestCase
 
         $response = $this->post($url, $content, $header)->response;
         $jsonObject = json_decode($response->getContent());
+        // dd($jsonObject);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('This is a body.', $jsonObject->items[0]->body);
+        $this->assertEquals('This is a body.', $jsonObject->data->body);
 	}
 
 	/** @test */
@@ -46,7 +47,7 @@ class CommentsTest extends TestCase
 		$jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(2, count($jsonObject->items));
+        $this->assertEquals(2, count($jsonObject->data));
 	}
 
 	/** @test */
@@ -72,7 +73,7 @@ class CommentsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($data['body'], $jsonObject->items[0]->body);
+        $this->assertEquals($data['body'], $jsonObject->data->body);
     }
 
     /** @test */
