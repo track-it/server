@@ -34,6 +34,7 @@ class CreateProposalRequest extends Request
         return [
             'title' => 'required|max:100',
             'description' => 'required|max:5000',
+            'tags' => 'array|max:20',
         ];
     }
 }

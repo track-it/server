@@ -24,7 +24,9 @@ class UpdateProposalRequest extends Request
     public function rules()
     {
         return [
-            //
+            'title' => 'required|max:100',
+            'description' => 'required|max:5000',
+            'tags' => 'array|max:20',
         ];
     }
 }

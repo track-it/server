@@ -4,20 +4,23 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class CreateProposalRequestTest extends TestCase
+use Trackit\Models\Proposal;
+
+class UpdateProposalRequestTest extends TestCase
 {
     use DatabaseTransactions;
 
     /** @test */
     public function it_should_not_allow_a_title_longer_than_100_characters()
     {
+        $proposal = factory(Proposal::class)->create();
         $header = $this->createAuthHeader();
         $data = [
             'title' => str_random(1000),
             'description' => 'This is a description',
         ];
 
-        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -27,12 +30,13 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_missing_title()
     {
+        $proposal = factory(Proposal::class)->create();
         $header = $this->createAuthHeader();
         $data = [
             'description' => 'This is a description',
         ];
 
-        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -42,13 +46,14 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_description_longer_than_5000_characters()
     {
+        $proposal = factory(Proposal::class)->create();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
             'description' => str_random(5001),
         ];
 
-        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -58,12 +63,13 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_missing_description()
     {
+        $proposal = factory(Proposal::class)->create();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
         ];
 
-        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -73,6 +79,7 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_tags_not_in_an_array()
     {
+        $proposal = factory(Proposal::class)->create();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
@@ -80,7 +87,7 @@ class CreateProposalRequestTest extends TestCase
             'tags' => 'test',
         ];
 
-        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -90,6 +97,7 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_more_than_20_tags()
     {
+        $proposal = factory(Proposal::class)->create();
         $faker = Faker\Factory::create();
         $tags = [];
         for ($i = 0; $i < 21; $i++) {
@@ -102,7 +110,7 @@ class CreateProposalRequestTest extends TestCase
             'tags' => $tags,
         ];
 
-        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
