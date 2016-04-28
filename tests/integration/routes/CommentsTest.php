@@ -33,34 +33,20 @@ class CommentsTest extends TestCase
 	{
 		$proposal = factory(Proposal::class)->create();
 		$user = factory(User::class)->create();
+		$comment1 = factory(Comment::class)->create(['body' => 'This is a body.', 'author_id' => $user->id]);
+		$comment2 = factory(Comment::class)->create(['body' => 'This is another body.', 'author_id' => $user->id]);
+
+		$proposal->comments()->save($comment1);
+		$proposal->comments()->save($comment2);
 
 		$url = 'proposals/'.$proposal->id.'/comments';
 		$header = $this->createAuthHeader();
-
-		$content1 = ['body' => 'This is a body.', 'author_id' => $user->id];
-		$content2 = ['body' => 'This is another body.', 'author_id' => $user->id];
-
-		$this->post($url, $content1, $header);
-		$this->post($url, $content2, $header);
 
 		$response = $this->get($url, $header)->response;
 		$jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(2, count($jsonObject->items));
-	}
-
-	/** @test */
-	public function it_should_return_a_failure_for_a_non_existing_resource()
-	{
-		$user = factory(User::class)->create();
-		$url = 'proposals/9999999999999/comments';
-		$content = ['body' => 'This is a body.', 'author_id' => $user->id];
-		$header = $this->createAuthHeader();
-
-        $response = $this->post($url, $content, $header)->response;
-		
-        $this->assertEquals(404, $response->getStatusCode());
 	}
 
 	/** @test */
@@ -90,7 +76,7 @@ class CommentsTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_a_comment_on_commments_endpoint()
+    public function it_should_return_an_existing_comment()
     {
         $comment = factory(Comment::class)->create();
 
@@ -101,4 +87,21 @@ class CommentsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
     }
+
+
+	/** @test */
+	public function it_should_return_a_failure_for_a_non_existing_comment()
+	{
+		$proposal = factory(Proposal::class)->create();
+		$user = factory(User::class)->create();
+
+		$url = 'proposals/'.$proposal->id.'/comments/1';
+		$header = $this->createAuthHeader();
+
+		$response = $this->get($url, $header)->response;
+		$jsonObject = json_decode($response->getContent());
+		
+        $this->assertEquals(404, $response->getStatusCode());
+	}
+
 }

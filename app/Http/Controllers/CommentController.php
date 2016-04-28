@@ -52,10 +52,9 @@ class CommentController extends Controller
      */
     public function store(Commentable $commentable, CreateCommentRequest $request)
     {	
-    	
         $comment = Comment::create([
             'body' => $request->body,
-            'author_id' => $this->user->id ? $this->user->id : 0,
+            'author_id' => $this->user->id,
             'source_id' => $commentable->getId(),
             'source_type' => get_class($commentable),
         ]);
@@ -72,9 +71,7 @@ class CommentController extends Controller
      */
     public function update(Comment $comment, UpdateCommentRequest $request)
     {
-
         $data = $request->all();
-
         $comment->update($data);
 
         return JsonResponse::success($comment);

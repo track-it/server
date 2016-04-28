@@ -13,6 +13,7 @@ class CreateProposalRequest extends Request
     {
         $this->user = $user;
     }
+    
     /**
      * Determine if the user is authorized to make this request.
      *
