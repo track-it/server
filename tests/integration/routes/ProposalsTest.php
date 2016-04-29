@@ -96,7 +96,7 @@ class ProposalsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Ost', $jsonObject->data->title);
+        $this->assertEquals('This is a title', $jsonObject->data->title);
     }
 
     /** @test */
