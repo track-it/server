@@ -48,11 +48,16 @@ class ProposalsTest extends TestCase
     public function it_should_create_a_new_proposal()
     {
         $header = $this->createAuthHeader();
-        $response = $this->post('proposals', ['title' => 'Kebab'], $header)->response;
+        $data = [
+            'title' => 'This is a title',
+            'description' => 'This is a description',
+            ];
+
+        $response = $this->json('POST', 'proposals', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Kebab', $jsonObject->data->title);
+        $this->assertEquals('This is a title', $jsonObject->data->title);
     }
 
     /** @test */
@@ -60,17 +65,19 @@ class ProposalsTest extends TestCase
     {
         $header = $this->createAuthHeader();
         $proposalContent = [
-            'title' => 'Kebab',
+            'title' => 'This is a title',
+            'description' => 'This is a description',
             'tags' => [
                 'tagOne',
                 'tagTwo',
             ],
         ];
-        $response = $this->post('proposals', $proposalContent, $header)->response;
+
+        $response = $this->json('POST', 'proposals', $proposalContent, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Kebab', $jsonObject->data->title);
+        $this->assertEquals('This is a title', $jsonObject->data->title);
         $this->assertEquals('tagOne', $jsonObject->data->tags[0]->name);
         $this->assertEquals('tagTwo', $jsonObject->data->tags[1]->name);
     }
@@ -79,10 +86,13 @@ class ProposalsTest extends TestCase
     public function it_should_update_an_existing_proposal()
     {
         $header = $this->createAuthHeader();
-
+        $data = [
+            'title' => 'This is a title',
+            'description' => 'This is a description',
+        ];
         $proposal = factory(Proposal::class)->create();
 
-        $response = $this->put('proposals/'.$proposal->id, ['title' => 'Ost'], $header)->response;
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
