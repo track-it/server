@@ -16,11 +16,11 @@ class ProposalsTest extends TestCase
 
         $response = $this->get('proposals')->response;
         $jsonObject = json_decode($response->getContent());
-        $pages = $jsonObject->items[0]->last_page;
+
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertObjectHasAttribute('items', $jsonObject);
-        $this->assertInternalType('array', $jsonObject->items);
-        $this->assertEquals(3, $pages);
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertInternalType('array', $jsonObject->data);
+        $this->assertEquals(3, $jsonObject->last_page);
     }
 
     /** @test */
@@ -32,9 +32,8 @@ class ProposalsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertObjectHasAttribute('items', $jsonObject);
-        $this->assertInternalType('array', $jsonObject->items);
-        $this->assertCount(1, $jsonObject->items);
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertEquals($proposal->id, $jsonObject->data->id);
     }
 
     /** @test */
@@ -53,7 +52,7 @@ class ProposalsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Kebab', $jsonObject->items[0]->title);
+        $this->assertEquals('Kebab', $jsonObject->data->title);
     }
 
     /** @test */
@@ -71,9 +70,9 @@ class ProposalsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Kebab', $jsonObject->items[0]->title);
-        $this->assertEquals('tagOne', $jsonObject->items[0]->tags[0]->name);
-        $this->assertEquals('tagTwo', $jsonObject->items[0]->tags[1]->name);
+        $this->assertEquals('Kebab', $jsonObject->data->title);
+        $this->assertEquals('tagOne', $jsonObject->data->tags[0]->name);
+        $this->assertEquals('tagTwo', $jsonObject->data->tags[1]->name);
     }
 
     /** @test */
@@ -87,7 +86,7 @@ class ProposalsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Ost', $jsonObject->items[0]->title);
+        $this->assertEquals('Ost', $jsonObject->data->title);
     }
 
     /** @test */

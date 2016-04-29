@@ -3,12 +3,12 @@
 namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Response;
 
 use Trackit\Http\Requests;
 use Trackit\Models\Proposal;
 use Trackit\Models\Comment;
 use Trackit\Models\User;
-use Trackit\Support\JsonResponse;
 use Trackit\Contracts\Commentable;
 use Trackit\Http\Requests\CreateCommentRequest;
 use Trackit\Http\Requests\UpdateCommentRequest;
@@ -31,7 +31,7 @@ class CommentController extends Controller
     {
         $comments = $commentable->comments;
 
-        return JsonResponse::success($comments);
+        return Response::json($comments);
     }
 
     /**
@@ -42,7 +42,7 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        return JsonResponse::success($comment);
+        return Response::json($comment);
     }
 
     /**
@@ -59,7 +59,7 @@ class CommentController extends Controller
             'source_type' => get_class($commentable),
         ]);
 
-        return JsonResponse::success($comment);
+        return Response::json($comment);
     }
 
     /**
@@ -74,7 +74,7 @@ class CommentController extends Controller
         $data = $request->all();
         $comment->update($data);
 
-        return JsonResponse::success($comment);
+        return Response::json($comment);
     }
 
     /**
