@@ -24,7 +24,7 @@ class UpdateTagRequest extends Request
     public function rules()
     {
         return [
-            //
-        ];
+            'name' => 'required|string|max:20|regex:/^[a-zA-Z]{1}\w+$/'
+        ];;
     }
 }
