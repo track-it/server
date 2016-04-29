@@ -90,7 +90,7 @@ class ProposalsTest extends TestCase
             'title' => 'This is a title',
             'description' => 'This is a description',
         ];
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['user_id' => $this->getUser()->id]);
 
         $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
