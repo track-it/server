@@ -18,7 +18,6 @@ class CreateProjectsTable extends Migration
             $table->integer('owner_id')->unsigned()->index();
             $table->integer('proposal_id')->unsigned()->index();
             $table->integer('team_id')->unsigned()->index();
-            $table->integer('course_id')->unsigned()->index();
             $table->integer('status')->unsigned()->index();
             $table->timestamps();
         });

@@ -18,6 +18,11 @@ class Project extends Model
         'status',
     ];
 
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class);
+    }
+
     public function team()
     {
         return $this->belongsTo(Team::class);
@@ -31,10 +36,5 @@ class Project extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
     }
 }

@@ -9,7 +9,6 @@ use Trackit\Models\Proposal;
 use Trackit\Models\User;
 use Trackit\Models\Team;
 use Trackit\Models\Comment;
-use Trackit\Models\Course;
 
 class ProjectTest extends TestCase
 {
@@ -22,10 +21,11 @@ class ProjectTest extends TestCase
     public function it_has_a_proposal_associated_with_it()
     {
         $project = factory(Project::class)->create();
+        $proposal = factory(Proposal::class)->create();
 
-        $proposal = $project->proposal_id;
+        $project->proposal()->associate($proposal);
 
-        $this->assertNotNull($proposal);
+        $this->assertEquals($proposal->id, $project->proposal_id);
     }
 
     /** @test */
@@ -42,12 +42,11 @@ class ProjectTest extends TestCase
     public function it_has_a_userteam()
     {
         $project = factory(Project::class)->create();
-
         $this->setUpTeam();
 
         $project->team()->associate($this->team);
                 
-        $this->assertNotNull($project->team_id);
+        $this->assertEquals($this->team->id, $project->team_id);
     }
 
     /** @test */
@@ -59,7 +58,6 @@ class ProjectTest extends TestCase
         $project->owner()->associate($owner);
         
         $this->assertEquals($owner->id, $project->owner_id);
-
     }
 
     /** @test */
@@ -69,21 +67,8 @@ class ProjectTest extends TestCase
         $comment = factory(Comment::class)->create();
 
         $project->comments()->save($comment);
-        $hasComment = !! $project->comments();
-
-        $this->assertTrue($hasComment);
-    }
-
-    /** @test */
-    public function it_belongs_to_a_course()
-    {
-        $project = factory(Project::class)->create();
-        $course = factory(Course::class)->create();
-
-        $project->course()->associate($project);
-        $hasCourse = !! $project->course();
-
-        $this->assertTrue($hasCourse);
+       
+        $this->assertEquals($comment->id, $project->comments->first()->id);
     }
 
     /** @test */

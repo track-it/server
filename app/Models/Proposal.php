@@ -61,4 +61,9 @@ class Proposal extends Model implements Attachmentable, Taggable
     {
         return $this->id;
     }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }
