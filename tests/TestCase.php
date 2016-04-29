@@ -1,5 +1,7 @@
 <?php
 
+use Trackit\Models\User;
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
@@ -19,18 +21,25 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $this->user = factory(User::class)->create();
 
         return $app;
     }
 
     public function createAuthHeader()
     {
-        $user = Factory(Trackit\Models\User::class)->create();
-                
         $server = [
-            'HTTP_AUTHORIZATION' => "Bearer $user->api_token",
+            'HTTP_AUTHORIZATION' => "Bearer ".$this->user->api_token,
         ];
 
         return $server;
+    }
+
+    /**
+     *
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
