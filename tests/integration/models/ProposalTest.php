@@ -21,13 +21,13 @@ class ProposalTest extends TestCase
     }
 
     /** @test */
-    public function it_has_a_creator()
+    public function it_has_an_author()
     {
         $proposal = factory(Proposal::class)->create();
         
-        $hasCreator = !! $proposal->creator();
+        $hasAuthor = !! $proposal->author();
 
-        $this->assertTrue($hasCreator);
+        $this->assertTrue($hasAuthor);
     }
 
     /** @test */
