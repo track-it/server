@@ -86,8 +86,12 @@ class ProjectTest extends TestCase
     /** @test */
     public function it_has_at_least_one_supervisor()
     {
-      
+        $project = factory(Project::class)->create();
+        $supervisors = factory(User::class, 3)->create();
 
+        $project->supervisor()->attach($supervisors);
+
+        $this->assertEquals($supervisors->first()->id, $project->supervisor->first()->id);
     }
 
     private function setUpTeam()
