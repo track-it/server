@@ -12,7 +12,7 @@ class User extends Model implements Authenticatable
     use AuthenticatableTrait;
 
     protected $fillable = [
-        'name',
+        'username',
     ];
 
     protected $hidden = [
