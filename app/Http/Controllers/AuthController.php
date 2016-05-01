@@ -5,9 +5,11 @@ namespace Trackit\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use Response;
+use URL;
 
 use Trackit\Models\User;
 use Trackit\Http\Requests\LoginRequest;
+use Saml2;
 
 class AuthController extends Controller
 {
@@ -21,6 +23,11 @@ class AuthController extends Controller
         } else {
         	return response('Unauthorized.', 401);
         }
+    }
+
+    public function saml(Request $request)
+    {
+	return Saml2::login($request->input('callback'), [ 'key' => 'asdasdasd' ]);
     }
 
     /**

@@ -32,6 +32,9 @@ class Kernel extends HttpKernel
             \Trackit\Http\Middleware\VerifyCsrfToken::class,
         ],
 
+        'saml' => [
+        ],
+
         'api' => [
             'throttle:60,1',
         ],
