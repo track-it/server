@@ -66,3 +66,9 @@ $factory->define(Trackit\Models\Course::class, function (Faker\Generator $faker)
         
     ];
 });
+
+$factory->define(Trackit\Models\Workflow::class, function (Faker\Generator $faker) {
+    return [
+        
+    ];
+});
