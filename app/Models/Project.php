@@ -37,4 +37,9 @@ class Project extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+
+    public function workflow()
+    {
+        return $this->hasOne(Workflow::class);
+    }
 }

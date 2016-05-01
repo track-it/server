@@ -9,6 +9,7 @@ use Trackit\Models\Proposal;
 use Trackit\Models\User;
 use Trackit\Models\Team;
 use Trackit\Models\Comment;
+use Trackit\Models\Workflow;
 
 class ProjectTest extends TestCase
 {
@@ -71,15 +72,21 @@ class ProjectTest extends TestCase
         $this->assertEquals($comment->id, $project->comments->first()->id);
     }
 
+     /** @test */
+    public function it_has_a_workflow()
+    {
+          $project = factory(Project::class)->create();
+          $workflow = factory(Workflow::class)->create();
+
+          $project->workflow()->save($workflow);
+
+          $this->assertEquals($workflow->id, $project->workflow->id);
+    }
+    
     /** @test */
     public function it_has_at_least_one_supervisor()
     {
-
-    }
-
-    /** @test */
-    public function it_has_a_workflow()
-    {
+      
 
     }
 
