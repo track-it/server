@@ -29,7 +29,7 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
         'title' => $faker->sentence(3, true),
         'description' => $faker->paragraph(6, true),
         'status' => collect(Trackit\Models\Proposal::STATUSES)->random(),
-        'user_id' => factory(Trackit\Models\User::class)->create()->id,
+        'author_id' => factory(Trackit\Models\User::class)->create()->id,
         'created_at' => $faker->dateTimeThisMonth(),
     ];
 });

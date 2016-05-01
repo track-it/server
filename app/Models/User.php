@@ -45,7 +45,7 @@ class User extends Model implements Authenticatable
 
     public function proposals()
     {
-    	return $this->hasMany(Proposal::class);
+    	return $this->hasMany(Proposal::class, 'author_id');
     }
 
     public function role()

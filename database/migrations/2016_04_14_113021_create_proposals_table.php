@@ -16,7 +16,7 @@ class CreateProposalsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('description');
-            $table->integer('user_id')->unsigned()->index();
+            $table->integer('author_id')->unsigned()->index();
             $table->integer('status')->unsigned()->index();
             $table->integer('course_id')->unsigned()->index();
             $table->timestamps();

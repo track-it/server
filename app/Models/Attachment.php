@@ -20,7 +20,7 @@ class Attachment extends Model
      */
     public function uploader()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'uploader_id');
     }
 
     /*

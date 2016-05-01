@@ -7,12 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     protected $fillable = [
-        'user_id',
+        'author_id',
+        'body',
+        'source_id',
+        'source_type',
     ];
 
-	public function user()
+	public function author()
 	{
-		return $this->belongsTo(User::class);
+		return $this->belongsTo(User::class, 'author_id');
+	}
+
+	public function source()
+	{
+		return $this->morphTo();
 	}
 
 	public function commentable()
