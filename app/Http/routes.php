@@ -10,7 +10,38 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+Route::group([
+    'prefix' => config('saml2_settings.routesPrefix'),
+    'middleware' => ['saml'],//config('saml2_settings.routesMiddleware'),
+], function () {
+    Route::get('/logout', array(
+        'as' => 'saml_logout',
+        'uses' => 'Saml2Controller@logout',
+    ));
+    Route::get('/login', array(
+        'as' => 'saml_login',
+        'uses' => 'Saml2Controller@login',
+    ));
+    Route::get('/metadata', array(
+        'as' => 'saml_metadata',
+        'uses' => 'Saml2Controller@metadata',
+    ));
+    Route::post('/acs', array(
+        'as' => 'saml_acs',
+        'uses' => 'Saml2Controller@acs',
+    ));
+    Route::get('/sls', array(
+        'as' => 'saml_sls',
+        'uses' => 'Saml2Controller@sls',
+    ));
+});
+
 Route::group([], function () {
+    Route::get('/login', 'AuthController@saml');
+    Route::get('/error', function () {
+	dd($this);
+    });
     Route::post('/auth/login', 'AuthController@login');
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
