@@ -42,4 +42,9 @@ class Project extends Model
     {
         return $this->hasOne(Workflow::class);
     }
+
+    public function supervisor()
+    {
+        return $this->belongsToMany(User::class, 'project_supervisor');
+    }
 }
