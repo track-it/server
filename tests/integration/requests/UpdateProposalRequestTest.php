@@ -18,7 +18,7 @@ class UpdateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_allow_an_author_to_update()
     {        
-        $proposal = factory(Proposal::class)->create(['user_id' => $this->getUser()->id]);
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',

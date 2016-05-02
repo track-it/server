@@ -14,7 +14,7 @@ class CommentsTest extends TestCase
 	/** @test */
 	public function it_should_create_a_new_comment_on_a_commentable_resource()
 	{	
-		$proposal = factory(Proposal::class)->create(['user_id' => $this->getUser()->id]);
+		$proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
 		$user = factory(User::class)->create();
 
 		$url = 'proposals/'.$proposal->id.'/comments';

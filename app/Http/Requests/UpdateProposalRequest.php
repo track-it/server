@@ -21,7 +21,7 @@ class UpdateProposalRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->id == $this->route('proposal')->user_id;
+        return $this->user->id == $this->route('proposal')->author_id;
     }
 
     /**
