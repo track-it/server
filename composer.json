@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "barryvdh/laravel-cors": "^0.8@dev",
         "guzzlehttp/guzzle": "~5.3|~6.0",
-        "pda/pheanstalk": "~3.0"
+        "pda/pheanstalk": "~3.0",
+        "aacotroneo/laravel-saml2": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

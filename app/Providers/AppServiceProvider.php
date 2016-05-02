@@ -5,6 +5,8 @@ namespace Trackit\Providers;
 use Illuminate\Support\ServiceProvider;
 use Auth;
 
+use Trackit\Models\User;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -25,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('Trackit\Models\User', function() {
-            return Auth::user();
+            return Auth::user() == null ? User::create() : Auth::user();
         });
     }
 }
