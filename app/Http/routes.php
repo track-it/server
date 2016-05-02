@@ -35,6 +35,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
     Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
 
+    // Project routes
+    Route::get('projects/{project}', 'ProjectController@show');
+    Route::get('projects', 'ProjectController@index');
+    Route::post('projects', 'ProjectController@store');
+    Route::put('projects/{project}', 'ProjectController@update');
+    Route::delete('projects/{project}', 'ProjectController@destroy');
+
     // Proposal routes
     Route::resource('proposals', 'ProposalController', ['except' => ['index', 'show']]);
     Route::resource('proposals/{proposal}/attachments', 'AttachmentController', ['only' => ['index', 'store']]);
