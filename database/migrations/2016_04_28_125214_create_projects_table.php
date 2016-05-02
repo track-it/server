@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProposalsTable extends Migration
+class CreateProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,13 @@ class CreateProposalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('proposals', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->text('description');
-            $table->integer('author_id')->unsigned()->index();
+            $table->string('name');
+            $table->integer('owner_id')->unsigned()->index();
+            $table->integer('proposal_id')->unsigned()->index();
+            $table->integer('team_id')->unsigned()->index();
             $table->integer('status')->unsigned()->index();
-            $table->integer('course_id')->unsigned()->index();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateProposalsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('proposals');
+        Schema::drop('projects');
     }
 }

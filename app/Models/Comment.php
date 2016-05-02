@@ -9,8 +9,8 @@ class Comment extends Model
     protected $fillable = [
         'author_id',
         'body',
-        'source_id',
-        'source_type',
+        'commentable_id',
+        'commentable_type',
     ];
 
 	public function author()
@@ -21,5 +21,10 @@ class Comment extends Model
 	public function source()
 	{
 		return $this->morphTo();
+	}
+
+	public function commentable()
+	{
+        $this->morphTo();
 	}
 }

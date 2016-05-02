@@ -40,7 +40,7 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     
     public function attachments()
     {
-        return $this->morphMany(Attachment::class, 'source');
+        return $this->morphMany(Attachment::class, 'attachmentable');
     }
 
     public function tags()
@@ -50,7 +50,7 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'source');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function projects()
@@ -61,5 +61,10 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     public function interestedGroups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 }
