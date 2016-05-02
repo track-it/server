@@ -13,7 +13,7 @@
 
 Route::group([
     'prefix' => config('saml2_settings.routesPrefix'),
-    'middleware' => ['saml'],//config('saml2_settings.routesMiddleware'),
+    'middleware' => ['saml'],
 ], function () {
     Route::get('/logout', array(
         'as' => 'saml_logout',
@@ -40,7 +40,7 @@ Route::group([
 Route::group([], function () {
     Route::get('/login', 'AuthController@saml');
     Route::get('/error', function () {
-	dd($this);
+        dd($this);
     });
     Route::post('/auth/login', 'AuthController@login');
     Route::get('proposals', 'ProposalController@index');
