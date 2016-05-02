@@ -4,6 +4,8 @@ use Trackit\Models\User;
 
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
+    protected $user;
+
     /**
      * The base URL to use while testing the application.
      *

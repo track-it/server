@@ -25,7 +25,6 @@ class UpdateCommentRequestTest extends TestCase
         ];
 
         $response = $this->json('PUT', 'comments/'.$comment->id, $data, $header)->response;
-        // dd($response);
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
