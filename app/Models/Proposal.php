@@ -40,7 +40,7 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     
     public function attachments()
     {
-        return $this->morphMany(Attachment::class, 'source');
+        return $this->morphMany(Attachment::class, 'attachmentable');
     }
 
     public function tags()

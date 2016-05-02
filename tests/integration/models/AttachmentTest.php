@@ -46,15 +46,15 @@ class AttachmentTest extends TestCase
     }
 
     /** @test */
-    public function it_is_connected_to_a_source()
+    public function it_is_connected_to_a_attachmentable_source()
     {
     	$proposal = factory(Proposal::class)->create();
 
         $attachment = factory(Attachment::class)->create();
 
-        $attachment->source()->associate($proposal);
+        $attachment->attachmentable()->associate($proposal);
         
-        $this->assertEquals($proposal, $attachment->source);
+        $this->assertEquals($proposal, $attachment->attachmentable);
     }
 
 }
