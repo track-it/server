@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCommentsTable extends Migration
+class CreateWorkflowsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,9 @@ class CreateCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('workflows', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->string('body');
-            $table->integer('author_id')->unsigned()->index();
- 
-            $table->integer('commentable_id')->unsigned()->index();
-            $table->string('commentable_type');
-
+            $table->integer('project_id')->unsigned()->index();
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ class CreateCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('comments');
+        Schema::drop('workflows');
     }
 }
