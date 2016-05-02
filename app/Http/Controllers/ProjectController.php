@@ -39,9 +39,7 @@ class ProjectController extends Controller
      */
     public function store(CreateProjectRequest $request)
     {
-        $project = Project::create([
-            'name' => $request->name,
-        ]);
+        $project = Project::create($request->all());
 
         return Response::json($project);
     }
