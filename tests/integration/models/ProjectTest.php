@@ -108,7 +108,7 @@ class ProjectTest extends TestCase
     private function setUpTeam()
     {
         $this->users = new Collection(factory(User::class, 3)->create());
-        $this->team = Team::create(['course' => 'da350a']);
+        $this->team = Team::create();
         $team = $this->team;
         $this->users->each(function ($user) use ($team) {
             $user->joinTeam($this->team);

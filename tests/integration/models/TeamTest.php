@@ -25,7 +25,7 @@ class TeamTest extends TestCase
 	public function user_can_be_added_to_team()
 	{
 		$user = factory(User::class)->create();
-		$this->team = Team::create(['course' => 'da350a']);
+		$this->team = Team::create();
 		$user->joinTeam($this->team);
 		$this->assertEquals($user->id, $this->team->users->first()->id);
 	}
@@ -52,7 +52,7 @@ class TeamTest extends TestCase
 	private function setUpTeam()
 	{
 		$this->users = new Collection(factory(User::class, 3)->create());
-		$this->team = Team::create(['course' => 'da350a']);
+		$this->team = Team::create();
 		$team = $this->team;
 		$this->users->each(function ($user) use ($team) {
 			$user->joinTeam($this->team);
