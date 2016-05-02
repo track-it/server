@@ -109,6 +109,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('tags/{tag}', 'TagController@update');
     Route::delete('tags/{tag}', 'TagController@destroy');
 
+    // Project routes
+    Route::get('projects/{project}', 'ProjectController@show');
+    Route::get('projects', 'ProjectController@index');
+    Route::post('projects', 'ProjectController@store');
+    Route::put('projects/{project}', 'ProjectController@update');
+    Route::delete('projects/{project}', 'ProjectController@destroy');
+
     // Proposal routes
     Route::post('proposals', 'ProposalController@store');
     Route::put('proposals/{proposal}', 'ProposalController@update');
