@@ -45,12 +45,53 @@ Route::group([], function () {
     Route::post('/auth/login', 'AuthController@login');
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
+
+    // Sitemap
+    Route::get('/', function (Request $request) {
+        $sitemap = [
+            'self' => '/',
+            'index' => [
+                'proposals' => '/proposals',
+                'projects' => '/projects',
+            ],
+            'show' => [
+                'proposals' => '/proposals',
+                'projects' => '/projects',
+                'attachments' => '/attachments',
+                'tags' => '/tags',
+                'comments' => '/comments',
+            ],
+            'store' => [
+                'proposals' => '/proposals',
+                'projects' => '/projects',
+            ],
+            'update' => [
+                'proposals' => '/proposals',
+                'projects' => '/projects',
+                'attachments' => '/attachments',
+                'tags' => '/tags',
+                'comments' => '/comments',
+            ],
+            'destroy' => [
+                'proposals' => '/proposals',
+                'projects' => '/projects',
+                'attachments' => '/attachments',
+                'tags' => '/tags',
+                'comments' => '/comments',
+            ],
+        ];
+
+        $user = Auth::guard()->user();
+
+        if ($user) {
+            $sitemap['user'] = $user;
+        }
+
+        return $sitemap;
+    });
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
 
     Route::singularResourceParameters();
     
@@ -59,18 +100,29 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::model('comment', 'Trackit\Models\Comment');
 
     // Comment routes
-    Route::resource('proposals/{proposal}/comments', 'CommentController', ['only' => ['index', 'store']]);
-    Route::resource('comments', 'CommentController', ['only' => ['show', 'update', 'destroy']]);
+    Route::get('comments/{comment}', 'CommentController@show');
+    Route::put('comments/{comment}', 'CommentController@update');
+    Route::delete('comments/{comment}', 'CommentController@destroy');
 
     // Tag routes
-    Route::resource('proposals/{proposal}/tags', 'TagController', ['only' => ['index', 'store']]);
-    Route::resource('tags', 'TagController', ['only' => ['show', 'update', 'destroy']]);
+    Route::get('tags/{tag}', 'TagController@show');
+    Route::put('tags/{tag}', 'TagController@update');
+    Route::delete('tags/{tag}', 'TagController@destroy');
 
     // Proposal routes
-    Route::resource('proposals', 'ProposalController', ['except' => ['index', 'show']]);
-    Route::resource('proposals/{proposal}/attachments', 'AttachmentController', ['only' => ['index', 'store']]);
-    
+    Route::post('proposals', 'ProposalController@store');
+    Route::put('proposals/{proposal}', 'ProposalController@update');
+    Route::delete('proposals/{proposal}', 'ProposalController@destroy');
+    Route::get('proposals/{proposal}/attachments', 'AttachmentController@index');
+    Route::post('proposals/{proposal}/attachments', 'AttachmentController@store');
+    Route::get('proposals/{proposal}/tags', 'TagController@index');
+    Route::post('proposals/{proposal}/tags', 'TagController@store');
+    Route::get('proposals/{proposal}/comments', 'CommentController@index');
+    Route::post('proposals/{proposal}/comments', 'CommentController@store');
+
     // Global Attachment routes
-    Route::resource('attachments', 'AttachmentController', ['only' => ['show', 'update', 'destroy']]);
-    Route::get('attachments/{attachment}/download', [ 'as' => 'attachments.download', 'uses' => 'AttachmentController@download']);
+    Route::get('attachments/{attachment}', 'AttachmentController@show');
+    Route::put('attachments/{attachment}', 'AttachmentController@update');
+    Route::delete('attachments/{attachment}', 'AttachmentController@destroy');
+    Route::get('attachments/{attachment}/download', 'AttachmentController@download');
 });

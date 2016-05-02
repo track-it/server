@@ -3,9 +3,17 @@
 namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
+use Trackit\Models\User;
 
 class UpdateProposalRequest extends Request
 {
+    protected $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +21,7 @@ class UpdateProposalRequest extends Request
      */
     public function authorize()
     {
-        return true;
+        return $this->user->id == $this->route('proposal')->author_id;
     }
 
     /**
@@ -24,7 +32,9 @@ class UpdateProposalRequest extends Request
     public function rules()
     {
         return [
-            //
+            'title' => 'required|max:100',
+            'description' => 'required|max:5000',
+            'tags' => 'array|max:20',
         ];
     }
 }

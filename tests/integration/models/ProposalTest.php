@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
+use Trackit\Models\Course;
 
 class ProposalTest extends TestCase
 {
@@ -21,13 +22,13 @@ class ProposalTest extends TestCase
     }
 
     /** @test */
-    public function it_has_a_creator()
+    public function it_has_an_author()
     {
         $proposal = factory(Proposal::class)->create();
         
-        $hasCreator = !! $proposal->creator();
+        $hasAuthor = !! $proposal->author();
 
-        $this->assertTrue($hasCreator);
+        $this->assertTrue($hasAuthor);
     }
 
     /** @test */
@@ -40,5 +41,17 @@ class ProposalTest extends TestCase
         $proposal->attachments()->save($attachment);
 
         $this->assertEquals(1, $proposal->attachments->count());
+    }
+
+    /** @test */
+    public function it_belongs_to_a_course()
+    {
+        $proposal = factory(Proposal::class)->create();
+        $course = factory(Course::class)->create();
+        
+        $proposal->course()->associate($course);
+        $hasCourse = !! $proposal->course();
+
+        $this->assertTrue($hasCourse);
     }
 }

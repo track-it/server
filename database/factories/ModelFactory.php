@@ -18,7 +18,6 @@ $factory->define(Trackit\Models\Role::class, function (Faker\Generator $faker) {
     ];
 });
 
-
 $factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
     return [
         'username' => $faker->name,
@@ -30,11 +29,18 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
         'title' => $faker->sentence(3, true),
         'description' => $faker->paragraph(6, true),
         'status' => collect(Trackit\Models\Proposal::STATUSES)->random(),
-        'user_id' => factory(Trackit\Models\User::class)->create()->id,
+        'author_id' => factory(Trackit\Models\User::class)->create()->id,
         'created_at' => $faker->dateTimeThisMonth(),
     ];
 });
 
+$factory->define(Trackit\Models\Project::class, function (Faker\Generator $faker) {
+    return [
+        // 'proposal_id' => factory(Trackit\Models\Proposal::class)->create()->id,
+        'status' => collect(Trackit\Models\Project::STATUSES)->random(),
+        'owner_id' => factory(Trackit\Models\User::class)->create()->id,
+    ];
+});
 
 $factory->define(Trackit\Models\Comment::class, function (Faker\Generator $faker) {
     return [
@@ -52,5 +58,17 @@ $factory->define(Trackit\Models\Attachment::class, function (Faker\Generator $fa
 $factory->define(Trackit\Models\Tag::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
+    ];
+});
+
+$factory->define(Trackit\Models\Course::class, function (Faker\Generator $faker) {
+    return [
+        
+    ];
+});
+
+$factory->define(Trackit\Models\Workflow::class, function (Faker\Generator $faker) {
+    return [
+        
     ];
 });

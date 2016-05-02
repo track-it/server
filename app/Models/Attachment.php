@@ -11,8 +11,8 @@ class Attachment extends Model
         'title',
         'url',
         'uploader_id',
-        'source_id',
-        'source_type',
+        'attachmentable_id',
+        'attachmentable_type',
     ];
 
     /*
@@ -20,13 +20,13 @@ class Attachment extends Model
      */
     public function uploader()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'uploader_id');
     }
 
     /*
      *
      */
-    public function source()
+    public function attachmentable()
     {
         return $this->morphTo();
     }

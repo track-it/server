@@ -33,8 +33,8 @@ class AttachmentsTest extends TestCase
             [$file], // files
             $header // server
         );
-        $jsonObject = json_decode($response->getContent());
 
+        $jsonObject = json_decode($response->getContent());
         $this->assertEquals($file->getClientOriginalName(), $jsonObject->data[0]->title);
     }
 
