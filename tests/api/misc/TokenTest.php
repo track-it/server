@@ -11,13 +11,10 @@ class TokenTest extends TestCase
     /** @test */
     public function routes_require_valid_api_token()
     {
-        $user = factory(Trackit\Models\User::class)->create();
+        $tag = factory(Trackit\Models\Tag::class)->create();
 
-        $server = [
-            'Authorization' => "Bearer $user->api_token",
-        ];
-
-        $response = $this->get('/', $server)->response;
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'tags/'.$tag->id, [], $header)->response;
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -25,13 +22,9 @@ class TokenTest extends TestCase
     /** @test */
     public function routes_return_error_without_valid_api_token()
     {
-        $user = factory(Trackit\Models\User::class)->create();
+        $tag = factory(Trackit\Models\Tag::class)->create();
 
-        $server = [
-            'Accept'  => 'text/json',
-        ];
-
-        $response = $this->get('/', $server)->response;
+        $response = $this->json('GET', 'tags/'.$tag->id)->response;
 
         $this->assertEquals(401, $response->getStatusCode());
     }
