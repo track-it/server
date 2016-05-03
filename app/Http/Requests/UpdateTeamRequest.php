@@ -4,7 +4,7 @@ namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
 
-class UpdateTagRequest extends Request
+class UpdateTeamRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class UpdateTagRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|string|max:20|regex:/^[a-zA-Z]{1}\w+$/'
+            //
         ];
     }
 }

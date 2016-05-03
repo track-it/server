@@ -32,7 +32,7 @@ class TagController extends Controller
      */
     public function store(Taggable $taggable, CreateTagRequest $request)
     {
-        $tags = $request->tags;
+        $tags = $request->tags == null ? [] : $request->tags; 
 
         foreach ($tags as $tag) {
             $newTag = Tag::firstOrCreate(['name' => $tag]);

@@ -17,6 +17,9 @@ class Project extends Model
     protected $fillable = [
         'name',
         'status',
+        'team_id',
+        'proposal_id',
+        'owner_id',
     ];
 
     public function proposal()
@@ -47,5 +50,13 @@ class Project extends Model
     public function supervisor()
     {
         return $this->belongsToMany(User::class, 'project_supervisor');
+    }
+
+    /**
+     *
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 }
