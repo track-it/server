@@ -47,7 +47,7 @@ Route::group([], function () {
     Route::get('proposals/{proposal}', 'ProposalController@show');
 
     // Sitemap
-    Route::get('/', function (Request $request) {
+    Route::get('/site', function (Request $request) {
         $sitemap = [
             'self' => '/',
             'index' => [
