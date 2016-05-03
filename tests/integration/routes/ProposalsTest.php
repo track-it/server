@@ -52,7 +52,7 @@ class ProposalsTest extends TestCase
             'title' => 'This is a title',
             'description' => 'This is a description',
         ];
-        
+
         $response = $this->json('POST', 'proposals', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
