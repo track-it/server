@@ -27,7 +27,7 @@ class CreateCommentRequest extends Request
     public function rules()
     {
         return [
-            //
+            'body' => 'required|max:'.config('filesystems.commentBodySize'),
         ];
     }
 }

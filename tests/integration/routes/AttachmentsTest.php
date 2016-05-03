@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Trackit\Models\Attachment;
 use Trackit\Models\Proposal;
 
@@ -16,7 +17,7 @@ class AttachmentsTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
         $file = new UploadedFile(
-            base_path('tests/files/test.txt'), 
+            base_path('tests/files/test.txt'),
             'test.txt',
             'text/plain',
             20,
@@ -49,22 +50,6 @@ class AttachmentsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($attachment->id, $jsonObject->data->id);
-    }
-
-    /** @test */
-    public function it_should_update_an_existing_attachment()
-    {
-        $attachment = factory(Attachment::class)->create();
-        $data = [
-            'title' => 'New Title',
-        ];
-
-        $header = $this->createAuthHeader();
-        $response = $this->put('attachments/'.$attachment->id, $data, $header)->response;
-        $jsonObject = json_decode($response->getContent());
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($data['title'], $jsonObject->data->title);
     }
 
     /** @test */
