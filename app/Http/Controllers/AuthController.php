@@ -16,18 +16,22 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-    	$credentials = $this->getCredentials($request);
+        $credentials = $this->getCredentials($request);
 
-    	if (Auth::guard('web')->attempt($credentials)) {
+        if (!User::byUsername($credentials['username'])->first()) {
+            return Response::json(['error' => 'Unknown username.'], 401);
+        }
+
+        if (Auth::guard('web')->attempt($credentials)) {
             return Response::json(User::byUsername($credentials['username'])->first());
         } else {
-        	return response('Unauthorized.', 401);
+            return Response::json(['error' => 'Incorrect password.'], 401);
         }
     }
 
     public function saml(Request $request)
     {
-	return Saml2::login($request->input('callback'), [ 'key' => 'asdasdasd' ]);
+        return Saml2::login($request->input('callback'), [ 'key' => 'asdasdasd' ]);
     }
 
     /**
