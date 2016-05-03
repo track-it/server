@@ -25,6 +25,6 @@ class UpdateTagRequest extends Request
     {
         return [
             'name' => 'required|string|max:20|regex:/^[a-zA-Z]{1}\w+$/'
-        ];;
+        ];
     }
 }

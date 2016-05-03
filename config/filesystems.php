@@ -41,6 +41,9 @@ return [
     |
     */
 
+    'commentBodySize' => 5000,
+    'attachmentSizeInBytes' => 10000,
+
     'disks' => [
 
         'local' => [

@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Trackit\Models\Attachment;
 use Trackit\Models\Proposal;
 
@@ -16,7 +17,7 @@ class AttachmentsTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
         $file = new UploadedFile(
-            base_path('tests/files/test.txt'), 
+            base_path('tests/files/test.txt'),
             'test.txt',
             'text/plain',
             20,

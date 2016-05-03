@@ -23,8 +23,12 @@ class CreateAttachmentRequest extends Request
      */
     public function rules()
     {
+        // var $actualSize = $this->files->get('file')->getSize();
         return [
-            //
+            // 'file' => 'required|max:'.config('filesystems.attachmentSizeInBytes'),
+            // '*.size' => 'required|between:0,30',
+            'file.size' => 'max:0',
+            //'file.size' => 'required',
         ];
     }
 }
