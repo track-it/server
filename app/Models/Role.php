@@ -34,4 +34,11 @@ class Role extends Model
     {
         $this->permissions()->whereName($action)->delete();
     }
+
+    public function accessTo($resource)
+    {
+        return $this->hasMany(Access::class)->where(['resource' => $resource])->get()->map(function ($access) {
+            return $access->status;
+        })->toArray();
+    }
 }
