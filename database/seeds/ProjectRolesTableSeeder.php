@@ -28,7 +28,7 @@ class ProjectRolesTableSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            ProjectRole::create($role);
+            ProjectRole::firstOrCreate($role);
         }
     }
 }
