@@ -52,11 +52,12 @@ class ProjectsTest extends TestCase
 
         $header = $this->createAuthHeader();
         $response = $this->get('projects/'.$project->id, $header)->response;
-
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($project->id, $jsonObject->data->id);
+        $this->assertEquals($project->team->id, $jsonObject->data->team->id);
+        $this->assertEquals(5, count($jsonObject->data->team->users));
     }
 
     /** @test */
