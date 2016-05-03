@@ -101,7 +101,7 @@ class ProposalsTest extends TestCase
 
     /** @test */
     public function it_should_delete_an_existing_proposal()
-    {      
+    {
         $header = $this->createAuthHeader();
 
         $proposal = factory(Proposal::class)->create();
