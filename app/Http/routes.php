@@ -42,7 +42,8 @@ Route::group([], function () {
     Route::get('/error', function () {
         dd($this);
     });
-    Route::post('/auth/login', 'AuthController@login');
+    Route::post('auth/login', 'AuthController@login');
+    Route::post('auth/register', 'AuthController@register');
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
 
@@ -50,6 +51,10 @@ Route::group([], function () {
     Route::get('/site', function (Request $request) {
         $sitemap = [
             'self' => '/',
+            'auth' => [
+                'login' => '/auth/login',
+                'register' => '/auth/register',
+            ],
             'index' => [
                 'proposals' => '/proposals',
                 'projects' => '/projects',

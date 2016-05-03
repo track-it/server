@@ -9,6 +9,7 @@ use URL;
 
 use Trackit\Models\User;
 use Trackit\Http\Requests\LoginRequest;
+use Trackit\Http\Requests\CreateUserRequest;
 use Saml2;
 
 class AuthController extends Controller
@@ -27,6 +28,22 @@ class AuthController extends Controller
         } else {
             return Response::json(['error' => 'Incorrect password.'], 401);
         }
+    }
+
+    /**
+     *
+     */
+    public function register(CreateUserRequest $request)
+    {
+        $credentials = $this->getCredentials($request);
+
+        if (User::byUsername($credentials['username'])->first()) {
+            return Response::json(['error' => 'User already exists.'], 422);
+        }
+
+        $user = User::create($credentials);
+
+        return Response::json($user);
     }
 
     public function saml(Request $request)
