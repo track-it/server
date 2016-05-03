@@ -13,7 +13,7 @@ class ProjectRoleTest extends TestCase
     public function teacher_has_all_permissions()
     {
         $role = ProjectRole::byName('teacher')->first();
-        // dd($role);
+        
         $canView = $role->can('project:view');
         $canComment = $role->can('project:comment');
         $canSubmit = $role->can('project:submit');
