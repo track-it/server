@@ -80,4 +80,9 @@ class User extends Model implements Authenticatable
     {
         return $this->belongsToMany(Project::class, 'project_supervisor');
     }
+
+    public function projectUsers()
+    {
+        return $this->hasMany(ProjectUser::class);
+    }
 }
