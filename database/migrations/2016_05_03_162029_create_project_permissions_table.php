@@ -14,7 +14,7 @@ class CreateProjectPermissionsTable extends Migration
     {
         Schema::create('project_permissions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('project_role_id')->unsigned()->index();
+            $table->string('name')->index();
             $table->timestamps();
         });
     }

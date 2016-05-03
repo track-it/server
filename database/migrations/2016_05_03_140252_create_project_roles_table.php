@@ -15,7 +15,6 @@ class CreateProjectRolesTable extends Migration
         Schema::create('project_roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->index();
-
             $table->timestamps();
         });
     }
