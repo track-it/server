@@ -12,7 +12,7 @@ class User extends Model implements Authenticatable
     use AuthenticatableTrait;
 
     protected $fillable = [
-        'name',
+        'username',
     ];
 
     protected $hidden = [
@@ -45,7 +45,7 @@ class User extends Model implements Authenticatable
 
     public function proposals()
     {
-    	return $this->hasMany(Proposal::class);
+    	return $this->hasMany(Proposal::class, 'author_id');
     }
 
     public function role()
@@ -69,5 +69,15 @@ class User extends Model implements Authenticatable
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'user_teams');
+    }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsToMany(Project::class, 'project_supervisor');
     }
 }

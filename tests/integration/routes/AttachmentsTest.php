@@ -34,8 +34,8 @@ class AttachmentsTest extends TestCase
             [$file], // files
             $header // server
         );
-        $jsonObject = json_decode($response->getContent());
 
+        $jsonObject = json_decode($response->getContent());
         $this->assertEquals($file->getClientOriginalName(), $jsonObject->data[0]->title);
     }
 
@@ -50,22 +50,6 @@ class AttachmentsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($attachment->id, $jsonObject->data->id);
-    }
-
-    /** @test */
-    public function it_should_update_an_existing_attachment()
-    {
-        $attachment = factory(Attachment::class)->create();
-        $data = [
-            'title' => 'New Title',
-        ];
-
-        $header = $this->createAuthHeader();
-        $response = $this->put('attachments/'.$attachment->id, $data, $header)->response;
-        $jsonObject = json_decode($response->getContent());
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($data['title'], $jsonObject->data->title);
     }
 
     /** @test */

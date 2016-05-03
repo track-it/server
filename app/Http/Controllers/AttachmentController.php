@@ -46,16 +46,15 @@ class AttachmentController extends Controller
             $data = [
                 'title' => $file->getClientOriginalName(),
                 'uploader_id' => $this->user->id,
-                'source_id' => $attachmentable->getId(),
-                'source_type' => get_class($attachmentable),
+                'attachmentable_id' => $attachmentable->getId(),
+                'attachmentable_type' => get_class($attachmentable),
                 'mime_type' => $file->getMimeType(),
             ];
 
             $attachment = Attachment::create($data);
-
+            
             Storage::put('attachments/'.$attachment->id.'/'.$file->getClientOriginalName(), file_get_contents($file));
         }
-        
         return Response::json($attachmentable->attachments);
     }
 

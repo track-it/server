@@ -3,17 +3,9 @@
 namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
-use Trackit\Models\User;
 
-class UpdateCommentRequest extends Request
+class UpdateProjectRequest extends Request
 {
-    protected $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,7 +13,7 @@ class UpdateCommentRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->id == $this->route('comment')->author_id;
+        return true;
     }
 
     /**
