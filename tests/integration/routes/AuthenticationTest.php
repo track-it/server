@@ -4,6 +4,8 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use Trackit\Models\User;
+
 class AuthenticationTest extends TestCase
 {
     use DatabaseTransactions;
@@ -11,7 +13,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_should_allow_user_to_log_in_with_valid_credentials()
     {
-        $user = factory(Trackit\Models\User::class)->create(['password' => 'nisse']);
+        $user = factory(User::class)->create(['password' => 'nisse']);
 
         $data = [
             'username'  => $user->username,
@@ -33,7 +35,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_should_return_error_when_using_incorrect_credentials()
     {
-        $user = factory(Trackit\Models\User::class)->create(['password' => 'nisse']);
+        $user = factory(User::class)->create(['password' => 'nisse']);
 
         $data = [
             'username'  => $user->username,
@@ -54,7 +56,6 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_should_return_error_when_user_does_not_exist()
     {
-
         $data = [
             'username'  => 'olle',
             'password'  => 'olle',
