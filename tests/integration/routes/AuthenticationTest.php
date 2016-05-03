@@ -71,4 +71,35 @@ class AuthenticationTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals('Unknown username.', $jsonObject->error);
     }
+
+    /** @test */
+    public function it_should_create_a_new_user()
+    {
+        $data = [
+            'username' => 'newuser',
+            'password' => 'newpassword',
+        ];
+        
+        $response = $this->json('POST', 'auth/register', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($data['username'], $jsonObject->data->username);
+    }
+
+    /** @test */
+    public function it_should_return_an_error_when_creating_a_user_with_existing_username()
+    {
+        $data = [
+            'username' => 'newuser',
+            'password' => 'newpassword',
+        ];
+        factory(User::class)->create($data);
+        
+        $response = $this->json('POST', 'auth/register', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(422, $response->getStatusCode());
+        $this->assertEquals('User already exists.', $jsonObject->error);
+    }
 }
