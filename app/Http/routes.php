@@ -112,9 +112,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     // Project routes
     Route::get('projects/{project}', 'ProjectController@show');
     Route::get('projects', 'ProjectController@index');
-    Route::post('projects', 'ProjectController@store');
     Route::put('projects/{project}', 'ProjectController@update');
     Route::delete('projects/{project}', 'ProjectController@destroy');
+
+    // Team routes
+    Route::get('teams/{team}', 'TeamController@show');
+    Route::put('teams/{team}', 'TeamController@update');
+    Route::delete('teams/{team}', 'TeamController@destroy');
 
     // Proposal routes
     Route::post('proposals', 'ProposalController@store');
@@ -126,6 +130,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('proposals/{proposal}/tags', 'TagController@store');
     Route::get('proposals/{proposal}/comments', 'CommentController@index');
     Route::post('proposals/{proposal}/comments', 'CommentController@store');
+    Route::get('proposals/{proposal}/projects', 'ProjectController@index');
+    Route::post('proposals/{proposal}/projects', 'ProjectController@store');
+    Route::get('proposals/{proposal}/teams', 'TeamController@index');
+    Route::post('proposals/{proposal}/teams', 'TeamController@store');
 
     // Global Attachment routes
     Route::get('attachments/{attachment}', 'AttachmentController@show');
