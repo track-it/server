@@ -10,6 +10,7 @@ use URL;
 use Trackit\Models\User;
 use Trackit\Http\Requests\LoginRequest;
 use Trackit\Http\Requests\CreateUserRequest;
+use Trackit\Http\Requests\CheckTokenRequest;
 use Saml2;
 
 class AuthController extends Controller
@@ -44,6 +45,18 @@ class AuthController extends Controller
         $user = User::create($credentials);
 
         return Response::json($user);
+    }
+
+    /**
+     *
+     */
+    public function check(CheckTokenRequest $request)
+    {
+        if (User::where(['api_token' => $request->api_token])->first()) {
+            return Response::json(['valid' => true]);
+        } else {
+            return Response::json(['valid' => false]);
+        }
     }
 
     public function saml(Request $request)

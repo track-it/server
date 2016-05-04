@@ -44,6 +44,7 @@ Route::group([], function () {
     });
     Route::post('auth/login', 'AuthController@login');
     Route::post('auth/register', 'AuthController@register');
+    Route::post('auth/check', 'AuthController@check');
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
 
