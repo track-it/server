@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectRole extends Model
 {
+    protected $fillable = [
+        'name',
+    ];
+    
     public function scopeByName($query, $name)
     {
         return $query->where('name', $name);
@@ -33,5 +37,10 @@ class ProjectRole extends Model
     {
         $permissionId = ProjectPermission::where('name', $action)->first()->id;
         $this->projectPermissions()->detach($permissionId);
+    }
+
+    public function projectUsers()
+    {
+        return $this->hasMany(ProjectUser::class);
     }
 }
