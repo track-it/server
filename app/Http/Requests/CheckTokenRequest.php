@@ -24,7 +24,8 @@ class CheckTokenRequest extends Request
     public function rules()
     {
         return [
-            //
+            'username' => 'required|string',
+            'api_token' => 'required|string',
         ];
     }
 }
