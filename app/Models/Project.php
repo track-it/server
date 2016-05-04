@@ -3,8 +3,9 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Trackit\Contracts\Attachmentable;
 
-class Project extends Model
+class Project extends Model implements Attachmentable
 {
     const COMPLETED = 1;
     const NOT_COMPLETED = 2;
@@ -21,6 +22,16 @@ class Project extends Model
         'proposal_id',
         'owner_id',
     ];
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachmentable');
+    }
 
     public function proposal()
     {

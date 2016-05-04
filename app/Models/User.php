@@ -30,7 +30,7 @@ class User extends Model implements Authenticatable
             $user->refreshApiToken();
         });
 
-        static::creating(function($user) {
+        static::creating(function ($user) {
             $user->password = Hash::make($user->password);
         });
     }
@@ -74,9 +74,9 @@ class User extends Model implements Authenticatable
         return $this->belongsToMany(Team::class, 'user_teams');
     }
 
-    public function project()
+    public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class, 'owner_id');
     }
 
     public function supervisor()
