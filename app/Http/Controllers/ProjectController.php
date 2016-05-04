@@ -35,7 +35,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load('team.users');
+        $project->load('team.users', 'attachments');
         return Response::json($project);
     }
 
