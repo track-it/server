@@ -13,6 +13,9 @@ class User extends Model implements Authenticatable
 
     protected $fillable = [
         'username',
+        'password',
+        'api_token',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -21,13 +24,13 @@ class User extends Model implements Authenticatable
 
     public static function boot()
     {
-    	parent::boot();
+        parent::boot();
 
-    	static::created(function ($user) {
-    		$user->refreshApiToken();
-    	});
+        static::created(function ($user) {
+            $user->refreshApiToken();
+        });
 
-        static::creating(function($user) {
+        static::creating(function ($user) {
             $user->password = Hash::make($user->password);
         });
     }
@@ -39,29 +42,29 @@ class User extends Model implements Authenticatable
 
     public function refreshApiToken()
     {
-    	$this->api_token = str_random(128);
-    	$this->save();
+        $this->api_token = str_random(128);
+        $this->save();
     }
 
     public function proposals()
     {
-    	return $this->hasMany(Proposal::class, 'author_id');
+        return $this->hasMany(Proposal::class, 'author_id');
     }
 
     public function role()
     {
-    	return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function joinTeam($team)
     {
-    	$this->teams()->attach($team);
+        $this->teams()->attach($team);
     }
 
     public function leaveTeam($team)
     {
         $this->teams()->detach($team);
-        if($team->fresh()->users->count() == 0){
+        if ($team->fresh()->users->count() == 0) {
             $team->delete();
         }
     }
@@ -71,9 +74,9 @@ class User extends Model implements Authenticatable
         return $this->belongsToMany(Team::class, 'user_teams');
     }
 
-    public function project()
+    public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class, 'owner_id');
     }
 
     public function supervisor()

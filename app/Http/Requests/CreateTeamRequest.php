@@ -4,7 +4,7 @@ namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
 
-class UpdateAttachmentRequest extends Request
+class CreateTeamRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.

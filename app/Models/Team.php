@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
-	protected $fillable = [
-    
+
+    protected $fillable = [
+        'proposal_id',
     ];
 
     public function users()
@@ -18,5 +19,13 @@ class Team extends Model
     public function project()
     {
         return $this->hasOne(Project::class);
+    }
+
+    /**
+     *
+     */
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class);
     }
 }

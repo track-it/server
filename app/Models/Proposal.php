@@ -67,4 +67,12 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     {
         return $this->belongsTo(Course::class);
     }
+
+    /**
+     *
+     */
+    public function teams()
+    {
+        return $this->hasMany(Team::class);
+    }
 }

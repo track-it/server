@@ -20,7 +20,7 @@ class TagsTest extends TestCase
         ];
 
         $header = $this->createAuthHeader();
-        $response = $this->post('proposals/'.$proposal->id.'/tags', $data, $header)->response;
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/tags', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
         $tags = [];
         foreach ($jsonObject->data as $item) {
@@ -41,7 +41,7 @@ class TagsTest extends TestCase
         ];
 
         $header = $this->createAuthHeader();
-        $response = $this->post('proposals/'.$proposal->id.'/tags', $data, $header)->response;
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/tags', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
         $tags = [];
         foreach ($jsonObject->data as $item) {
@@ -58,7 +58,7 @@ class TagsTest extends TestCase
         $tag = factory(Tag::class)->create();
 
         $header = $this->createAuthHeader();
-        $response = $this->get('tags/'.$tag->id, $header)->response;
+        $response = $this->json('GET', 'tags/'.$tag->id, [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -70,11 +70,11 @@ class TagsTest extends TestCase
     {
         $tag = factory(Tag::class)->create();
         $data = [
-            'name' => 'New Tag',
+            'name' => factory(Tag::class)->create()->name,
         ];
 
         $header = $this->createAuthHeader();
-        $response = $this->put('tags/'.$tag->id, $data, $header)->response;
+        $response = $this->json('PUT', 'tags/'.$tag->id, $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -87,7 +87,7 @@ class TagsTest extends TestCase
         $tag = factory(Tag::class)->create();
 
         $header = $this->createAuthHeader();
-        $response = $this->delete('tags/'.$tag->id, [], $header)->response;
+        $response = $this->json('DELETE', 'tags/'.$tag->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
     }
@@ -102,7 +102,7 @@ class TagsTest extends TestCase
         $proposal->tags()->save($tag2);
 
         $header = $this->createAuthHeader();
-        $response = $this->get('proposals/'.$proposal->id.'/tags/', $header)->response;
+        $response = $this->json('GET', 'proposals/'.$proposal->id.'/tags/', [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
