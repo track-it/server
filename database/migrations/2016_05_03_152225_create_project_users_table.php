@@ -16,6 +16,7 @@ class CreateProjectUsersTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
             $table->integer('project_id')->unsigned()->index();
+            $table->integer('project_role_id')->unsigned()->index();
             $table->timestamps();
         });
     }

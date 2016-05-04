@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Trackit\Models\Project;
 use Trackit\Models\ProjectUser;
 use Trackit\Models\User;
+use Trackit\Models\ProjectRole;
 
 class ProjectUserTest extends TestCase
 {
@@ -31,5 +32,16 @@ class ProjectUserTest extends TestCase
         $projectUser->project()->associate($project);
 
         $this->assertEquals($project->id, $projectUser->project->id);
+    }
+
+     /** @test */
+    public function it_should_have_a_project_role()
+    {
+        $projectUser = factory(ProjectUser::Class)->create();
+        $projectRole = ProjectRole::find(1);
+
+        $projectUser->projectRole()->associate($projectRole);
+        
+        $this->assertEquals($projectRole->first()->name, $projectUser->projectRole->name);
     }
 }
