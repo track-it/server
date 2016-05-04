@@ -3,10 +3,12 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\Team;
 use Trackit\Models\User;
+use Trackit\Models\Attachment;
 
 class ProjectsTest extends TestCase
 {
@@ -58,6 +60,23 @@ class ProjectsTest extends TestCase
         $this->assertEquals($project->id, $jsonObject->data->id);
         $this->assertEquals($project->team->id, $jsonObject->data->team->id);
         $this->assertEquals(5, count($jsonObject->data->team->users));
+    }
+
+    /** @test */
+    public function it_should_return_a_project_with_attachments()
+    {
+        $project = factory(Project::class)->create();
+        $attachment = factory(Attachment::class)->create();
+        $attachment2 = factory(Attachment::class)->create();
+        $project->attachments()->save($attachment);
+        $project->attachments()->save($attachment2);
+
+        $header = $this->createAuthHeader();
+        $response = $this->get('projects/'.$project->id, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(2, count($jsonObject->data->attachments));
     }
 
     /** @test */
