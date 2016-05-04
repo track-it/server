@@ -43,11 +43,6 @@ class Project extends Model implements Attachmentable
         return $this->belongsTo(Team::class);
     }
 
-    public function owner()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
@@ -58,9 +53,9 @@ class Project extends Model implements Attachmentable
         return $this->hasOne(Workflow::class);
     }
 
-    public function supervisor()
+    public function projectUsers()
     {
-        return $this->belongsToMany(User::class, 'project_supervisor');
+        return $this->hasMany(ProjectUser::class);
     }
 
     /**
