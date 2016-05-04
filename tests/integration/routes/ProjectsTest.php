@@ -90,6 +90,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_project_from_a_proposal()
     {
+        $user = $this->getUser();
         $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $team = factory(Team::class)->create();
         factory(User::class, 5)->create()->each(function ($user) use ($team) {
@@ -110,6 +111,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
         $this->assertEquals($data['tag_ids'][0], $jsonObject->data->tags[0]->name);
+        $this->assertEquals($user->id, $jsonObject->data->owner_id);
     }
 
     /** @test */
