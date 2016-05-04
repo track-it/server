@@ -15,31 +15,31 @@ Route::group([
     'prefix' => config('saml2_settings.routesPrefix'),
     'middleware' => ['saml'],
 ], function () {
-    Route::get('/logout', array(
+    Route::get('logout', array(
         'as' => 'saml_logout',
         'uses' => 'Saml2Controller@logout',
     ));
-    Route::get('/login', array(
+    Route::get('login', array(
         'as' => 'saml_login',
         'uses' => 'Saml2Controller@login',
     ));
-    Route::get('/metadata', array(
+    Route::get('metadata', array(
         'as' => 'saml_metadata',
         'uses' => 'Saml2Controller@metadata',
     ));
-    Route::post('/acs', array(
+    Route::post('acs', array(
         'as' => 'saml_acs',
         'uses' => 'Saml2Controller@acs',
     ));
-    Route::get('/sls', array(
+    Route::get('sls', array(
         'as' => 'saml_sls',
         'uses' => 'Saml2Controller@sls',
     ));
 });
 
 Route::group([], function () {
-    Route::get('/login', 'AuthController@saml');
-    Route::get('/error', function () {
+    Route::get('login', 'AuthController@saml');
+    Route::get('error', function () {
         dd($this);
     });
     Route::post('auth/login', 'AuthController@login');
@@ -48,41 +48,41 @@ Route::group([], function () {
     Route::get('proposals/{proposal}', 'ProposalController@show');
 
     // Sitemap
-    Route::get('/site', function (Request $request) {
+    Route::get('site', function (Request $request) {
         $sitemap = [
             'self' => '/',
             'auth' => [
-                'login' => '/auth/login',
-                'register' => '/auth/register',
+                'login' => 'auth/login',
+                'register' => 'auth/register',
             ],
             'index' => [
-                'proposals' => '/proposals',
-                'projects' => '/projects',
+                'proposals' => 'proposals',
+                'projects' => 'projects',
             ],
             'show' => [
-                'proposals' => '/proposals',
-                'projects' => '/projects',
-                'attachments' => '/attachments',
-                'tags' => '/tags',
-                'comments' => '/comments',
+                'proposals' => 'proposals',
+                'projects' => 'projects',
+                'attachments' => 'attachments',
+                'tags' => 'tags',
+                'comments' => 'comments',
             ],
             'store' => [
-                'proposals' => '/proposals',
-                'projects' => '/projects',
+                'proposals' => 'proposals',
+                'projects' => 'projects',
             ],
             'update' => [
-                'proposals' => '/proposals',
-                'projects' => '/projects',
-                'attachments' => '/attachments',
-                'tags' => '/tags',
-                'comments' => '/comments',
+                'proposals' => 'proposals',
+                'projects' => 'projects',
+                'attachments' => 'attachments',
+                'tags' => 'tags',
+                'comments' => 'comments',
             ],
             'destroy' => [
-                'proposals' => '/proposals',
-                'projects' => '/projects',
-                'attachments' => '/attachments',
-                'tags' => '/tags',
-                'comments' => '/comments',
+                'proposals' => 'proposals',
+                'projects' => 'projects',
+                'attachments' => 'attachments',
+                'tags' => 'tags',
+                'comments' => 'comments',
             ],
         ];
 

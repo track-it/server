@@ -40,6 +40,7 @@ $factory->define(Trackit\Models\Project::class, function (Faker\Generator $faker
         'name' => $faker->sentence(6, true),
         'status' => collect(Trackit\Models\Project::STATUSES)->random(),
         'owner_id' => factory(Trackit\Models\User::class)->create()->id,
+        'team_id' => factory(Trackit\Models\Team::class)->create()->id,
     ];
 });
 
@@ -76,6 +77,6 @@ $factory->define(Trackit\Models\Workflow::class, function (Faker\Generator $fake
 
 $factory->define(Trackit\Models\Team::class, function (Faker\Generator $faker) {
     return [
-        
+
     ];
 });

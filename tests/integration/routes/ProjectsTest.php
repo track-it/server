@@ -43,14 +43,21 @@ class ProjectsTest extends TestCase
     public function it_should_return_a_project()
     {
         $project = factory(Project::class)->create();
+        $team = factory(Team::class)->create();
+        factory(User::class, 5)->create()->each(function ($user) use ($team) {
+            $team->users()->attach($user->id);
+        });
+        $project->team()->associate($team);
+        $project->save();
 
         $header = $this->createAuthHeader();
         $response = $this->get('projects/'.$project->id, $header)->response;
-
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($project->id, $jsonObject->data->id);
+        $this->assertEquals($project->team->id, $jsonObject->data->team->id);
+        $this->assertEquals(5, count($jsonObject->data->team->users));
     }
 
     /** @test */
