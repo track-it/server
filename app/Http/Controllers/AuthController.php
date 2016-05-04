@@ -52,7 +52,9 @@ class AuthController extends Controller
      */
     public function check(CheckTokenRequest $request)
     {
-        if (User::where(['api_token' => $request->api_token])->first()) {
+        $user = User::byUsername($request->username)->first();
+
+        if ($user && $user->api_token == $request->api_token) {
             return Response::json(['valid' => true]);
         } else {
             return Response::json(['valid' => false]);

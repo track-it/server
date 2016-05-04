@@ -108,6 +108,7 @@ class AuthenticationTest extends TestCase
     {
         $user = $this->getUser();
         $data = [
+            'username' => $user->username,
             'api_token' => $user->api_token,
         ];
 
@@ -121,7 +122,9 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_should_return_false_when_checking_invalid_token()
     {
+        $user = $this->getUser();
         $data = [
+            'username' => $user->username,
             'api_token' => str_random(100),
         ];
 
@@ -129,6 +132,6 @@ class AuthenticationTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertTrue($jsonObject->valid);
+        $this->assertFalse($jsonObject->valid);
     }
 }
