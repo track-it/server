@@ -35,7 +35,7 @@ class ProposalController extends Controller
             'title' => $request->title,
         ]);
 
-        $tags = $request->tags == null ? [] : $request->tags; 
+        $tags = $request->tags == null ? [] : $request->tags;
 
         foreach ($tags as $tag) {
             $newTag = Tag::firstOrCreate(['name' => $tag]);
