@@ -15,7 +15,7 @@ use Trackit\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
-   	protected $user;
+    protected $user;
 
     public function __construct(User $user)
     {
@@ -51,13 +51,15 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Commentable $commentable, CreateCommentRequest $request)
-    {	
+    {
         $comment = Comment::create([
             'body' => $request->body,
             'author_id' => $this->user->id,
-            'source_id' => $commentable->getId(),
-            'source_type' => get_class($commentable),
+            'commentable_id' => $commentable->getId(),
+            'commentable_type' => get_class($commentable),
         ]);
+
+        $comment->load('author');
 
         return Response::json($comment);
     }

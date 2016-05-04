@@ -13,18 +13,23 @@ class Comment extends Model
         'commentable_type',
     ];
 
-	public function author()
-	{
-		return $this->belongsTo(User::class, 'author_id');
-	}
+    /**
+     * @var
+     */
+    protected $with = ['author'];
 
-	public function source()
-	{
-		return $this->morphTo();
-	}
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 
-	public function commentable()
-	{
+    public function source()
+    {
+        return $this->morphTo();
+    }
+
+    public function commentable()
+    {
         $this->morphTo();
-	}
+    }
 }
