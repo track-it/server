@@ -150,5 +150,4 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('me', 'UserController@self');
     Route::get('users', 'UserController@index');
     Route::get('users/{user}', 'UserController@show');
-
 });
