@@ -10,6 +10,8 @@ use Trackit\Models\User;
 use Trackit\Models\Team;
 use Trackit\Models\Comment;
 use Trackit\Models\Workflow;
+use Trackit\Models\ProjectRole;
+use Trackit\Models\ProjectUser;
 
 class ProjectTest extends TestCase
 {
@@ -17,6 +19,9 @@ class ProjectTest extends TestCase
 
     private $team;
     private $users;
+    private $project;
+    private $projectUser;
+    private $projectRole;
 
     /** @test */
     public function it_has_a_proposal_associated_with_it()
@@ -51,17 +56,6 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
-    public function it_has_an_owner()
-    {
-        $project = factory(Project::class)->create();
-        $owner = factory(User::class)->create();
-
-        $project->owner()->associate($owner);
-        
-        $this->assertEquals($owner->id, $project->owner_id);
-    }
-
-    /** @test */
     public function it_can_have_comments()
     {
         $project = factory(Project::class)->create();
@@ -82,27 +76,33 @@ class ProjectTest extends TestCase
 
           $this->assertEquals($workflow->id, $project->workflow->id);
     }
+
+    /** @test */
+    public function it_has_an_stakeholder()
+    {
+        $this->setUpProjectWithProjectUser('stakeholder');
+        $project = $this->project;
+        $projectUser = $this->projectUser;
+        $projectRole = $this->projectRole;
+        
+        // check the projectuser har an id
+        $this->assertEquals($project->id, $projectUser->project->id);
+        //check that the same projectuser has a stakeholder projectrole
+        $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
+    }
     
     /** @test */
     public function it_has_at_least_one_supervisor()
     {
-        $project = factory(Project::class)->create();
-        $supervisor = factory(User::class)->create();
-
-        $project->supervisor()->attach($supervisor);
-
-        $this->assertEquals($supervisor->id, $project->supervisor->first()->id);
-    }
-
-    /** @test */
-    public function it_can_have_more_than_one_supervisor()
-    {
-        $project = factory(Project::class)->create();
-        $supervisors = factory(User::class, 3)->create();
-
-        $project->supervisor()->attach($supervisors);
-
-        $this->assertEquals($supervisors->count(), $project->supervisor->count());
+        $this->setUpProjectWithProjectUser('supervisor');
+        $project = $this->project;
+        $projectUser = $this->projectUser;
+        $projectRole = $this->projectRole;
+        
+        // check the projectuser has an id
+        $this->assertEquals($project->id, $projectUser->project->id);
+        //check that the same projectuser has a supervisor projectrole
+        $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
     }
 
     private function setUpTeam()
@@ -113,5 +113,17 @@ class ProjectTest extends TestCase
         $this->users->each(function ($user) use ($team) {
             $user->joinTeam($this->team);
         });
+    }
+
+    private function setUpProjectWithProjectUser($role)
+    {
+        $this->project = factory(Project::class)->create();
+        $user = factory(User::class)->create();
+        $this->projectRole = ProjectRole::where('name', $role)->first();
+    
+        $this->projectUser = factory(ProjectUser::class)->create();
+        $this->projectUser->user()->associate($user);
+        $this->projectUser->project()->associate($this->project);
+        $this->projectUser->projectRole()->associate($this->projectRole);
     }
 }
