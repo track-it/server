@@ -78,16 +78,14 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
-    public function it_has_an_stakeholder()
+    public function it_has_a_stakeholder()
     {
         $this->setUpProjectWithProjectUser('stakeholder');
         $project = $this->project;
         $projectUser = $this->projectUser;
         $projectRole = $this->projectRole;
         
-        // check the projectuser har an id
         $this->assertEquals($project->id, $projectUser->project->id);
-        //check that the same projectuser has a stakeholder projectrole
         $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
     }
     
@@ -99,9 +97,7 @@ class ProjectTest extends TestCase
         $projectUser = $this->projectUser;
         $projectRole = $this->projectRole;
         
-        // check the projectuser has an id
         $this->assertEquals($project->id, $projectUser->project->id);
-        //check that the same projectuser has a supervisor projectrole
         $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
     }
 
