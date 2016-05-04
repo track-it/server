@@ -15,4 +15,9 @@ class ProjectUser extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function projectRole()
+    {
+    	return $this->belongsTo(ProjectRole::class);
+    }
 }
