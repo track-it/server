@@ -33,6 +33,22 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
         return $this->id;
     }
 
+    /**
+     *
+     */
+    public function allowsActionFrom($action, $user)
+    {
+        if ($user->id == $this->author_id) {
+            return true;
+        }
+
+        if ($user->can($action)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');

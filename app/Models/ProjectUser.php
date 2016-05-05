@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectUser extends Model
 {
+    /**
+     *
+     */
+    public function can($action)
+    {
+        return $this->projectRole->can($action);
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -18,6 +26,6 @@ class ProjectUser extends Model
 
     public function projectRole()
     {
-    	return $this->belongsTo(ProjectRole::class);
+        return $this->belongsTo(ProjectRole::class);
     }
 }

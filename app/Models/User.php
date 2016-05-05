@@ -46,16 +46,6 @@ class User extends Model implements Authenticatable
         $this->save();
     }
 
-    public function proposals()
-    {
-        return $this->hasMany(Proposal::class, 'author_id');
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
-
     public function joinTeam($team)
     {
         $this->teams()->attach($team);
@@ -67,6 +57,24 @@ class User extends Model implements Authenticatable
         if ($team->fresh()->users->count() == 0) {
             $team->delete();
         }
+    }
+
+    /**
+     *
+     */
+    public function can($permission)
+    {
+        return $this->role->can($permission);
+    }
+
+    public function proposals()
+    {
+        return $this->hasMany(Proposal::class, 'author_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 
     public function teams()

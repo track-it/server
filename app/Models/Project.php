@@ -28,6 +28,28 @@ class Project extends Model implements Attachmentable
         return $this->id;
     }
 
+    public function allowsActionFrom($action, $user)
+    {
+        // Allow if user is owner
+        if ($user->id == $this->owner_id) {
+            return true;
+        }
+
+        $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
+
+        // Allow is user is part of project and has project permission
+        if ($projectUser && $projectUser->can($action)) {
+            return true;
+        }
+
+        // Allow if user has global permission
+        if ($user->can($action)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function attachments()
     {
         return $this->morphMany(Attachment::class, 'attachmentable');
