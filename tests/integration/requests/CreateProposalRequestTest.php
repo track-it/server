@@ -4,13 +4,34 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use Trackit\Models\Role;
+
 class CreateProposalRequestTest extends TestCase
 {
     use DatabaseTransactions;
 
     /** @test */
+    public function it_should_allow_users_with_submit_permission_to_create_proposal()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
+        $header = $this->createAuthHeader();
+        $data = [
+            'title' => 'This is a title',
+            'description' => 'This is a description',
+        ];
+
+        $response = $this->json('POST', 'proposals', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /** @test */
     public function it_should_not_allow_a_title_longer_than_100_characters()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'title' => str_random(1000),
@@ -27,6 +48,8 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_missing_title()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'description' => 'This is a description',
@@ -42,6 +65,8 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_description_longer_than_5000_characters()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
@@ -58,6 +83,8 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_missing_description()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
@@ -73,6 +100,8 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_tags_not_in_an_array()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
@@ -90,6 +119,8 @@ class CreateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_more_than_20_tags()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $faker = Faker\Factory::create();
         $tags = [];
         for ($i = 0; $i < 21; $i++) {

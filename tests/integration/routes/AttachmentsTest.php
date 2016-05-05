@@ -15,7 +15,7 @@ class AttachmentsTest extends TestCase
     /** @test */
     public function it_should_upload_an_attached_file()
     {
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $file = new UploadedFile(
             base_path('tests/files/test.txt'),
             'test.txt',

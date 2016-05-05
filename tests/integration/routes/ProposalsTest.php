@@ -3,7 +3,9 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use Trackit\Models\Proposal;
+use Trackit\Models\Role;
 
 class ProposalsTest extends TestCase
 {
@@ -47,6 +49,8 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_proposal()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
@@ -63,6 +67,8 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_proposal_with_tags()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
         $header = $this->createAuthHeader();
         $proposalContent = [
             'title' => 'This is a title',

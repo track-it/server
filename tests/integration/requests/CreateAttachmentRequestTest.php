@@ -7,10 +7,37 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
+use Trackit\Models\Role;
 
 class CreateAttachmentRequestTest extends TestCase
 {
     use DatabaseTransactions;
+
+    /** @test */
+    public function it_should_allow_author_to_create_attachment()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $proposal = factory(Proposal::class)->create(['author_id' => $user->id]);
+        $header = $this->createAuthHeader();
+
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/attachments', [], $header)->response;
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_disallow_non_author_to_create_attachment()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $proposal = factory(Proposal::class)->create();
+        $header = $this->createAuthHeader();
+
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/attachments', [], $header)->response;
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
 
     // Tests not working yet, need rework.
 
