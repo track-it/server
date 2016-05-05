@@ -13,39 +13,42 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-    	$customer = Role::where(['name' => 'customer'])->first();
-    	$student = Role::where(['name' => 'student'])->first();
-    	$teacher = Role::where(['name' => 'teacher'])->first();
-    	$administrator = Role::where(['name' => 'administrator'])->first();
+        $customer = Role::where(['name' => 'customer'])->first();
+        $student = Role::where(['name' => 'student'])->first();
+        $teacher = Role::where(['name' => 'teacher'])->first();
+        $administrator = Role::where(['name' => 'administrator'])->first();
 
         $roles = Role::all();
 
         $permissions = [
             'customer' => [
-                'submit',
-                'view',
+                'proposal:submit',
+                'proposal:view',
+                'project:view',
             ],
             'student' => [
-                'submit',
-                'view',
-                'publish',
-                'search',
+                'proposal:submit',
+                'proposal:view',
+                'proposal:apply',
+                'project:view',
             ],
             'teacher' => [
-                'submit',
-                'view',
-                'approve',
-                'categorize',
-                'search',
+                'proposal:submit',
+                'proposal:view',
+                'proposal:approve',
+                'proposal:categorize',
+                'project:view',
             ],
             'administrator' => [
-                'submit',
-                'view',
-                'publish',
-                'search',
-                'approve',
-                'categorize',
-                'search',
+                'proposal:submit',
+                'proposal:view',
+                'proposal:approve',
+                'proposal:delete',
+                'proposal:edit',
+                'proposal:categorize',
+                'project:view',
+                'project:edit',
+                'project:delete',
             ],
         ];
 
