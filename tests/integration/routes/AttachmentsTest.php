@@ -59,7 +59,7 @@ class AttachmentsTest extends TestCase
             'projects/'.$project->id.'/attachments',
             [], // parameters
             [], // cookies
-            [$file], // files
+            ['files' => [$file]], // files
             $header // server
         );
 
