@@ -15,7 +15,7 @@ class CommentsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_comment_on_a_proposal()
     {
-        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $proposal = factory(Proposal::class)->create();
         $user = factory(User::class)->create();      
         $content = ['body' => 'This is a body.', 'author_id' => $user->id];
 
@@ -33,8 +33,8 @@ class CommentsTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
         $user = factory(User::class)->create();
-        $comment1 = factory(Comment::class)->create(['body' => 'This is a body.', 'author_id' => $user->id]);
-        $comment2 = factory(Comment::class)->create(['body' => 'This is another body.', 'author_id' => $user->id]);
+        $comment1 = factory(Comment::class)->create(['body' => 'This is a body.']);
+        $comment2 = factory(Comment::class)->create(['body' => 'This is another body.']);
         $proposal->comments()->save($comment1);
         $proposal->comments()->save($comment2);
 
@@ -52,7 +52,7 @@ class CommentsTest extends TestCase
     {
         $project = factory(Project::class)->create(['owner_id' => $this->getUser()->id]);
         $user = factory(User::class)->create();
-        $content = ['body' => 'This is a body.', 'author_id' => $user->id];
+        $content = ['body' => 'This is a body.'];
         
         $header = $this->createAuthHeader();
         $url = 'projects/'.$project->id.'/comments';
@@ -68,8 +68,8 @@ class CommentsTest extends TestCase
     {
         $project = factory(Project::class)->create();
         $user = factory(User::class)->create();
-        $comment1 = factory(Comment::class)->create(['body' => 'This is a body.', 'author_id' => $user->id]);
-        $comment2 = factory(Comment::class)->create(['body' => 'This is another body.', 'author_id' => $user->id]);
+        $comment1 = factory(Comment::class)->create(['body' => 'This is a body.']);
+        $comment2 = factory(Comment::class)->create(['body' => 'This is another body.']);
         $project->comments()->save($comment1);
         $project->comments()->save($comment2);
 
