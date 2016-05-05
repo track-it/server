@@ -102,6 +102,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
+    Route::model('project', 'Trackit\Models\Project');
     Route::model('comment', 'Trackit\Models\Comment');
 
     // Comment routes
@@ -119,6 +120,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('projects', 'ProjectController@index');
     Route::put('projects/{project}', 'ProjectController@update');
     Route::delete('projects/{project}', 'ProjectController@destroy');
+    Route::get('projects/{project}/attachments', 'AttachmentController@index');
+    Route::post('projects/{project}/attachments', 'AttachmentController@store');
+    Route::get('projects/{project}/tags', 'TagController@index');
+    Route::post('projects/{project}/tags', 'TagController@store');
+    Route::get('projects/{project}/comments', 'CommentController@index');
+    Route::post('projects/{project}/comments', 'CommentController@store');
 
     // Team routes
     Route::get('teams/{team}', 'TeamController@show');
