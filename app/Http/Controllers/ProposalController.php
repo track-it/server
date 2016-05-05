@@ -31,9 +31,7 @@ class ProposalController extends Controller
      */
     public function store(CreateProposalRequest $request)
     {
-        $proposal = Proposal::create([
-            'title' => $request->title,
-        ]);
+        $proposal = Proposal::create($request->all());
 
         $tags = $request->tags == null ? [] : $request->tags;
 
@@ -55,6 +53,7 @@ class ProposalController extends Controller
      */
     public function show(Proposal $proposal)
     {
+        $proposal->load(['attachments', 'tags']);
         return Response::json($proposal);
     }
 
