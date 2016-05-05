@@ -4,8 +4,10 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Attachmentable;
+use Trackit\Contracts\Commentable;
+use Trackit\Contracts\Taggable;
 
-class Project extends Model implements Attachmentable
+class Project extends Model implements Attachmentable, Commentable, Taggable
 {
     const COMPLETED = 1;
     const NOT_COMPLETED = 2;
