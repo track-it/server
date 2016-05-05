@@ -53,6 +53,7 @@ class ProposalController extends Controller
      */
     public function show(Proposal $proposal)
     {
+        $proposal->load(['attachments', 'tags']);
         return Response::json($proposal);
     }
 

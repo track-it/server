@@ -31,7 +31,7 @@ class AttachmentsTest extends TestCase
             'proposals/'.$proposal->id.'/attachments',
             [], // parameters
             [], // cookies
-            [$file], // files
+            ['files' => [$file]], // files
             $header // server
         );
 
