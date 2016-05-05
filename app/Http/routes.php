@@ -38,19 +38,26 @@ Route::group([
 });
 
 Route::group([], function () {
+    
+    // Saml2
     Route::get('login', 'AuthController@saml');
     Route::get('error', function () {
         dd($this);
     });
+
+    // Authentication
     Route::post('auth/login', 'AuthController@login');
     Route::post('auth/register', 'AuthController@register');
+    Route::post('auth/check', 'AuthController@check');
+
+    // Open routes
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
 
     // Sitemap
     Route::get('site', function (Request $request) {
         $sitemap = [
-            'self' => '/',
+            'self' => '/site',
             'auth' => [
                 'login' => 'auth/login',
                 'register' => 'auth/register',
