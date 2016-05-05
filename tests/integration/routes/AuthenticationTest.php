@@ -102,4 +102,36 @@ class AuthenticationTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertEquals('User already exists.', $jsonObject->error);
     }
+
+    /** @test */
+    public function it_should_return_true_when_checking_valid_token()
+    {
+        $user = $this->getUser();
+        $data = [
+            'username' => $user->username,
+            'api_token' => $user->api_token,
+        ];
+
+        $response = $this->json('POST', 'auth/check', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($jsonObject->valid);
+    }
+
+    /** @test */
+    public function it_should_return_false_when_checking_invalid_token()
+    {
+        $user = $this->getUser();
+        $data = [
+            'username' => $user->username,
+            'api_token' => str_random(100),
+        ];
+
+        $response = $this->json('POST', 'auth/check', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertFalse($jsonObject->valid);
+    }
 }

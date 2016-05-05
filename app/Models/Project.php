@@ -4,8 +4,10 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Attachmentable;
+use Trackit\Contracts\Commentable;
+use Trackit\Contracts\Taggable;
 
-class Project extends Model implements Attachmentable
+class Project extends Model implements Attachmentable, Commentable, Taggable
 {
     const COMPLETED = 1;
     const NOT_COMPLETED = 2;
@@ -43,11 +45,6 @@ class Project extends Model implements Attachmentable
         return $this->belongsTo(Team::class);
     }
 
-    public function owner()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
@@ -58,9 +55,9 @@ class Project extends Model implements Attachmentable
         return $this->hasOne(Workflow::class);
     }
 
-    public function supervisor()
+    public function projectUsers()
     {
-        return $this->belongsToMany(User::class, 'project_supervisor');
+        return $this->hasMany(ProjectUser::class);
     }
 
     /**
