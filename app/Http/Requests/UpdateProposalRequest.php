@@ -7,8 +7,14 @@ use Trackit\Models\User;
 
 class UpdateProposalRequest extends Request
 {
+    /**
+     * @var
+     */
     protected $user;
 
+    /**
+     *
+     */
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -21,7 +27,9 @@ class UpdateProposalRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->id == $this->route('proposal')->author_id;
+        $proposal = $this->route('proposal');
+
+        return $proposal->allowsActionFrom('proposal:edit', $this->user);
     }
 
     /**

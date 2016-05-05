@@ -21,7 +21,7 @@ class CreateProposalRequest extends Request
      */
     public function authorize()
     {
-        return true;
+        return $this->user->can('proposal:submit');
     }
 
     /**
