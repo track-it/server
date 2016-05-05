@@ -12,7 +12,7 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-            $roles = [
+        $roles = [
         	[
         		'name'		=> 'customer'
         	],
