@@ -111,7 +111,6 @@ class ProjectsTest extends TestCase
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
         $this->assertEquals($data['tag_ids'][0], $jsonObject->data->tags[0]->name);
-        $this->assertEquals($user->id, $jsonObject->data->owner_id);
     }
 
     /** @test */

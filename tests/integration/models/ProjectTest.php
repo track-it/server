@@ -101,6 +101,18 @@ class ProjectTest extends TestCase
         $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
     }
 
+    /** @test */
+    public function it_can_add_project_user()
+    {
+        $project = factory(Project::class)->create();
+        $user = factory(User::class)->create();
+        $projectRole = ProjectRole::byName('teacher')->first();
+        
+        $project->addProjectUser('teacher', $user);
+
+        $this->assertNotNull($project->projectUsers()->where(['user_id' => $user->id, 'project_role_id' => $projectRole->id])->first());
+    }
+
     private function setUpTeam()
     {
         $this->users = new Collection(factory(User::class, 3)->create());

@@ -59,7 +59,7 @@ class ProjectController extends Controller
 
         $project->load('tags');
 
-        $project->owner()->associate(Auth::user());
+        $project->addProjectUser('teacher', Auth::user());
         $project->proposal()->associate($proposal);
         $project->status = Project::NOT_COMPLETED;
         $project->save();
