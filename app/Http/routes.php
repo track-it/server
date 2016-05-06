@@ -38,19 +38,26 @@ Route::group([
 });
 
 Route::group([], function () {
+    
+    // Saml2
     Route::get('login', 'AuthController@saml');
     Route::get('error', function () {
         dd($this);
     });
+
+    // Authentication
     Route::post('auth/login', 'AuthController@login');
     Route::post('auth/register', 'AuthController@register');
+    Route::post('auth/check', 'AuthController@check');
+
+    // Open routes
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
 
     // Sitemap
     Route::get('site', function (Request $request) {
         $sitemap = [
-            'self' => '/',
+            'self' => '/site',
             'auth' => [
                 'login' => 'auth/login',
                 'register' => 'auth/register',
@@ -102,6 +109,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
+    Route::model('project', 'Trackit\Models\Project');
     Route::model('comment', 'Trackit\Models\Comment');
 
     // Comment routes
@@ -119,6 +127,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('projects', 'ProjectController@index');
     Route::put('projects/{project}', 'ProjectController@update');
     Route::delete('projects/{project}', 'ProjectController@destroy');
+    Route::get('projects/{project}/attachments', 'AttachmentController@index');
+    Route::post('projects/{project}/attachments', 'AttachmentController@store');
+    Route::get('projects/{project}/tags', 'TagController@index');
+    Route::post('projects/{project}/tags', 'TagController@store');
+    Route::get('projects/{project}/comments', 'CommentController@index');
+    Route::post('projects/{project}/comments', 'CommentController@store');
 
     // Team routes
     Route::get('teams/{team}', 'TeamController@show');
@@ -145,4 +159,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('attachments/{attachment}', 'AttachmentController@update');
     Route::delete('attachments/{attachment}', 'AttachmentController@destroy');
     Route::get('attachments/{attachment}/download', 'AttachmentController@download');
+
+    // User routes
+    Route::get('me', 'UserController@self');
+    Route::get('users', 'UserController@index');
+    Route::get('users/{user}', 'UserController@show');
 });
