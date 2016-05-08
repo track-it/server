@@ -30,7 +30,7 @@ class UserController extends Controller
     public function self(Request $request)
     {
         $user = Auth::user();
-        $user->load(['proposals', 'role', 'teams', 'projects']);
+        $user->load(['proposals', 'role', 'teams', 'projectUsers']);
 
         return Response::json($user);
     }
@@ -54,7 +54,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['proposals', 'role', 'teams', 'projects']);
+        $user->load(['proposals', 'role', 'teams', 'projectUsers']);
 
         return Response::json($user);
     }

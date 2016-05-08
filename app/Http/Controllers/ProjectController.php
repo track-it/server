@@ -3,13 +3,15 @@
 namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Response;
+use Auth;
+
 use Trackit\Http\Requests;
 use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\Tag;
 use Trackit\Http\Requests\UpdateProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
-use Response;
 
 class ProjectController extends Controller
 {
@@ -57,8 +59,10 @@ class ProjectController extends Controller
 
         $project->load('tags');
 
+        $project->addProjectUser('teacher', Auth::user());
         $project->proposal()->associate($proposal);
         $project->status = Project::NOT_COMPLETED;
+        $project->save();
 
         return Response::json($project);
     }

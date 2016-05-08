@@ -21,6 +21,7 @@ class UsersTest extends TestCase
         
         $header = $this->createAuthHeader();
         $response = $this->json('GET', 'me', [], $header)->response;
+
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
