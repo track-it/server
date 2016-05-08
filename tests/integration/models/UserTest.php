@@ -15,7 +15,7 @@ class UserTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function has_an_api_token()
+    public function it_has_an_api_token()
     {
         $user = factory(User::class)->create();
 
@@ -25,7 +25,7 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function can_own_a_proposal()
+    public function it_can_own_a_proposal()
     {
         $proposal = factory(Proposal::class)->create();
 
@@ -36,7 +36,7 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function has_a_role()
+    public function it_has_a_role()
     {
         $role = factory(Role::class)->create();
 
@@ -47,7 +47,7 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function can_have_projects()
+    public function it_can_have_projects()
     {
         $user = factory(User::class)->create();
         $projects = factory(Project::class, 5)->create();
