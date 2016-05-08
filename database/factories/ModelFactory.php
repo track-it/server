@@ -21,6 +21,7 @@ $factory->define(Trackit\Models\Role::class, function (Faker\Generator $faker) {
 $factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
     return [
         'username' => $faker->name,
+        'role_id' => Trackit\Models\Role::byName('teacher')->first()->id,
     ];
 });
 
