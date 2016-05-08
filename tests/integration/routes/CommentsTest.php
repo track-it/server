@@ -50,7 +50,7 @@ class CommentsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_comment_on_a_project()
     {
-        $project = factory(Project::class)->create(['owner_id' => $this->getUser()->id]);
+        $project = factory(Project::class)->create();
         $user = factory(User::class)->create();
         $content = ['body' => 'This is a body.'];
         

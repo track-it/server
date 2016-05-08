@@ -3,9 +3,13 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Taggable;
+use Trackit\Models\ProjectRole;
+use Trackit\Models\ProjectUser;
+
 
 class Project extends Model implements Attachmentable, Commentable, Taggable
 {
@@ -22,12 +26,25 @@ class Project extends Model implements Attachmentable, Commentable, Taggable
         'status',
         'team_id',
         'proposal_id',
-        'owner_id',
     ];
 
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     *
+     */
+    public function addProjectUser($role, $user)
+    {
+        $projectUser = ProjectUser::create([
+            'user_id' => $user->id,
+            'project_role_id' => ProjectRole::byName($role)->first()->id,
+            'project_id' => $this->id,
+        ]);
+
+        return $projectUser;
     }
 
     public function attachments()
