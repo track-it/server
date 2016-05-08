@@ -12,7 +12,7 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-            $roles = [
+        $roles = [
         	[
         		'name'		=> 'customer'
         	],
@@ -28,7 +28,7 @@ class RolesTableSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-        	Role::create($role);
+        	Role::firstOrCreate($role);
         }
     }
 }

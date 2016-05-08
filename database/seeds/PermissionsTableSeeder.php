@@ -13,47 +13,28 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-    	$customer = Role::where(['name' => 'customer'])->first();
-    	$student = Role::where(['name' => 'student'])->first();
-    	$teacher = Role::where(['name' => 'teacher'])->first();
-    	$administrator = Role::where(['name' => 'administrator'])->first();
-
-        $roles = Role::all();
-
-        $permissions = [
-            'customer' => [
-                'submit',
-                'view',
+       $permissions = [
+            [
+                'name'      => 'proposal:view'
             ],
-            'student' => [
-                'submit',
-                'view',
-                'publish',
-                'search',
+            [
+                'name'      => 'proposal:submit'
             ],
-            'teacher' => [
-                'submit',
-                'view',
-                'approve',
-                'categorize',
-                'search',
+            [
+                'name'      => 'proposal:search'
             ],
-            'administrator' => [
-                'submit',
-                'view',
-                'publish',
-                'search',
-                'approve',
-                'categorize',
-                'search',
+            [
+                'name'      => 'proposal:approve'
+            ],
+            [
+                'name'      => 'proposal:publish'
+            ],
+            [
+                'name'      => 'proposal:categorize'
             ],
         ];
-
-
-        $roles->each(function ($role) use ($permissions) {
-            foreach ($permissions[$role->name] as $perm) {
-                $role->givePermissionTo($perm);
-            }
-        });
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate($permission);
+        }
     }
 }

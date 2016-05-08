@@ -5,6 +5,8 @@ namespace Trackit\Http\Controllers;
 use Illuminate\Http\Request;
 use Trackit\Http\Requests;
 use Trackit\Models\Project;
+use Trackit\Models\Proposal;
+use Trackit\Models\Tag;
 use Trackit\Http\Requests\UpdateProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
 use Response;
@@ -16,9 +18,13 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Proposal $proposal)
     {
-        return Response::json(Project::orderBy('updated_at', 'desc')->paginate(20));
+        if (!$proposal->exists) {
+            return Response::json(Project::orderBy('updated_at', 'desc')->paginate(20));
+        } else {
+            return Response::json($proposal->projects()->orderBy('updated_at', 'desc')->paginate(20));
+        }
     }
 
     /**
@@ -29,6 +35,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project->load('team.users', 'attachments');
         return Response::json($project);
     }
 
@@ -37,9 +44,21 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateProjectRequest $request)
+    public function store(Proposal $proposal, CreateProjectRequest $request)
     {
         $project = Project::create($request->all());
+
+        $tag_ids = $request->tag_ids == null ? [] : $request->tag_ids;
+
+        foreach ($tag_ids as $id) {
+            $newTag = Tag::firstOrCreate(['name' => $id]);
+            $project->tags()->attach($newTag->id);
+        }
+
+        $project->load('tags');
+
+        $project->proposal()->associate($proposal);
+        $project->status = Project::NOT_COMPLETED;
 
         return Response::json($project);
     }
