@@ -49,6 +49,12 @@ class PermissionsTableSeeder extends Seeder
                 'project:view',
                 'project:edit',
                 'project:delete',
+                'comment:view',
+                'comment:edit',
+                'comment:delete',
+                'tag:view',
+                'tag:edit',
+                'tag:delete',
             ],
         ];
 

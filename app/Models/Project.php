@@ -5,7 +5,7 @@ namespace Trackit\Models;
 use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Attachmentable;
 
-class Project extends Model implements Attachmentable
+class Project extends Model implements Attachmentable, RestrictsAccess
 {
     const COMPLETED = 1;
     const NOT_COMPLETED = 2;
@@ -20,7 +20,6 @@ class Project extends Model implements Attachmentable
         'status',
         'team_id',
         'proposal_id',
-        'owner_id',
     ];
 
     public function getId()
@@ -30,10 +29,6 @@ class Project extends Model implements Attachmentable
 
     public function allowsActionFrom($action, $user)
     {
-        // Allow if user is owner
-        if ($user->id == $this->owner_id) {
-            return true;
-        }
 
         $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
 

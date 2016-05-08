@@ -7,7 +7,18 @@ use Trackit\Models\Comment;
 
 class CreateCommentRequest extends Request
 {
+    /**
+     * @var
+     */
     protected $user;
+
+    /**
+     *
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +27,11 @@ class CreateCommentRequest extends Request
      */
     public function authorize()
     {
-        return true;
+        // TODO: Is there a more elegant solution for this?
+        $keys = array_keys(Route::current()->parameters());
+        $commentable = Route::current()->parameters()[$keys[0]];
+
+        return $commentable->allowsActionFrom($keys[0].':comment', $this->user);
     }
 
     /**

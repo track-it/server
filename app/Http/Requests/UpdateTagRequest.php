@@ -7,13 +7,28 @@ use Trackit\Http\Requests\Request;
 class UpdateTagRequest extends Request
 {
     /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     *
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return true;
+        $tag = $this->route('tag');
+
+        return $tag->allowsActionFrom('tag:edit', $user);
     }
 
     /**

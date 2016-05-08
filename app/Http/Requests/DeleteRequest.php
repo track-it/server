@@ -4,7 +4,7 @@ namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
 
-class CreateTeamRequest extends Request
+class DeleteRequest extends Request
 {
     /**
      * @var
@@ -26,7 +26,11 @@ class CreateTeamRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->can('proposal:apply');
+        // TODO: Is there a more elegant solution for this?
+        $keys = array_keys(Route::current()->parameters());
+        $model = Route::current()->parameters()[$keys[0]];
+
+        return $model->allowsActionFrom($keys[0].':delete', $this->user);
     }
 
     /**

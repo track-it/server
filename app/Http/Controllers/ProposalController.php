@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Response;
 
 use Trackit\Http\Requests;
+use Trackit\Http\Requests\ShowProposalRequest;
 use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Http\Requests\UpdateProposalRequest;
+use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Models\Proposal;
 use Trackit\Models\Tag;
 
@@ -53,7 +55,7 @@ class ProposalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Proposal $proposal)
+    public function show(Proposal $proposal, ShowProposalRequest $request)
     {
         return Response::json($proposal);
     }
@@ -77,7 +79,7 @@ class ProposalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Proposal $proposal)
+    public function destroy(Proposal $proposal, DeleteRequest $request)
     {
         $proposal->delete();
         return response('', 204);

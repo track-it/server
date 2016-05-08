@@ -4,7 +4,7 @@ namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
 
-class CreateTeamRequest extends Request
+class ShowProjectRequest extends Request
 {
     /**
      * @var
@@ -26,7 +26,14 @@ class CreateTeamRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->can('proposal:apply');
+        $project = $this->route('project');
+
+        // If a project is completed, it's visible to everyone regardless of permissions
+        if ($project->status == Project::COMPLETED) {
+            return true;
+        }
+
+        return $project->allowsActionFrom('project:view', $user);
     }
 
     /**
