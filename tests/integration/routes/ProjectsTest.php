@@ -141,11 +141,11 @@ class ProjectsTest extends TestCase
     /** @test */
     public function it_should_update_an_existing_project()
     {
+        $project = factory(Project::class)->create();
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addProjectUser('teacher', $user);
         $header = $this->createAuthHeader();
-
-        $project = factory(Project::class)->create(['owner_id' => $this->getUser()->id]);
 
         $response = $this->put('projects/'.$project->id, ['name' => 'new'], $header)->response;
         $jsonObject = json_decode($response->getContent());

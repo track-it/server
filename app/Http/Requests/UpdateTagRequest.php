@@ -3,6 +3,7 @@
 namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
+use Trackit\Models\User;
 
 class UpdateTagRequest extends Request
 {
@@ -26,9 +27,7 @@ class UpdateTagRequest extends Request
      */
     public function authorize()
     {
-        $tag = $this->route('tag');
-
-        return $tag->allowsActionFrom('tag:edit', $user);
+        return $this->user->can('tag:edit');
     }
 
     /**

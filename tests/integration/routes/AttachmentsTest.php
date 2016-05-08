@@ -44,6 +44,7 @@ class AttachmentsTest extends TestCase
     public function it_should_upload_an_attached_file_to_a_project()
     {
         $project = factory(Project::class)->create();
+        $project->addProjectUser('teacher', $this->getUser());
         $file = new UploadedFile(
             base_path('tests/files/test.txt'),
             'test.txt',
@@ -57,7 +58,7 @@ class AttachmentsTest extends TestCase
         $response = $this->call(
             'POST',
             'projects/'.$project->id.'/attachments',
-            [], // parameters
+            [], // parameter
             [], // cookies
             ['files' => [$file]], // files
             $header // server

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Taggable;
+use Trackit\Contracts\RestrictsAccess;
 use Trackit\Models\ProjectRole;
 use Trackit\Models\ProjectUser;
 
@@ -37,7 +38,7 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
 
         $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
 
-        // Allow is user is part of project and has project permission
+        // Allow if user is part of project and has project permission
         if ($projectUser && $projectUser->can($action)) {
             return true;
         }

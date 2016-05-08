@@ -2,8 +2,11 @@
 
 namespace Trackit\Http\Requests;
 
+use Route;
+
 use Trackit\Http\Requests\Request;
 use Trackit\Models\Comment;
+use Trackit\Models\User;
 
 class CreateCommentRequest extends Request
 {

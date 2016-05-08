@@ -4,6 +4,8 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Trackit\Contracts\RestrictsAccess;
+
 class Comment extends Model implements RestrictsAccess
 {
     protected $fillable = [

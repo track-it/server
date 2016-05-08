@@ -2,7 +2,10 @@
 
 namespace Trackit\Http\Requests;
 
+use Route;
+
 use Trackit\Http\Requests\Request;
+use Trackit\Models\User;
 
 class DeleteRequest extends Request
 {

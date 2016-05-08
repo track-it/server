@@ -138,29 +138,11 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
-    public function it_should_allow_edits_from_owner()
-    {
-        $user = factory(User::class)->create();
-        $project = factory(Project::class)->create(['owner_id' => $user->id]);
-
-        $this->assertTrue($project->allowsActionfrom('project:edit', $user));
-    }
-
-    /** @test */
-    public function it_should_disallow_edits_from_non_author()
-    {
-        $this->setUpProjectWithProjectUser('stakeholder');
-        $this->projectUser->user->role()->associate(Role::byName('customer')->first())->save();
-
-        $this->assertFalse($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
-    }
-
-    /** @test */
     public function it_should_allow_edits_from_project_user_with_proper_permissions()
     {
         $this->setUpProjectWithProjectUser('teacher');
 
-        $this->assertTrue($this->project->allowsActionfrom('project:edit', $this->projectUser->user));
+        $this->assertTrue($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
     }
 
     /** @test */
@@ -169,7 +151,7 @@ class ProjectTest extends TestCase
         $this->setUpProjectWithProjectUser('stakeholder');
         $this->projectUser->user->role()->associate(Role::byName('customer')->first())->save();
 
-        $this->assertFalse($this->project->allowsActionfrom('project:edit', $this->projectUser->user));
+        $this->assertFalse($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
     }
 
     /** @test */
@@ -179,6 +161,6 @@ class ProjectTest extends TestCase
         $user->role()->associate(Role::byName('administrator')->first())->save();
         $project = factory(Project::class)->create();
 
-        $this->assertTrue($project->allowsActionfrom('project:edit', $user));
+        $this->assertTrue($project->allowsActionFrom('project:edit', $user));
     }
 }

@@ -3,7 +3,9 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 use Trackit\Models\User;
+use Trackit\Contracts\RestrictsAccess;
 
 class Attachment extends Model implements RestrictsAccess
 {

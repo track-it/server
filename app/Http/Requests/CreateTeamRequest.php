@@ -3,6 +3,7 @@
 namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
+use Trackit\Models\User;
 
 class CreateTeamRequest extends Request
 {
