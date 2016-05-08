@@ -35,6 +35,7 @@ class ProposalController extends Controller
     public function store(CreateProposalRequest $request)
     {
         $proposal = Proposal::create($request->all());
+        $proposal->status = Proposal::NOT_REVIEWED;
 
         $tags = $request->tags == null ? [] : $request->tags;
 
@@ -42,6 +43,8 @@ class ProposalController extends Controller
             $newTag = Tag::firstOrCreate(['name' => $tag]);
             $proposal->tags()->attach($newTag->id);
         }
+
+        $proposal->save();
 
         $proposal->load('tags');
 
