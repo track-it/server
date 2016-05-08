@@ -4,23 +4,46 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Proposal;
+use Trackit\Models\Role;
 
 class ProposalsTest extends TestCase
 {
     use DatabaseTransactions;
 
     /** @test */
-    public function it_should_return_a_collection_of_proposals_with_pagination()
+    public function it_should_return_a_filtered_collection_of_proposals_with_pagination()
     {
-        $proposals = factory(Proposal::class, 30)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first());
+        $user->save();
+        factory(Proposal::class, 10)->create(['status' => Proposal::NOT_APPROVED]);
+        factory(Proposal::class, 3)->create(['status' => Proposal::UNDER_REVIEW]);
+        factory(Proposal::class, 5)->create(['status' => Proposal::APPROVED]);
 
-        $response = $this->get('proposals')->response;
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'proposals', [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(3, $jsonObject->last_page);
+        $this->assertEquals(18, $jsonObject->total);
+    }
+
+    /** @test */
+    public function it_should_return_approved_proposals_with_pagination_without_authorization()
+    {
+        factory(Proposal::class, 10)->create(['status' => Proposal::NOT_APPROVED]);
+        factory(Proposal::class, 3)->create(['status' => Proposal::UNDER_REVIEW]);
+        factory(Proposal::class, 5)->create(['status' => Proposal::APPROVED]);
+
+        $response = $this->json('GET', 'proposals')->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertInternalType('array', $jsonObject->data);
+        $this->assertEquals(5, $jsonObject->total);
     }
 
     /** @test */

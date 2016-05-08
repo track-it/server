@@ -4,6 +4,7 @@ namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Response;
+use Auth;
 
 use Trackit\Http\Requests;
 use Trackit\Http\Requests\CreateProposalRequest;
@@ -20,8 +21,10 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        // return Response::json(Proposal::all());
-        return Response::json(Proposal::orderBy('created_at', 'desc')->paginate(10));
+        $statuses = Auth::guest() ? [Proposal::APPROVED] : Auth::user()->role->accessTo('proposal');
+        $proposals = Proposal::whereIn('status', $statuses);
+
+        return Response::json($proposals->orderBy('created_at', 'desc')->paginate(10));
     }
 
     /**
