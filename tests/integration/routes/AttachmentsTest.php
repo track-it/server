@@ -7,13 +7,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Trackit\Models\Attachment;
 use Trackit\Models\Proposal;
+use Trackit\Models\Project;
 
 class AttachmentsTest extends TestCase
 {
     use DatabaseTransactions;
 
     /** @test */
-    public function it_should_upload_an_attached_file()
+    public function it_should_upload_an_attached_file_to_a_proposal()
     {
         $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $file = new UploadedFile(
@@ -31,7 +32,34 @@ class AttachmentsTest extends TestCase
             'proposals/'.$proposal->id.'/attachments',
             [], // parameters
             [], // cookies
-            [$file], // files
+            ['files' => [$file]], // files
+            $header // server
+        );
+
+        $jsonObject = json_decode($response->getContent());
+        $this->assertEquals($file->getClientOriginalName(), $jsonObject->data[0]->title);
+    }
+
+    /** @test */
+    public function it_should_upload_an_attached_file_to_a_project()
+    {
+        $project = factory(Project::class)->create();
+        $file = new UploadedFile(
+            base_path('tests/files/test.txt'),
+            'test.txt',
+            'text/plain',
+            20,
+            null,
+            false
+        );
+
+        $header = $this->createAuthHeader();
+        $response = $this->call(
+            'POST',
+            'projects/'.$project->id.'/attachments',
+            [], // parameters
+            [], // cookies
+            ['files' => [$file]], // files
             $header // server
         );
 
@@ -90,6 +118,23 @@ class AttachmentsTest extends TestCase
 
         $header = $this->createAuthHeader();
         $response = $this->get('proposals/'.$proposal->id.'/attachments/', $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(2, count($jsonObject->data));
+    }
+
+    /** @test */
+    public function it_should_return_all_attachments_for_a_project()
+    {
+        $project = factory(Project::class)->create();
+        $attachment = factory(Attachment::class)->create();
+        $attachment2 = factory(Attachment::class)->create();
+        $project->attachments()->save($attachment);
+        $project->attachments()->save($attachment2);
+
+        $header = $this->createAuthHeader();
+        $response = $this->get('projects/'.$project->id.'/attachments/', $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());

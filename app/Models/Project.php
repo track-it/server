@@ -3,9 +3,14 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Trackit\Contracts\Attachmentable;
 
-class Project extends Model implements Attachmentable, RestrictsAccess
+use Trackit\Contracts\Attachmentable;
+use Trackit\Contracts\Commentable;
+use Trackit\Contracts\Taggable;
+use Trackit\Models\ProjectRole;
+use Trackit\Models\ProjectUser;
+
+class Project extends Model implements Attachmentable, Commentable, Taggable, RestrictsAccess
 {
     const COMPLETED = 1;
     const NOT_COMPLETED = 2;
@@ -43,6 +48,20 @@ class Project extends Model implements Attachmentable, RestrictsAccess
         }
 
         return false;
+    }
+
+    /**
+     *
+     */
+    public function addProjectUser($role, $user)
+    {
+        $projectUser = ProjectUser::create([
+            'user_id' => $user->id,
+            'project_role_id' => ProjectRole::byName($role)->first()->id,
+            'project_id' => $this->id,
+        ]);
+
+        return $projectUser;
     }
 
     public function attachments()

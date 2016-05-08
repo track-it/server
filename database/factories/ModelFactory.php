@@ -21,6 +21,7 @@ $factory->define(Trackit\Models\Role::class, function (Faker\Generator $faker) {
 $factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
     return [
         'username' => $faker->name,
+        'role_id' => Trackit\Models\Role::byName('teacher')->first()->id,
     ];
 });
 
@@ -39,7 +40,6 @@ $factory->define(Trackit\Models\Project::class, function (Faker\Generator $faker
         // 'proposal_id' => factory(Trackit\Models\Proposal::class)->create()->id,
         'name' => $faker->sentence(6, true),
         'status' => collect(Trackit\Models\Project::STATUSES)->random(),
-        'owner_id' => factory(Trackit\Models\User::class)->create()->id,
         'team_id' => factory(Trackit\Models\Team::class)->create()->id,
     ];
 });
@@ -77,7 +77,9 @@ $factory->define(Trackit\Models\Workflow::class, function (Faker\Generator $fake
 
 $factory->define(Trackit\Models\ProjectUser::class, function (Faker\Generator $faker) {
     return [
-
+        'user_id' => factory(Trackit\Models\User::class)->create()->id,
+        'project_id' => factory(Trackit\Models\Project::class)->create()->id,
+        'project_role_id' => Trackit\Models\ProjectRole::all()->random(1)->id,
     ];
 });
         

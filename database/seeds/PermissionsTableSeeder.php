@@ -13,6 +13,7 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
+        /*
         $customer = Role::where(['name' => 'customer'])->first();
         $student = Role::where(['name' => 'student'])->first();
         $teacher = Role::where(['name' => 'teacher'])->first();
@@ -55,14 +56,31 @@ class PermissionsTableSeeder extends Seeder
                 'tag:view',
                 'tag:edit',
                 'tag:delete',
+        */
+
+        $permissions = [
+            [
+                'name'      => 'proposal:view'
+            ],
+            [
+                'name'      => 'proposal:submit'
+            ],
+            [
+                'name'      => 'proposal:search'
+            ],
+            [
+                'name'      => 'proposal:approve'
+            ],
+            [
+                'name'      => 'proposal:publish'
+            ],
+            [
+                'name'      => 'proposal:categorize'
             ],
         ];
 
-
-        $roles->each(function ($role) use ($permissions) {
-            foreach ($permissions[$role->name] as $perm) {
-                $role->givePermissionTo($perm);
-            }
-        });
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate($permission);
+        }
     }
 }

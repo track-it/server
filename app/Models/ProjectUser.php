@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectUser extends Model
 {
     /**
+     * @var
+     */
+    protected $fillable = [
+        'user_id',
+        'project_id',
+        'project_role_id',
+    ];
+
+    /**
      *
      */
     public function can($action)

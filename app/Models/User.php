@@ -82,11 +82,6 @@ class User extends Model implements Authenticatable
         return $this->belongsToMany(Team::class, 'user_teams');
     }
 
-    public function projects()
-    {
-        return $this->hasMany(Project::class, 'owner_id');
-    }
-
     public function supervisor()
     {
         return $this->belongsToMany(Project::class, 'project_supervisor');
@@ -94,6 +89,6 @@ class User extends Model implements Authenticatable
 
     public function projectUsers()
     {
-        return $this->hasMany(ProjectUser::class);
+        return $this->hasMany(ProjectUser::class)->with(['project', 'projectRole']);
     }
 }

@@ -20,18 +20,25 @@ class Role extends Model
 
     public function permissions()
     {
-        return $this->hasMany(Permission::class);
+        return $this->belongsToMany(Permission::class);
     }
 
     public function givePermissionTo($action)
     {
-        $this->permissions()->create([
-            'name' => $action,
-        ]);
+        $permissionId = Permission::where('name', $action)->first()->id;
+        $this->permissions()->attach($permissionId);
     }
 
     public function removePermissionTo($action)
     {
-        $this->permissions()->whereName($action)->delete();
+        $permissionId = Permission::where('name', $action)->first()->id;
+        $this->permissions()->detach($permissionId);
+    }
+
+    public function accessTo($resource)
+    {
+        return $this->hasMany(Access::class)->where(['resource' => $resource])->get()->map(function ($access) {
+            return $access->status;
+        })->toArray();
     }
 }

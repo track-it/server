@@ -4,6 +4,7 @@ namespace Trackit\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Response;
+use Auth;
 
 use Trackit\Http\Requests;
 use Trackit\Http\Requests\ShowProposalRequest;
@@ -22,8 +23,10 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        // return Response::json(Proposal::all());
-        return Response::json(Proposal::orderBy('created_at', 'desc')->paginate(10));
+        $statuses = Auth::guest() ? [Proposal::APPROVED] : Auth::user()->role->accessTo('proposal');
+        $proposals = Proposal::whereIn('status', $statuses);
+
+        return Response::json($proposals->orderBy('created_at', 'desc')->paginate(10));
     }
 
     /**
@@ -33,9 +36,8 @@ class ProposalController extends Controller
      */
     public function store(CreateProposalRequest $request)
     {
-        $proposal = Proposal::create([
-            'title' => $request->title,
-        ]);
+        $proposal = Proposal::create($request->all());
+        $proposal->status = Proposal::NOT_REVIEWED;
 
         $tags = $request->tags == null ? [] : $request->tags;
 
@@ -43,6 +45,8 @@ class ProposalController extends Controller
             $newTag = Tag::firstOrCreate(['name' => $tag]);
             $proposal->tags()->attach($newTag->id);
         }
+
+        $proposal->save();
 
         $proposal->load('tags');
 
@@ -57,6 +61,7 @@ class ProposalController extends Controller
      */
     public function show(Proposal $proposal, ShowProposalRequest $request)
     {
+        $proposal->load(['attachments', 'tags']);
         return Response::json($proposal);
     }
 

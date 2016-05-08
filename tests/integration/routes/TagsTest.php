@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Tag;
 use Trackit\Models\Proposal;
+use Trackit\Models\Project;
 
 class TagsTest extends TestCase
 {
@@ -16,7 +17,7 @@ class TagsTest extends TestCase
         $proposal = factory(Proposal::class)->create();
         $tag = factory(Tag::class)->create();
         $data = [
-        	'tags' => [$tag->name],
+            'tags' => [$tag->name],
         ];
 
         $header = $this->createAuthHeader();
@@ -31,8 +32,8 @@ class TagsTest extends TestCase
         $this->assertTrue(in_array($tag->name, $tags));
     }
 
-     /** @test */
-    public function it_should_add_a_new_tag_to_a_taggable()
+    /** @test */
+    public function it_should_add_a_new_tag_to_a_proposal()
     {
         $proposal = factory(Proposal::class)->create();
 
@@ -42,6 +43,27 @@ class TagsTest extends TestCase
 
         $header = $this->createAuthHeader();
         $response = $this->json('POST', 'proposals/'.$proposal->id.'/tags', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+        $tags = [];
+        foreach ($jsonObject->data as $item) {
+            $tags[] = $item->name;
+        }
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue(in_array($data['tags'][0], $tags));
+    }
+
+    /** @test */
+    public function it_should_add_a_new_tag_to_a_project()
+    {
+        $project = factory(Project::class)->create();
+
+        $data = [
+            'tags' => ['tagtagtagtag'],
+        ];
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('POST', 'projects/'.$project->id.'/tags', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
         $tags = [];
         foreach ($jsonObject->data as $item) {
@@ -103,6 +125,23 @@ class TagsTest extends TestCase
 
         $header = $this->createAuthHeader();
         $response = $this->json('GET', 'proposals/'.$proposal->id.'/tags/', [], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(2, count($jsonObject->data));
+    }
+
+    /** @test */
+    public function it_should_return_all_tags_for_a_project()
+    {
+        $project = factory(Project::class)->create();
+        $tag = factory(Tag::class)->create();
+        $tag2 = factory(Tag::class)->create();
+        $project->tags()->save($tag);
+        $project->tags()->save($tag2);
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'projects/'.$project->id.'/tags/', [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
