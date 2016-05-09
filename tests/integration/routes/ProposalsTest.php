@@ -52,7 +52,8 @@ class ProposalsTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
 
-        $response = $this->get('proposals/'.$proposal->id)->response;
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'proposals/'.$proposal->id, [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -132,7 +133,7 @@ class ProposalsTest extends TestCase
     {
         $header = $this->createAuthHeader();
 
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
 
         $response = $this->delete('proposals/'.$proposal->id, [], $header)->response;
 

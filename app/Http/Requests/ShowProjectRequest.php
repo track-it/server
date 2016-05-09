@@ -4,6 +4,7 @@ namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
 use Trackit\Models\User;
+use Trackit\Models\Project;
 
 class ShowProjectRequest extends Request
 {
@@ -29,12 +30,7 @@ class ShowProjectRequest extends Request
     {
         $project = $this->route('project');
 
-        // If a project is completed, it's visible to everyone regardless of permissions
-        if ($project->status == Project::COMPLETED) {
-            return true;
-        }
-
-        return $project->allowsActionFrom('project:view', $user);
+        return $project->allowsActionFrom('project:view', $this->user);
     }
 
     /**

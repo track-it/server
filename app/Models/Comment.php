@@ -5,6 +5,7 @@ namespace Trackit\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Trackit\Contracts\RestrictsAccess;
+use Trackit\Contracts\Commentable;
 
 class Comment extends Model implements RestrictsAccess
 {
@@ -31,7 +32,7 @@ class Comment extends Model implements RestrictsAccess
         }
 
         // Allow if user has permission to do action on the comment's parent resource
-        if ($this->commentable()->allowsActionFrom($action, $user)) {
+        if ($this->commentable->allowsActionFrom($action, $user)) {
             return true;
         }
 

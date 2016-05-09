@@ -15,6 +15,7 @@ class PermissionsTableSeeder extends Seeder
     {
         
         $permissions = [
+            'proposal:list',
             'proposal:view',
             'proposal:edit',
             'proposal:delete',
@@ -23,7 +24,9 @@ class PermissionsTableSeeder extends Seeder
             'proposal:categorize',
             'proposal:apply',
             'proposal:publish',
+            'project:create',
             'project:view',
+            'project:list',
             'project:edit',
             'project:delete',
             'comment:view',
@@ -32,6 +35,9 @@ class PermissionsTableSeeder extends Seeder
             'tag:view',
             'tag:edit',
             'tag:delete',
+            'team:view',
+            'team:edit',
+            'team:delete',
         ];
 
         foreach ($permissions as $permission) {

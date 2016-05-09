@@ -21,7 +21,7 @@ class CreateProjectRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->can('proposal:approve');
+        return $this->user->can('project:create');
     }
 
     /**

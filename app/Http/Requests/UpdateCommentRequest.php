@@ -22,7 +22,7 @@ class UpdateCommentRequest extends Request
     public function authorize()
     {
         $comment = $this->route('comment');
-        return $comment->allowsActionFrom('comment:edit', $user);
+        return $comment->allowsActionFrom('comment:edit', $this->user);
     }
 
     /**

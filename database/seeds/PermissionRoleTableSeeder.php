@@ -18,17 +18,26 @@ class PermissionRoleTableSeeder extends Seeder
             'customer' => [
                 'proposal:submit',
                 'proposal:view',
+                'proposal:list',
+                'project:view',
+                'project:list',
             ],
             'student' => [
+                'proposal:apply',
                 'proposal:submit',
                 'proposal:view',
                 'proposal:publish',
+                'project:view',
+                'project:list',
             ],
             'teacher' => [
                 'proposal:submit',
                 'proposal:view',
                 'proposal:approve',
                 'proposal:categorize',
+                'project:create',
+                'project:view',
+                'project:list',
             ],
             'administrator' => [
                 'proposal:submit',
@@ -47,6 +56,15 @@ class PermissionRoleTableSeeder extends Seeder
                 'project:view',
                 'project:edit',
                 'project:delete',
+                'team:view',
+                'team:edit',
+                'team:delete',
+            ],
+            'guest' => [
+                'proposal:view',
+                'proposal:list',
+                'project:view',
+                'project:list',
             ],
         ];
 

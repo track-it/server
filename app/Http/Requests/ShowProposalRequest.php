@@ -4,6 +4,7 @@ namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
 use Trackit\Models\User;
+use Trackit\Models\Proposal;
 
 class ShowProposalRequest extends Request
 {
@@ -29,12 +30,7 @@ class ShowProposalRequest extends Request
     {
         $proposal = $this->route('proposal');
 
-        // If a proposal is approved, it's visible to everyone regardless of permissions
-        if ($proposal->status == Proposal::APPROVED) {
-            return true;
-        }
-
-        return $proposal->allowsActionFrom('proposal:view', $user);
+        return $proposal->allowsActionFrom('proposal:view', $this->user);
     }
 
     /**

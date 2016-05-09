@@ -39,11 +39,15 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable, R
      */
     public function allowsActionFrom($action, $user)
     {
+        // Allow if user is author of proposal
         if ($user->id == $this->author_id) {
             return true;
         }
 
-        if ($user->can($action)) {
+        // Or if user has global permission, and access according to proposal status
+        $statuses = $user->role->accessTo($action);
+        $statuses = sizeof($statuses) > 0 ? $statuses : Proposal::STATUSES;
+        if ($user->can($action) && in_array($this->status, $statuses)) {
             return true;
         }
 

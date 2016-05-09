@@ -13,6 +13,7 @@ use Trackit\Models\Tag;
 use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\UpdateProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
+use Trackit\Http\Requests\DeleteRequest;
 
 class ProjectController extends Controller
 {
@@ -87,7 +88,7 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project, DeleteRequest $request)
     {
         $project->delete();
         return response('', 204);

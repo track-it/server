@@ -35,16 +35,16 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
 
     public function allowsActionFrom($action, $user)
     {
-
-        $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
-
         // Allow if user is part of project and has project permission
+        $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
         if ($projectUser && $projectUser->can($action)) {
             return true;
         }
 
         // Allow if user has global permission
-        if ($user->can($action)) {
+        $statuses = $user->role->accessTo($action);
+        $statuses = sizeof($statuses) > 0 ? $statuses : Project::STATUSES;
+        if ($user->can($action) && in_array($this->status, $statuses)) {
             return true;
         }
 

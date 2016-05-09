@@ -29,7 +29,7 @@ class UpdateTeamRequest extends Request
     {
         $team = $this->route('team');
 
-        return $team->allowsActionFrom('team:edit', $team);
+        return $team->allowsActionFrom('team:edit', $this->user);
     }
 
     /**

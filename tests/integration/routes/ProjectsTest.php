@@ -46,6 +46,7 @@ class ProjectsTest extends TestCase
     public function it_should_return_a_project()
     {
         $project = factory(Project::class)->create();
+        $project->status = Project::COMPLETED;
         $team = factory(Team::class)->create();
         factory(User::class, 5)->create()->each(function ($user) use ($team) {
             $team->users()->attach($user->id);
@@ -67,10 +68,12 @@ class ProjectsTest extends TestCase
     public function it_should_return_a_project_with_attachments()
     {
         $project = factory(Project::class)->create();
+        $project->status = Project::COMPLETED;
         $attachment = factory(Attachment::class)->create();
         $attachment2 = factory(Attachment::class)->create();
         $project->attachments()->save($attachment);
         $project->attachments()->save($attachment2);
+        $project->save();
 
         $header = $this->createAuthHeader();
         $response = $this->get('projects/'.$project->id, $header)->response;
@@ -158,6 +161,8 @@ class ProjectsTest extends TestCase
     public function it_should_delete_an_existing_project()
     {
         $header = $this->createAuthHeader();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
 
         $project = factory(Project::class)->create();
 

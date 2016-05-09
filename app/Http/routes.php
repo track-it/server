@@ -53,6 +53,8 @@ Route::group([], function () {
     // Open routes
     Route::get('proposals', 'ProposalController@index');
     Route::get('proposals/{proposal}', 'ProposalController@show');
+    Route::get('projects', 'ProjectController@index');
+    Route::get('projects/{project}', 'ProjectController@show');
 
     // Sitemap
     Route::get('site', function (Request $request) {
@@ -123,8 +125,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('tags/{tag}', 'TagController@destroy');
 
     // Project routes
-    Route::get('projects/{project}', 'ProjectController@show');
-    Route::get('projects', 'ProjectController@index');
     Route::put('projects/{project}', 'ProjectController@update');
     Route::delete('projects/{project}', 'ProjectController@destroy');
     Route::get('projects/{project}/attachments', 'AttachmentController@index');
