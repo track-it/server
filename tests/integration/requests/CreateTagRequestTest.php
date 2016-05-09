@@ -141,4 +141,20 @@ class CreateTagRequestTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('C#', $jsonObject->data[0]->name);
     }
+
+    /** @test */
+    public function it_should_allow_a_tag_including_a_swedish_characters()
+    {
+        $proposal = factory(Proposal::class)->create();
+        $data = [
+            'tags' => ['åäöÅÄÖ'],
+        ];
+        $header = $this->createAuthHeader();
+
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/tags', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('åäöÅÄÖ', $jsonObject->data[0]->name);
+    }
 }
