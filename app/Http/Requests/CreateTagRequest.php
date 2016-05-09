@@ -24,8 +24,8 @@ class CreateTagRequest extends Request
     public function rules()
     {
         return [
-            'tags' => 'required|array|max:20',
-            'tags.*' => 'required|string|max:20|regex:/^[a-zA-Z]{1}\w+$/'
+            'tags'      => config('validation.tags') . '|required',
+            'tags.*'    => config('validation.tag'),
         ];
     }
 }

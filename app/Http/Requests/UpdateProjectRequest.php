@@ -24,7 +24,10 @@ class UpdateProjectRequest extends Request
     public function rules()
     {
         return [
-            //
+            'title'         => config('validation.title'),
+            'description'   => config('validation.description'),
+            'tags'          => config('validation.tags'),
+            'tags.*'        => config('validation.tag'),
         ];
     }
 }

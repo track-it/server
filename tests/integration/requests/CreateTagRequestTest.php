@@ -125,4 +125,20 @@ class CreateTagRequestTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertEquals('The tags.0 format is invalid.', $jsonObject->{'tags.0'}[0]);
     }
+
+    /** @test */
+    public function it_should_allow_a_tag_including_a_hashtag()
+    {
+        $proposal = factory(Proposal::class)->create();
+        $data = [
+            'tags' => ['C#'],
+        ];
+        $header = $this->createAuthHeader();
+
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/tags', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('C#', $jsonObject->data[0]->name);
+    }
 }

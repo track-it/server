@@ -97,7 +97,7 @@ class ProjectsTest extends TestCase
             $team->users()->attach($user->id);
         });
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
             'team_id' => $team->id,
             'tags' => ['tag1', 'tag2'],
         ];
@@ -107,7 +107,7 @@ class ProjectsTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($data['name'], $jsonObject->data->name);
+        $this->assertEquals($data['title'], $jsonObject->data->title);
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
         $this->assertEquals($data['tags'][0], $jsonObject->data->tags[0]->name);
@@ -120,11 +120,11 @@ class ProjectsTest extends TestCase
 
         $project = factory(Project::class)->create();
 
-        $response = $this->put('projects/'.$project->id, ['name' => 'new'], $header)->response;
+        $response = $this->put('projects/'.$project->id, ['title' => 'new'], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('new', $jsonObject->data->name);
+        $this->assertEquals('new', $jsonObject->data->title);
     }
 
     /** @test */
