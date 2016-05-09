@@ -99,7 +99,7 @@ class ProjectsTest extends TestCase
         $data = [
             'name' => 'New Project',
             'team_id' => $team->id,
-            'tag_ids' => ['tag1', 'tag2'],
+            'tags' => ['tag1', 'tag2'],
         ];
 
         $header = $this->createAuthHeader();
@@ -110,7 +110,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals($data['name'], $jsonObject->data->name);
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
-        $this->assertEquals($data['tag_ids'][0], $jsonObject->data->tags[0]->name);
+        $this->assertEquals($data['tags'][0], $jsonObject->data->tags[0]->name);
     }
 
     /** @test */
