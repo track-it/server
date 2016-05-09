@@ -13,8 +13,7 @@ class CreateUserTeamsTable extends Migration
     public function up()
     {
         Schema::create('user_teams', function (Blueprint $table) {
-            $table->increments('id');
-            
+
             $table->integer('team_id')->unsigned();
             $table->foreign('team_id')->references('id')->on('teams');
             $table->integer('user_id')->unsigned();
