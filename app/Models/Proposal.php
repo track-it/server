@@ -13,12 +13,14 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     const UNDER_REVIEW = 2;
     const NOT_APPROVED = 3;
     const APPROVED = 4;
+    const ARCHIVED = 5;
 
     const STATUSES = [
         self::NOT_REVIEWED,
         self::UNDER_REVIEW,
         self::NOT_APPROVED,
         self::APPROVED,
+        self::ARCHIVED,
     ];
 
     protected $fillable = [
