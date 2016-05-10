@@ -37,7 +37,7 @@ class TestSeeder extends Seeder
         $student1 = factory(User::class)->create([
             'username' => 'customer',
             'password' => 'password',
-            'role_id' => Role::byName('student')->first()->id,
+            'role_id' => Role::byName('customer')->first()->id,
         ]);
         $student2 = factory(User::class)->create([
             'role_id' => Role::byName('student')->first()->id,
@@ -101,10 +101,12 @@ class TestSeeder extends Seeder
         $proposal1->comments()->save($comment3);
 
         $proposal2->author()->associate($teacher)->save();
+        $proposal3->author()->associate($teacher)->save();
 
         $project1->proposal()->associate($proposal1)->save();
         $project1->team()->associate($team)->save();
         $project1->addProjectUser('teacher', $teacher);
+        $project2->addProjectUser('teacher', $teacher);
         $project1->addProjectUser('stakeholder', $customer);
 
         $project1->attachments()->save($attachment4);
