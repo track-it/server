@@ -102,6 +102,9 @@ class TestSeeder extends Seeder
 
         $project1->proposal()->associate($proposal1)->save();
         $project1->team()->associate($team)->save();
+        $project1->addProjectUser('student', $student1);
+        $project1->addProjectUser('student', $student2);
+        $project1->addProjectUser('student', $student3);
         $project1->addProjectUser('teacher', $teacher);
         $project2->addProjectUser('teacher', $teacher);
         $project1->addProjectUser('stakeholder', $customer);
