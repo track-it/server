@@ -21,7 +21,8 @@ class UpdateCommentRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->id == $this->route('comment')->author_id;
+        $comment = $this->route('comment');
+        return $comment->allowsActionFrom('comment:edit', $this->user);
     }
 
     /**

@@ -7,13 +7,30 @@ use Response;
 use Auth;
 
 use Trackit\Http\Requests;
+use Trackit\Http\Requests\ShowProposalRequest;
 use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Http\Requests\UpdateProposalRequest;
+use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Models\Proposal;
 use Trackit\Models\Tag;
+use Trackit\Models\User;
 
 class ProposalController extends Controller
 {
+
+    /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     *
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +38,8 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        $statuses = Auth::guest() ? [Proposal::APPROVED] : Auth::user()->role->accessTo('proposal');
+        $statuses = $this->user->role->accessTo('proposal:list');
+
         $proposals = Proposal::whereIn('status', $statuses);
 
         return Response::json($proposals->orderBy('created_at', 'desc')->paginate(10));
@@ -57,7 +75,7 @@ class ProposalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Proposal $proposal)
+    public function show(Proposal $proposal, ShowProposalRequest $request)
     {
         $proposal->load(['attachments', 'tags']);
         return Response::json($proposal);
@@ -82,7 +100,7 @@ class ProposalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Proposal $proposal)
+    public function destroy(Proposal $proposal, DeleteRequest $request)
     {
         $proposal->delete();
         return response('', 204);

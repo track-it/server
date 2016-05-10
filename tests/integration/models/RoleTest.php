@@ -13,18 +13,12 @@ class RoleTest extends TestCase
     public function it_has_a_set_of_permissions()
     {
         $role = Role::byName('customer')->first();
-
+        
         $canSubmit = $role->can('proposal:submit');
         $canView = $role->can('proposal:view');
-        $canPublish = $role->can('proposal:publish');
-        $canSearch = $role->can('proposal:search');
-        $canApprove = $role->can('proposal:approve');
 
         $this->assertTrue($canSubmit);
         $this->assertTrue($canView);
-        $this->assertFalse($canPublish);
-        $this->assertFalse($canSearch);
-        $this->assertFalse($canApprove);
     }
 
     /** @test */

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Tag;
 use Trackit\Models\Proposal;
 use Trackit\Models\Project;
+use Trackit\Models\Role;
 
 class TagsTest extends TestCase
 {
@@ -14,7 +15,7 @@ class TagsTest extends TestCase
     /** @test */
     public function it_should_add_an_existing_tag_to_a_taggable()
     {
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $tag = factory(Tag::class)->create();
         $data = [
             'tags' => [$tag->name],
@@ -35,7 +36,7 @@ class TagsTest extends TestCase
     /** @test */
     public function it_should_add_a_new_tag_to_a_proposal()
     {
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
 
         $data = [
             'tags' => ['tagtagtagtag'],
@@ -57,6 +58,7 @@ class TagsTest extends TestCase
     public function it_should_add_a_new_tag_to_a_project()
     {
         $project = factory(Project::class)->create();
+        $project->addProjectUser('teacher', $this->getUser());
 
         $data = [
             'tags' => ['tagtagtagtag'],
@@ -90,6 +92,8 @@ class TagsTest extends TestCase
     /** @test */
     public function it_should_update_an_existing_tag()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
         $tag = factory(Tag::class)->create();
         $data = [
             'name' => factory(Tag::class)->create()->name,

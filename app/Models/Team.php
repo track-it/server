@@ -4,12 +4,23 @@ namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Team extends Model
-{
+use Trackit\Contracts\RestrictsAccess;
 
+class Team extends Model implements RestrictsAccess
+{
     protected $fillable = [
         'proposal_id',
     ];
+
+    /**
+     *
+     */
+    public function allowsActionFrom($action, $user)
+    {
+        if ($this->project->allowsActionFrom($action, $user)) {
+            return true;
+        }
+    }
 
     public function users()
     {
@@ -18,7 +29,7 @@ class Team extends Model
 
     public function project()
     {
-        return $this->hasOne(Project::class);
+        return $this->hasOne(Project::class, 'team_id');
     }
 
     /**

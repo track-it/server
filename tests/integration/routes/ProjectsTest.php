@@ -8,6 +8,7 @@ use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\Team;
 use Trackit\Models\User;
+use Trackit\Models\Role;
 use Trackit\Models\Attachment;
 
 class ProjectsTest extends TestCase
@@ -45,6 +46,7 @@ class ProjectsTest extends TestCase
     public function it_should_return_a_project()
     {
         $project = factory(Project::class)->create();
+        $project->status = Project::COMPLETED;
         $team = factory(Team::class)->create();
         factory(User::class, 5)->create()->each(function ($user) use ($team) {
             $team->users()->attach($user->id);
@@ -66,10 +68,12 @@ class ProjectsTest extends TestCase
     public function it_should_return_a_project_with_attachments()
     {
         $project = factory(Project::class)->create();
+        $project->status = Project::COMPLETED;
         $attachment = factory(Attachment::class)->create();
         $attachment2 = factory(Attachment::class)->create();
         $project->attachments()->save($attachment);
         $project->attachments()->save($attachment2);
+        $project->save();
 
         $header = $this->createAuthHeader();
         $response = $this->get('projects/'.$project->id, $header)->response;
@@ -91,6 +95,7 @@ class ProjectsTest extends TestCase
     public function it_should_create_a_new_project_from_a_proposal()
     {
         $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
         $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $team = factory(Team::class)->create();
         factory(User::class, 5)->create()->each(function ($user) use ($team) {
@@ -114,11 +119,36 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function it_should_return_error_when_non_teacher_creates_new_project_from_a_proposal()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $team = factory(Team::class)->create();
+        factory(User::class, 5)->create()->each(function ($user) use ($team) {
+            $team->users()->attach($user->id);
+        });
+        $data = [
+            'name' => 'New Project',
+            'team_id' => $team->id,
+            'tag_ids' => ['tag1', 'tag2'],
+        ];
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/projects', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /** @test */
     public function it_should_update_an_existing_project()
     {
-        $header = $this->createAuthHeader();
-
         $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addProjectUser('teacher', $user);
+        $header = $this->createAuthHeader();
 
         $response = $this->put('projects/'.$project->id, ['title' => 'new'], $header)->response;
         $jsonObject = json_decode($response->getContent());
@@ -131,6 +161,8 @@ class ProjectsTest extends TestCase
     public function it_should_delete_an_existing_project()
     {
         $header = $this->createAuthHeader();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
 
         $project = factory(Project::class)->create();
 

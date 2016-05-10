@@ -42,7 +42,7 @@ class AttachmentController extends Controller
      */
     public function store(Attachmentable $attachmentable, CreateAttachmentRequest $request)
     {
-        $files = $request->allFiles()['files'];
+        $files = array_key_exists('files', $request->allFiles()) ? $request->allFiles()['files'] : [];
         foreach ($files as $file) {
             $data = [
                 'title' => $file->getClientOriginalName(),
