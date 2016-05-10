@@ -13,7 +13,7 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
         $permissions = [
             'proposal:list',
             'proposal:view',
@@ -24,11 +24,13 @@ class PermissionsTableSeeder extends Seeder
             'proposal:categorize',
             'proposal:apply',
             'proposal:publish',
+            'proposal:comment',
             'project:create',
             'project:view',
             'project:list',
             'project:edit',
             'project:delete',
+            'project:comment',
             'comment:view',
             'comment:edit',
             'comment:delete',
