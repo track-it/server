@@ -72,8 +72,8 @@ class AccessesTableSeeder extends Seeder
 
         ];
         $administratorStatuses = [
-            'proposal:view' => Proposal::STATUSES,
-            'project:view' => Project::STATUSES,
+            'proposal:list' => Proposal::STATUSES,
+            'proposal:view' => Project::STATUSES,
             'project:view' => Project::STATUSES,
             'project:list' => Project::STATUSES,
         ];
