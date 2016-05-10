@@ -29,24 +29,21 @@ class TestSeeder extends Seeder
             'password' => 'password',
             'role_id' => Role::byName('teacher')->first()->id,
         ]);
+        $customer = factory(User::class)->create([
+            'username' => 'customer',
+            'password' => 'password',
+            'role_id' => Role::byName('customer')->first()->id,
+        ]);
         $student1 = factory(User::class)->create([
             'username' => 'student',
             'password' => 'password',
             'role_id' => Role::byName('student')->first()->id,
-        ]);
-        $student1 = factory(User::class)->create([
-            'username' => 'customer',
-            'password' => 'password',
-            'role_id' => Role::byName('customer')->first()->id,
         ]);
         $student2 = factory(User::class)->create([
             'role_id' => Role::byName('student')->first()->id,
         ]);
         $student3 = factory(User::class)->create([
             'role_id' => Role::byName('student')->first()->id,
-        ]);
-        $customer = factory(User::class)->create([
-            'role_id' => Role::byName('customer')->first()->id,
         ]);
 
         $attachment1 = factory(Attachment::class)->create();
@@ -105,6 +102,9 @@ class TestSeeder extends Seeder
 
         $project1->proposal()->associate($proposal1)->save();
         $project1->team()->associate($team)->save();
+        $project1->addProjectUser('student', $student1);
+        $project1->addProjectUser('student', $student2);
+        $project1->addProjectUser('student', $student3);
         $project1->addProjectUser('teacher', $teacher);
         $project2->addProjectUser('teacher', $teacher);
         $project1->addProjectUser('stakeholder', $customer);
