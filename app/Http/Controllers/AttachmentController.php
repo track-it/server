@@ -44,17 +44,22 @@ class AttachmentController extends Controller
     {
         $files = $request->allFiles()['files'];
         foreach ($files as $file) {
+            $path = 'attachments/'.
+                    strtolower(class_basename(get_class($attachmentable))).'_'.$attachmentable->getId().'/'.
+                    $file->getClientOriginalName();
+
             $data = [
                 'title' => $file->getClientOriginalName(),
                 'uploader_id' => $this->user->id,
                 'attachmentable_id' => $attachmentable->getId(),
                 'attachmentable_type' => get_class($attachmentable),
+                'path' => $path,
                 'mime_type' => $file->getMimeType(),
             ];
 
             $attachment = Attachment::create($data);
-            
-            Storage::put('attachments/'.$attachment->id.'/'.$file->getClientOriginalName(), file_get_contents($file));
+
+            Storage::put($path, file_get_contents($file));
         }
         return Response::json($attachmentable->attachments);
     }
@@ -67,7 +72,7 @@ class AttachmentController extends Controller
      */
     public function show(Attachment $attachment)
     {
-        return Response::json($attachment);
+        return Response::file(storage_path('app/'.$attachment->path));
     }
 
     /**
