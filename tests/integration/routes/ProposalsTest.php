@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use Trackit\Models\Proposal;
 use Trackit\Models\Role;
 
@@ -51,7 +52,8 @@ class ProposalsTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
 
-        $response = $this->get('proposals/'.$proposal->id)->response;
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'proposals/'.$proposal->id, [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -70,6 +72,8 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_proposal()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
         $header = $this->createAuthHeader();
         $data = [
             'title' => 'This is a title',
@@ -86,6 +90,8 @@ class ProposalsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_proposal_with_tags()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
         $header = $this->createAuthHeader();
         $proposalContent = [
             'title' => 'This is a title',
@@ -127,7 +133,7 @@ class ProposalsTest extends TestCase
     {
         $header = $this->createAuthHeader();
 
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
 
         $response = $this->delete('proposals/'.$proposal->id, [], $header)->response;
 

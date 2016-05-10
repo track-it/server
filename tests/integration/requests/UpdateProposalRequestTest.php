@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use Trackit\Models\Proposal;
 use Trackit\Models\User;
+use Trackit\Models\Role;
 
 class UpdateProposalRequestTest extends TestCase
 {
@@ -17,7 +18,9 @@ class UpdateProposalRequestTest extends TestCase
 
     /** @test */
     public function it_should_allow_an_author_to_update()
-    {        
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
         $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $header = $this->createAuthHeader();
         $data = [
@@ -35,6 +38,8 @@ class UpdateProposalRequestTest extends TestCase
     /** @test */
     public function it_should_disallow_a_non_author_to_update()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
         $proposal = factory(Proposal::class)->create();
         $originalTitle = $proposal->title;
         $data = [

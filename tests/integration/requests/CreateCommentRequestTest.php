@@ -15,7 +15,7 @@ class CreateCommentRequestTest extends TestCase
     public function it_should_not_allow_a_body_longer_than_5000_characters()
     {
         $header = $this->createAuthHeader();
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $comment = factory(Comment::class)->create();
         $data = [
             'body' => str_random(5001),
@@ -32,7 +32,7 @@ class CreateCommentRequestTest extends TestCase
     public function it_should_not_allow_a_missing_body()
     {
         $header = $this->createAuthHeader();
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $comment = factory(Comment::class)->create();
         $data = [
         ];

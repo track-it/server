@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Taggable;
+use Trackit\Contracts\RestrictsAccess;
 use Trackit\Models\ProjectRole;
 use Trackit\Models\ProjectUser;
 
-
-class Project extends Model implements Attachmentable, Commentable, Taggable
+class Project extends Model implements Attachmentable, Commentable, Taggable, RestrictsAccess
 {
     const COMPLETED = 1;
     const NOT_COMPLETED = 2;
@@ -31,6 +31,24 @@ class Project extends Model implements Attachmentable, Commentable, Taggable
     public function getId()
     {
         return $this->id;
+    }
+
+    public function allowsActionFrom($action, $user)
+    {
+        // Allow if user is part of project and has project permission
+        $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
+        if ($projectUser && $projectUser->can($action)) {
+            return true;
+        }
+
+        // Allow if user has global permission
+        $statuses = $user->role->accessTo($action);
+        $statuses = sizeof($statuses) > 0 ? $statuses : Project::STATUSES;
+        if ($user->can($action) && in_array($this->status, $statuses)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

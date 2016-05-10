@@ -8,6 +8,7 @@ use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\User;
 use Trackit\Models\Team;
+use Trackit\Models\Role;
 use Trackit\Models\Comment;
 use Trackit\Models\Workflow;
 use Trackit\Models\ProjectRole;
@@ -133,5 +134,33 @@ class ProjectTest extends TestCase
         $this->projectUser->user()->associate($user);
         $this->projectUser->project()->associate($this->project);
         $this->projectUser->projectRole()->associate($this->projectRole);
+        $this->projectUser->save();
+    }
+
+    /** @test */
+    public function it_should_allow_edits_from_project_user_with_proper_permissions()
+    {
+        $this->setUpProjectWithProjectUser('teacher');
+
+        $this->assertTrue($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
+    }
+
+    /** @test */
+    public function it_should_disallow_edits_from_project_user_without_proper_permissions()
+    {
+        $this->setUpProjectWithProjectUser('stakeholder');
+        $this->projectUser->user->role()->associate(Role::byName('customer')->first())->save();
+
+        $this->assertFalse($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
+    }
+
+    /** @test */
+    public function it_should_allow_edits_from_global_user_with_proper_permissions()
+    {
+        $user = factory(User::class)->create();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
+        $project = factory(Project::class)->create();
+
+        $this->assertTrue($project->allowsActionFrom('project:edit', $user));
     }
 }

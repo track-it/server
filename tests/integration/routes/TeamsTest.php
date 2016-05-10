@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Team;
 use Trackit\Models\Proposal;
 use Trackit\Models\User;
+use Trackit\Models\Role;
+use Trackit\Models\Project;
 
 class TeamsTest extends TestCase
 {
@@ -55,6 +57,8 @@ class TeamsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_team_on_a_proposal()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
         $proposal = factory(Proposal::class)->create();
         $data = [
             'user_ids' => [],
@@ -76,7 +80,10 @@ class TeamsTest extends TestCase
     /** @test */
     public function it_should_update_an_existing_team()
     {
-        $team = factory(Team::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
+        $project = factory(Project::class)->create();
+        $team = $project->team;
         $user = factory(User::class)->create();
         $data = [
             'users' => [$user->id],
@@ -94,8 +101,10 @@ class TeamsTest extends TestCase
     public function it_should_delete_an_existing_team()
     {
         $header = $this->createAuthHeader();
-
-        $team = factory(Team::class)->create();
+        $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
+        $team = $project->team;
 
         $response = $this->delete('teams/'.$team->id, [], $header)->response;
 

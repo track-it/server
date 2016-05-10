@@ -35,9 +35,11 @@ class Role extends Model
         $this->permissions()->detach($permissionId);
     }
 
-    public function accessTo($resource)
+    public function accessTo($permission)
     {
-        return $this->hasMany(Access::class)->where(['resource' => $resource])->get()->map(function ($access) {
+        $accesses = $this->hasMany(Access::class)->where(['permission' => $permission])->get();
+
+        return $accesses->map(function ($access) {
             return $access->status;
         })->toArray();
     }

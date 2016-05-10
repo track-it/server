@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Taggable;
 use Trackit\Contracts\Attachmentable;
+use Trackit\Contracts\RestrictsAccess;
 
-class Proposal extends Model implements Attachmentable, Taggable, Commentable
+class Proposal extends Model implements Attachmentable, Taggable, Commentable, RestrictsAccess
 {
     const NOT_REVIEWED = 1;
     const UNDER_REVIEW = 2;
@@ -33,6 +34,26 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     *
+     */
+    public function allowsActionFrom($action, $user)
+    {
+        // Allow if user is author of proposal
+        if ($user->id == $this->author_id) {
+            return true;
+        }
+
+        // Or if user has global permission, and access according to proposal status
+        $statuses = $user->role->accessTo($action);
+        $statuses = sizeof($statuses) > 0 ? $statuses : Proposal::STATUSES;
+        if ($user->can($action) && in_array($this->status, $statuses)) {
+            return true;
+        }
+
+        return false;
     }
 
     public function author()

@@ -2,18 +2,26 @@
 
 namespace Trackit\Http\Requests;
 
+use Route;
+
 use Trackit\Http\Requests\Request;
 use Trackit\Models\User;
 
-class CreateProposalRequest extends Request
+class DeleteRequest extends Request
 {
+    /**
+     * @var
+     */
     protected $user;
 
+    /**
+     *
+     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
-    
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,7 +29,11 @@ class CreateProposalRequest extends Request
      */
     public function authorize()
     {
-        return $this->user->can('proposal:submit');
+        // TODO: Is there a more elegant solution for this?
+        $keys = array_keys(Route::current()->parameters());
+        $model = Route::current()->parameters()[$keys[0]];
+
+        return $model->allowsActionFrom($keys[0].':delete', $this->user);
     }
 
     /**
@@ -32,10 +44,7 @@ class CreateProposalRequest extends Request
     public function rules()
     {
         return [
-            'title'         => config('validation.title'),
-            'description'   => config('validation.description') . '|required',
-            'tags'          => config('validation.tags'),
-            'tags.*'        => config('validation.tag'),
+            //
         ];
     }
 }
