@@ -22,6 +22,13 @@ class User extends Model implements Authenticatable
         'password'
     ];
 
+    /**
+     * @var
+     */
+    protected $appends = [
+        'projects',
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -33,6 +40,18 @@ class User extends Model implements Authenticatable
         static::creating(function ($user) {
             $user->password = Hash::make($user->password);
         });
+    }
+
+    /**
+     *
+     */
+    public function getProjectsAttribute()
+    {
+        $projects = $this->manyThroughMany(Project::class, ProjectUser::class, 'user_id', 'id', 'project_id');
+        $projects->select('projects.*', 'project_roles.name AS my_role');
+        $projects->join('project_roles', 'project_roles.id', '=', 'project_users.project_role_id');
+
+        return $projects->get();
     }
 
     public static function scopeByUsername($query, $username)
@@ -90,5 +109,18 @@ class User extends Model implements Authenticatable
     public function projectUsers()
     {
         return $this->hasMany(ProjectUser::class)->with(['project', 'projectRole']);
+    }
+
+    public function manyThroughMany($related, $through, $firstKey, $secondKey, $pivotKey)
+    {
+        $model = new $related;
+        $table = $model->getTable();
+        $throughModel = new $through;
+        $pivot = $throughModel->getTable();
+
+        return $model
+            ->join($pivot, $pivot . '.' . $pivotKey, '=', $table . '.' . $secondKey)
+            ->select($table . '.*')
+            ->where($pivot . '.' . $firstKey, '=', $this->id);
     }
 }
