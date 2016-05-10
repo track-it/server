@@ -51,9 +51,10 @@ $factory->define(Trackit\Models\Comment::class, function (Faker\Generator $faker
 });
 
 $factory->define(Trackit\Models\Attachment::class, function (Faker\Generator $faker) {
+    $filename = $faker->sentence(3, true);
     return [
-        'title' => $faker->sentence(3, true),
-        'url' => $faker->url(),
+        'title' => $filename,
+        'path' => storage_path($filename),
     ];
 });
 
@@ -65,13 +66,13 @@ $factory->define(Trackit\Models\Tag::class, function (Faker\Generator $faker) {
 
 $factory->define(Trackit\Models\Course::class, function (Faker\Generator $faker) {
     return [
-        
+
     ];
 });
 
 $factory->define(Trackit\Models\Workflow::class, function (Faker\Generator $faker) {
     return [
-        
+
     ];
 });
 
@@ -82,7 +83,7 @@ $factory->define(Trackit\Models\ProjectUser::class, function (Faker\Generator $f
         'project_role_id' => Trackit\Models\ProjectRole::all()->random(1)->id,
     ];
 });
-        
+
 $factory->define(Trackit\Models\Team::class, function (Faker\Generator $faker) {
     return [
 

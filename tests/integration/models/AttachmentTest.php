@@ -29,7 +29,7 @@ class AttachmentTest extends TestCase
     public function it_has_a_title()
     {
         $attachment = factory(Attachment::class)->create();
-        
+
         $hasTitle = !! $attachment->title;
 
         $this->assertTrue($hasTitle);
@@ -39,8 +39,8 @@ class AttachmentTest extends TestCase
     public function it_has_an_url()
     {
         $attachment = factory(Attachment::class)->create();
-        
-        $hasUrl = !! $attachment->url;
+
+        $hasUrl = !! $attachment->toArray()['url'];
 
         $this->assertTrue($hasUrl);
     }
@@ -53,7 +53,7 @@ class AttachmentTest extends TestCase
         $attachment = factory(Attachment::class)->create();
 
         $attachment->attachmentable()->associate($proposal);
-        
+
         $this->assertEquals($proposal, $attachment->attachmentable);
     }
 
