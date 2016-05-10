@@ -47,6 +47,9 @@ class TestSeeder extends Seeder
         $attachment1 = factory(Attachment::class)->create();
         $attachment2 = factory(Attachment::class)->create();
         $attachment3 = factory(Attachment::class)->create();
+        $attachment4 = factory(Attachment::class)->create();
+        $attachment5 = factory(Attachment::class)->create();
+        $attachment6 = factory(Attachment::class)->create();
 
         $proposal1 = factory(Proposal::class)->create([
             'author_id' => $customer->id,
@@ -97,8 +100,8 @@ class TestSeeder extends Seeder
         $project1->addProjectUser('teacher', $teacher);
         $project1->addProjectUser('stakeholder', $customer);
 
-        $project1->attachments()->save($attachment1);
-        $project1->attachments()->save($attachment2);
-        $project1->attachments()->save($attachment3);
+        $project1->attachments()->save($attachment4);
+        $project1->attachments()->save($attachment5);
+        $project1->attachments()->save($attachment6);
     }
 }
