@@ -74,7 +74,7 @@ class TeamsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
-        $this->assertEquals(sizeof($data['user_ids']), sizeof($jsonObject->data->users));
+        $this->assertEquals(sizeof($data['user_ids']) + 1, sizeof($jsonObject->data->users));
     }
 
     /** @test */
