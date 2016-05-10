@@ -62,6 +62,7 @@ class ProposalController extends Controller
             $proposal->tags()->attach($newTag->id);
         }
 
+        $proposal->author()->associate($this->user);
         $proposal->save();
 
         $proposal->load('tags');
