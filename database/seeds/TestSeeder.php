@@ -37,7 +37,7 @@ class TestSeeder extends Seeder
         $student1 = factory(User::class)->create([
             'username' => 'student',
             'password' => 'password',
-            'role_id' => Role::byName('customer')->first()->id,
+            'role_id' => Role::byName('student')->first()->id,
         ]);
         $student2 = factory(User::class)->create([
             'role_id' => Role::byName('student')->first()->id,
