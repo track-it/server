@@ -67,18 +67,18 @@ class AttachmentsTest extends TestCase
         $this->assertEquals($file->getClientOriginalName(), $jsonObject->data[0]->title);
     }
 
-    /** @test */
-    public function it_should_return_an_existing_attachment()
-    {
-        $attachment = factory(Attachment::class)->create();
+    // /** @test */
+    // public function it_should_return_an_existing_attachment()
+    // {
+    //     $attachment = factory(Attachment::class)->create();
 
-        $header = $this->createAuthHeader();
-        $response = $this->get('attachments/'.$attachment->id, $header)->response;
-        $jsonObject = json_decode($response->getContent());
+    //     $header = $this->createAuthHeader();
+    //     $response = $this->get('attachments/'.$attachment->id, $header)->response;
+    //     $jsonObject = json_decode($response->getContent());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($attachment->id, $jsonObject->data->id);
-    }
+    //     $this->assertEquals(200, $response->getStatusCode());
+    //     $this->assertEquals($attachment->id, $jsonObject->data->id);
+    // }
 
     /** @test */
     public function it_should_delete_an_existing_attachment()
@@ -94,17 +94,21 @@ class AttachmentsTest extends TestCase
     /** @test */
     public function it_should_download_an_attached_file()
     {
-        $attachment = factory(Attachment::class)->create();
-        $attachment->url = 'attachments/'.$attachment->id.'/test.txt';
-        $content = file_get_contents(getcwd() . '/tests/files/test.txt');
-        Storage::put($attachment->url, $content);
+        $attachment = factory(Attachment::class)->create([
+            'path' => 'attachments/test_123/test.txt',
+            'attachmentable_type' => 'Test',
+            'attachmentable_id' => 123,
+        ]);
+
+        $content = file_get_contents(base_path() . '/tests/files/test.txt');
+        Storage::put($attachment->path, $content);
         $attachment->save();
 
         $header = $this->createAuthHeader();
-        $response = $this->get('attachments/'.$attachment->id.'/download', $header)->response;
+        $response = $this->get('attachments/'.$attachment->id, $header)->response;
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($content, $response->getContent());
+        $this->assertEquals('test.txt', $response->getFile()->getFilename());
     }
 
     /** @test */
