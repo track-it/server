@@ -25,7 +25,7 @@ class RenameUrlColumnToPathOnAttachmentsTable extends Migration
     public function down()
     {
         Schema::table('attachments', function (Blueprint $table) {
-            //
+            $table->renameColumn('path', 'url');
         });
     }
 }
