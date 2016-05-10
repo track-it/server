@@ -39,10 +39,20 @@ class ProjectTest extends TestCase
     public function it_has_a_status()
     {
         $project = factory(Project::class)->create();
-        
+
         $status = in_array($project->status, Project::STATUSES);
 
         $this->assertTrue($status);
+    }
+
+    /** @test */
+    public function it_can_have_status_published()
+    {
+        $project = factory(Project::class)->create();
+
+        $project->status = Project::PUBLISHED;
+
+        $this->assertEquals(Project::PUBLISHED, $project->status);
     }
 
     /** @test */
@@ -52,7 +62,7 @@ class ProjectTest extends TestCase
         $this->setUpTeam();
 
         $project->team()->associate($this->team);
-                
+
         $this->assertEquals($this->team->id, $project->team_id);
     }
 
@@ -63,7 +73,7 @@ class ProjectTest extends TestCase
         $comment = factory(Comment::class)->create();
 
         $project->comments()->save($comment);
-       
+
         $this->assertEquals($comment->id, $project->comments->first()->id);
     }
 
@@ -85,11 +95,11 @@ class ProjectTest extends TestCase
         $project = $this->project;
         $projectUser = $this->projectUser;
         $projectRole = $this->projectRole;
-        
+
         $this->assertEquals($project->id, $projectUser->project->id);
         $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
     }
-    
+
     /** @test */
     public function it_has_at_least_one_supervisor()
     {
@@ -97,7 +107,7 @@ class ProjectTest extends TestCase
         $project = $this->project;
         $projectUser = $this->projectUser;
         $projectRole = $this->projectRole;
-        
+
         $this->assertEquals($project->id, $projectUser->project->id);
         $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
     }
@@ -108,7 +118,7 @@ class ProjectTest extends TestCase
         $project = factory(Project::class)->create();
         $user = factory(User::class)->create();
         $projectRole = ProjectRole::byName('teacher')->first();
-        
+
         $project->addProjectUser('teacher', $user);
 
         $this->assertNotNull($project->projectUsers()->where(['user_id' => $user->id, 'project_role_id' => $projectRole->id])->first());
@@ -129,7 +139,7 @@ class ProjectTest extends TestCase
         $this->project = factory(Project::class)->create();
         $user = factory(User::class)->create();
         $this->projectRole = ProjectRole::where('name', $role)->first();
-    
+
         $this->projectUser = factory(ProjectUser::class)->create();
         $this->projectUser->user()->associate($user);
         $this->projectUser->project()->associate($this->project);

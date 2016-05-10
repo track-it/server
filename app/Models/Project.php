@@ -13,12 +13,14 @@ use Trackit\Models\ProjectUser;
 
 class Project extends Model implements Attachmentable, Commentable, Taggable, RestrictsAccess
 {
-    const COMPLETED = 1;
-    const NOT_COMPLETED = 2;
+    const NOT_COMPLETED = 1;
+    const COMPLETED = 2;
+    const PUBLISHED = 3;
 
     const STATUSES = [
-        self::COMPLETED,
         self::NOT_COMPLETED,
+        self::COMPLETED,
+        self::PUBLISHED,
     ];
 
     protected $fillable = [
