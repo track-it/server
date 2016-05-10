@@ -2,6 +2,7 @@
 
 namespace Trackit\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Response;
 
@@ -9,17 +10,39 @@ use Trackit\Http\Requests\CreateTeamRequest;
 use Trackit\Http\Requests\UpdateTeamRequest;
 use Trackit\Models\Team;
 use Trackit\Models\Proposal;
+use Trackit\Models\User;
 
 class TeamController extends Controller
 {
+    /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     *
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Proposal $proposal)
+    public function index(Proposal $proposal, Request $request)
     {
-        return Response::json($proposal->teams->load('users'));
+        $query = $proposal->teams();
+        if ($request->input('user_id')) {
+            $user_id = $request->input('user_id');
+            $query = $proposal->teams()->whereHas('users', function ($q) use ($user_id) {
+                $q->where('id', '=', $user_id);
+            });
+        }
+
+        return Response::json($query->get()->load('users'));
     }
 
     /**
@@ -32,9 +55,14 @@ class TeamController extends Controller
     {
         $team = Team::create();
 
-        $team->users()->attach($request->user_ids);
+        $user_ids = $request->user_ids ? $request->user_ids : [];
 
+        foreach ($user_ids as $user_id) {
+            $team->users()->attach($user_id);
+        }
+        $team->users()->attach($this->user->id);
         $team->proposal()->associate($proposal);
+        $team->save();
 
         $team->load('users');
 

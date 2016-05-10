@@ -7,17 +7,36 @@ use Auth;
 use Response;
 
 use Trackit\Models\User;
+use Trackit\Models\Role;
 
 class UserController extends Controller
 {
+    /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     *
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('username', 'ASC')->paginate(20);
+        $where = [];
+        if ($request->input('role')) {
+            $where['role_id'] = Role::byName($request->input('role'))->first()->id;
+        }
+
+        $users = User::where($where)->orderBy('username', 'ASC')->paginate(20);
 
         return Response::json($users);
     }
@@ -29,10 +48,9 @@ class UserController extends Controller
      */
     public function self(Request $request)
     {
-        $user = Auth::user();
-        $user->load(['proposals', 'role', 'teams']);
+        $this->user->load(['proposals', 'role', 'teams']);
 
-        return Response::json($user);
+        return Response::json($this->user);
     }
 
     /**
@@ -54,7 +72,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['proposals', 'role', 'teams', 'projectUsers']);
+        $user->load(['proposals', 'role', 'teams']);
 
         return Response::json($user);
     }
