@@ -29,13 +29,13 @@ class TestSeeder extends Seeder
             'password' => 'password',
             'role_id' => Role::byName('teacher')->first()->id,
         ]);
-        $student1 = factory(User::class)->create([
-            'username' => 'student',
+        $customer = factory(User::class)->create([
+            'username' => 'customer',
             'password' => 'password',
-            'role_id' => Role::byName('student')->first()->id,
+            'role_id' => Role::byName('customer')->first()->id,
         ]);
         $student1 = factory(User::class)->create([
-            'username' => 'customer',
+            'username' => 'student',
             'password' => 'password',
             'role_id' => Role::byName('customer')->first()->id,
         ]);
@@ -44,9 +44,6 @@ class TestSeeder extends Seeder
         ]);
         $student3 = factory(User::class)->create([
             'role_id' => Role::byName('student')->first()->id,
-        ]);
-        $customer = factory(User::class)->create([
-            'role_id' => Role::byName('customer')->first()->id,
         ]);
 
         $attachment1 = factory(Attachment::class)->create();
