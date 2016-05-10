@@ -30,7 +30,7 @@ class UserController extends Controller
     public function self(Request $request)
     {
         $user = Auth::user();
-        $user->load(['proposals', 'role', 'teams', 'projectUsers']);
+        $user->load(['proposals', 'role', 'teams']);
 
         return Response::json($user);
     }

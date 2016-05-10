@@ -55,6 +55,7 @@ class UserTest extends TestCase
             factory(ProjectUser::class)->create(['user_id' => $user->id, 'project_id' => $project->id]);
         });
 
-        $this->assertEquals(5, $user->projectUsers->count());
+        $this->assertEquals(5, $user->projects->count());
+        $this->assertNotEmpty($user->projects[0]->my_role);
     }
 }
