@@ -2,29 +2,38 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Response;
-
-use Trackit\Http\Requests;
-use Trackit\Models\Proposal;
-use Trackit\Models\Comment;
 use Trackit\Models\User;
+use Trackit\Http\Requests;
+use Trackit\Models\Comment;
+use Illuminate\Http\Request;
+use Trackit\Models\Proposal;
 use Trackit\Contracts\Commentable;
 use Trackit\Http\Requests\CreateCommentRequest;
 use Trackit\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
+    /**
+     * @var
+     */
     protected $user;
 
+    /**
+     * Create the controller.
+     *
+     * @param  \Trackit\Models\User  $user
+     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of all comments on the given
+     * commentable model.
      *
+     * @param  \Trackit\Contracts\Commentable  $commentable
      * @return \Illuminate\Http\Response
      */
     public function index(Commentable $commentable)
@@ -35,9 +44,9 @@ class CommentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Return a JSON response of the request comment.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
     public function show(Comment $comment)
@@ -46,8 +55,10 @@ class CommentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a comment for the given commentable model.
      *
+     * @param  \Trackit\Contracts\Commentable  $commentable
+     * @param  \Trackit\Http\Requests\CreateCommentRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Commentable $commentable, CreateCommentRequest $request)
@@ -65,10 +76,10 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the given comment.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\Comment  $comment
+     * @param  \Trackit\Http\Requests\UpdateCommentRequest  $comment
      * @return \Illuminate\Http\Response
      */
     public function update(Comment $comment, UpdateCommentRequest $request)
@@ -80,9 +91,9 @@ class CommentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the given comment.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
     public function destroy(Comment $comment)

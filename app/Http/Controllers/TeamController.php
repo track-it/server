@@ -2,19 +2,20 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Response;
-
+use Trackit\Models\Team;
+use Illuminate\Http\Request;
+use Trackit\Models\Proposal;
 use Trackit\Http\Requests\CreateTeamRequest;
 use Trackit\Http\Requests\UpdateTeamRequest;
-use Trackit\Models\Team;
-use Trackit\Models\Proposal;
 
 class TeamController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return a JSON response for all teams related to
+     * the given proposal model.
      *
+     * @param  \Trackit\Models\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
     public function index(Proposal $proposal)
@@ -23,9 +24,10 @@ class TeamController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new team for the given proposal.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Trackit\Models\Proposal  $proposal
+     * @param  \Trackit\Http\Requests\CreateTeamRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Proposal $proposal, CreateTeamRequest $request)
@@ -33,9 +35,7 @@ class TeamController extends Controller
         $team = Team::create();
 
         $team->users()->attach($request->user_ids);
-
         $team->proposal()->associate($proposal);
-
         $team->load('users');
 
         return Response::json($team);
@@ -53,10 +53,10 @@ class TeamController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the given team.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\Team  $team
+     * @param  \Trackit\Http\Requests\UpdateTeamRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function update(Team $team, UpdateTeamRequest $request)
@@ -71,9 +71,9 @@ class TeamController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the given team.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
     public function destroy(Team $team)

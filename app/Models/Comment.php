@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    /**
+     * @var array
+     */
     protected $fillable = [
         'author_id',
         'body',
@@ -14,20 +17,29 @@ class Comment extends Model
     ];
 
     /**
-     * @var
+     * @var array
      */
-    protected $with = ['author'];
+    protected $with = [
+        'author',
+    ];
 
+    /**
+     * Get the relationship between the comment and its
+     * author.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function source()
-    {
-        return $this->morphTo();
-    }
-
+    /**
+     * Get the relationship between the comment and its
+     * commentable model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function commentable()
     {
         $this->morphTo();

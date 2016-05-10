@@ -3,10 +3,12 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Trackit\Models\User;
 
 class Attachment extends Model
 {
+    /**
+     * @var array
+     */
     protected $fillable = [
         'title',
         'url',
@@ -15,16 +17,21 @@ class Attachment extends Model
         'attachmentable_type',
     ];
 
-    /*
+    /**
+     * Get the relationship between the attachment and its uploader.
      *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function uploader()
     {
         return $this->belongsTo(User::class, 'uploader_id');
     }
 
-    /*
+    /**
+     * Get the relationship between the attachment and its
+     * attachmentable model.
      *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function attachmentable()
     {

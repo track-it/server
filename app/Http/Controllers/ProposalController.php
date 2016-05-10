@@ -2,20 +2,20 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Response;
 use Auth;
-
+use Response;
+use Trackit\Models\Tag;
 use Trackit\Http\Requests;
+use Illuminate\Http\Request;
+use Trackit\Models\Proposal;
 use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Http\Requests\UpdateProposalRequest;
-use Trackit\Models\Proposal;
-use Trackit\Models\Tag;
 
 class ProposalController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a lising of all proposals. If the user is not logged,
+     * then only approved proposals will appear.
      *
      * @return \Illuminate\Http\Response
      */
@@ -28,8 +28,9 @@ class ProposalController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create a new proposal.
      *
+     * @param  \Trackit\Http\Requests\CreateProposalRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateProposalRequest $request)
@@ -52,9 +53,9 @@ class ProposalController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Returns a JSON response for the given proposal.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
     public function show(Proposal $proposal)
@@ -64,10 +65,10 @@ class ProposalController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the given proposal.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\Proposal  $proposal
+     * @param  \Trackit\Http\Requests\UpdateProposalRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function update(Proposal $proposal, UpdateProposalRequest $request)
@@ -77,9 +78,9 @@ class ProposalController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the given proposal
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
     public function destroy(Proposal $proposal)
