@@ -24,9 +24,9 @@ class CreateProjectRequestTest extends TestCase
             $team->users()->attach($user->id);
         });
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
             'team_id' => $team->id,
-            'tag_ids' => ['tag1', 'tag2'],
+            'tags' => ['tag1', 'tag2'],
         ];
 
         $header = $this->createAuthHeader();
@@ -47,9 +47,9 @@ class CreateProjectRequestTest extends TestCase
             $team->users()->attach($user->id);
         });
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
             'team_id' => $team->id,
-            'tag_ids' => ['tag1', 'tag2'],
+            'tags' => ['tag1', 'tag2'],
         ];
 
         $header = $this->createAuthHeader();

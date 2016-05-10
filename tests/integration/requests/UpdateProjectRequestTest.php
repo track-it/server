@@ -20,7 +20,7 @@ class UpdateProjectRequestTest extends TestCase
         $project = factory(Project::class)->create();
         $project->addProjectUser('teacher', $user);
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
         ];
 
         $header = $this->createAuthHeader();
@@ -36,7 +36,7 @@ class UpdateProjectRequestTest extends TestCase
         $user->role()->associate(Role::byName('administrator')->first())->save();
         $project = factory(Project::class)->create();
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
         ];
 
         $header = $this->createAuthHeader();
@@ -51,7 +51,7 @@ class UpdateProjectRequestTest extends TestCase
         $user = $this->getUser();
         $project = factory(Project::class)->create();
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
         ];
 
         $header = $this->createAuthHeader();
@@ -67,7 +67,7 @@ class UpdateProjectRequestTest extends TestCase
         $user->role()->associate(Role::byName('student')->first())->save();
         $project = factory(Project::class)->create();
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
         ];
 
         $header = $this->createAuthHeader();
@@ -81,7 +81,7 @@ class UpdateProjectRequestTest extends TestCase
     {
         $project = factory(Project::class)->create();
         $data = [
-            'name' => 'New Project',
+            'title' => 'New Project',
         ];
 
         $response = $this->json('PUT', 'projects/'.$project->id, $data)->response;

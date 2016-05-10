@@ -129,7 +129,7 @@ class CreateTagRequestTest extends TestCase
     /** @test */
     public function it_should_allow_a_tag_including_a_hashtag()
     {
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $data = [
             'tags' => ['C#'],
         ];
@@ -145,7 +145,7 @@ class CreateTagRequestTest extends TestCase
     /** @test */
     public function it_should_allow_a_tag_including_swedish_characters()
     {
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $data = [
             'tags' => ['åäöÅÄÖ'],
         ];
