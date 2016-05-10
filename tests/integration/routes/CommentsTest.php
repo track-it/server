@@ -15,9 +15,9 @@ class CommentsTest extends TestCase
     /** @test */
     public function it_should_create_a_new_comment_on_a_proposal()
     {
-        $proposal = factory(Proposal::class)->create();
-        $user = factory(User::class)->create();      
-        $content = ['body' => 'This is a body.', 'author_id' => $user->id];
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $user = factory(User::class)->create();
+        $content = ['body' => 'This is a body.'];
 
         $header = $this->createAuthHeader();
         $url = 'proposals/'.$proposal->id.'/comments';
@@ -51,7 +51,9 @@ class CommentsTest extends TestCase
     public function it_should_create_a_new_comment_on_a_project()
     {
         $project = factory(Project::class)->create();
+        $project->addProjectUser('student', $this->getUser());
         $user = factory(User::class)->create();
+        $project->addProjectUser('student', $user);
         $content = ['body' => 'This is a body.'];
         
         $header = $this->createAuthHeader();

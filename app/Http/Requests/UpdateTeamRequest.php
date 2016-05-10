@@ -3,9 +3,23 @@
 namespace Trackit\Http\Requests;
 
 use Trackit\Http\Requests\Request;
+use Trackit\Models\User;
 
 class UpdateTeamRequest extends Request
 {
+    /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     *
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +27,9 @@ class UpdateTeamRequest extends Request
      */
     public function authorize()
     {
-        return true;
+        $team = $this->route('team');
+
+        return $team->allowsActionFrom('team:edit', $this->user);
     }
 
     /**

@@ -22,6 +22,13 @@ class User extends Model implements Authenticatable
         'password'
     ];
 
+    /**
+     * @var
+     */
+    protected $appends = [
+        'projects',
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -35,6 +42,18 @@ class User extends Model implements Authenticatable
         });
     }
 
+    /**
+     *
+     */
+    public function getProjectsAttribute()
+    {
+        $projects = $this->manyThroughMany(Project::class, ProjectUser::class, 'user_id', 'id', 'project_id');
+        $projects->select('projects.*', 'project_roles.name AS my_role');
+        $projects->join('project_roles', 'project_roles.id', '=', 'project_users.project_role_id');
+
+        return $projects->get();
+    }
+
     public static function scopeByUsername($query, $username)
     {
         return $query->where('username', $username);
@@ -44,16 +63,6 @@ class User extends Model implements Authenticatable
     {
         $this->api_token = str_random(128);
         $this->save();
-    }
-
-    public function proposals()
-    {
-        return $this->hasMany(Proposal::class, 'author_id');
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function joinTeam($team)
@@ -69,6 +78,24 @@ class User extends Model implements Authenticatable
         }
     }
 
+    /**
+     *
+     */
+    public function can($permission)
+    {
+        return $this->role->can($permission);
+    }
+
+    public function proposals()
+    {
+        return $this->hasMany(Proposal::class, 'author_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'user_teams');
@@ -82,5 +109,18 @@ class User extends Model implements Authenticatable
     public function projectUsers()
     {
         return $this->hasMany(ProjectUser::class)->with(['project', 'projectRole']);
+    }
+
+    public function manyThroughMany($related, $through, $firstKey, $secondKey, $pivotKey)
+    {
+        $model = new $related;
+        $table = $model->getTable();
+        $throughModel = new $through;
+        $pivot = $throughModel->getTable();
+
+        return $model
+            ->join($pivot, $pivot . '.' . $pivotKey, '=', $table . '.' . $secondKey)
+            ->select($table . '.*')
+            ->where($pivot . '.' . $firstKey, '=', $this->id);
     }
 }

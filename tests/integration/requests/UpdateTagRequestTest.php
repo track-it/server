@@ -6,17 +6,20 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use Trackit\Models\Proposal;
 use Trackit\Models\Tag;
+use Trackit\Models\Role;
 
 class UpdateTagRequestTest extends TestCase
 {
-	use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function it_should_not_allow_a_tag_longer_than_20_characters()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
         $tag = factory(Tag::class)->create();
         $data = [
-        	'name' => str_random(21),
+            'name' => str_random(21),
         ];
         $header = $this->createAuthHeader();
 
@@ -30,9 +33,11 @@ class UpdateTagRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_tag_with_spaces()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
         $tag = factory(Tag::class)->create();
         $data = [
-        	'name' => ' aa',
+            'name' => ' aa',
         ];
         $header = $this->createAuthHeader();
 
@@ -46,9 +51,11 @@ class UpdateTagRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_tag_to_start_with_a_digit()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
         $tag = factory(Tag::class)->create();
         $data = [
-        	'name' => '1asdasd',
+            'name' => '1asdasd',
         ];
         $header = $this->createAuthHeader();
 
@@ -62,9 +69,11 @@ class UpdateTagRequestTest extends TestCase
     /** @test */
     public function it_should_not_allow_a_tag_to_start_with_an_underscore()
     {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
         $tag = factory(Tag::class)->create();
         $data = [
-        	'name' => '_asdasd',
+            'name' => '_asdasd',
         ];
         $header = $this->createAuthHeader();
 

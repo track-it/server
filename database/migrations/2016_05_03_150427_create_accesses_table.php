@@ -15,7 +15,7 @@ class CreateAccessesTable extends Migration
         Schema::create('accesses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('role_id')->unsigned()->index();
-            $table->string('resource');
+            $table->string('permission');
             $table->integer('status');
             $table->timestamps();
         });

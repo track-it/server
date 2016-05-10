@@ -15,6 +15,14 @@ class ProjectUser extends Model
         'project_role_id',
     ];
 
+    /**
+     *
+     */
+    public function can($action)
+    {
+        return $this->projectRole->can($action);
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class);

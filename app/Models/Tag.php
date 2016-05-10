@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     protected $fillable = [
-    	'name',
+        'name',
     ];
 
     public function proposals()
     {
-    	return $this->morphedByMany(Proposal::class, 'taggable');
+        return $this->morphedByMany(Proposal::class, 'taggable');
     }
 }

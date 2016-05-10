@@ -11,7 +11,7 @@ class Access extends Model
      */
     protected $fillable = [
         'role_id',
-        'resource',
+        'permission',
         'status',
     ];
 }

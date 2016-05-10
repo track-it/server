@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('Trackit\Models\User', function() {
-            return Auth::user() == null ? User::create() : Auth::user();
+            return Auth::user() == null ? User::find(1) : Auth::user();
         });
     }
 }

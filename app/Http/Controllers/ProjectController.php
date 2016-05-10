@@ -10,8 +10,10 @@ use Trackit\Http\Requests;
 use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\Tag;
+use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\UpdateProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
+use Trackit\Http\Requests\DeleteRequest;
 
 class ProjectController extends Controller
 {
@@ -35,9 +37,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(Project $project, ShowProjectRequest $request)
     {
-        $project->load('team.users', 'attachments');
+        $project->load('team.users', 'projectUsers.user', 'attachments');
         return Response::json($project);
     }
 
@@ -86,7 +88,7 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project, DeleteRequest $request)
     {
         $project->delete();
         return response('', 204);
