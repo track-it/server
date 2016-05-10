@@ -52,9 +52,9 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->all());
 
-        $tag_ids = $request->tag_ids == null ? [] : $request->tag_ids;
+        $tags = $request->tags == null ? [] : $request->tags;
 
-        foreach ($tag_ids as $id) {
+        foreach ($tags as $id) {
             $newTag = Tag::firstOrCreate(['name' => $id]);
             $project->tags()->attach($newTag->id);
         }

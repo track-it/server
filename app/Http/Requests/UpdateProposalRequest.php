@@ -40,9 +40,10 @@ class UpdateProposalRequest extends Request
     public function rules()
     {
         return [
-            'title' => 'required|max:100',
-            'description' => 'required|max:5000',
-            'tags' => 'array|max:20',
+            'title'         => config('validation.title'),
+            'description'   => config('validation.description') . '|required',
+            'tags'          => config('validation.tags'),
+            'tags.*'        => config('validation.tag'),
         ];
     }
 }
