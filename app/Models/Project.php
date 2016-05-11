@@ -77,12 +77,8 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
         $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
         if ($projectUser && $projectUser->can($action)) {
             // If action is constrained by statuses, check them
-            if (sizeof($projectStatuses) > 0) {
-                if (in_array($this->status, $projectStatuses)) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if (sizeof($projectStatuses) > 0 && !in_array($this->status, $projectStatuses)) {
+                return false;
             }
 
             return true;
