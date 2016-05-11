@@ -30,10 +30,10 @@ class AccessesTableSeeder extends Seeder
                 Proposal::APPROVED,
             ],
             'global:project:list' => [
-                Project::COMPLETED,
+                Project::PUBLISHED,
             ],
             'global:project:view' => [
-                Project::COMPLETED,
+                Project::PUBLISHED,
             ],
         ];
         $customerStatuses = [
@@ -44,10 +44,10 @@ class AccessesTableSeeder extends Seeder
                 Proposal::APPROVED,
             ],
             'global:project:list' => [
-                Project::COMPLETED,
+                Project::PUBLISHED,
             ],
             'global:project:view' => [
-                Project::COMPLETED,
+                Project::PUBLISHED,
             ],
         ];
         $studentStatuses = [
@@ -58,10 +58,10 @@ class AccessesTableSeeder extends Seeder
                 Proposal::APPROVED,
             ],
             'global:project:list' => [
-                Project::COMPLETED,
+                Project::PUBLISHED,
             ],
             'global:project:view' => [
-                Project::COMPLETED,
+                Project::PUBLISHED,
             ],
             'project:publish' => [
                 Project::COMPLETED,
