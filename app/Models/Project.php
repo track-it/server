@@ -50,6 +50,7 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
      */
     protected $fillable = [
         'title',
+        'description',
         'status',
         'team_id',
         'proposal_id',
