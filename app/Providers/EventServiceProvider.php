@@ -16,9 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'Trackit\Events\SomeEvent' => [
             'Trackit\Listeners\EventListener',
         ],
-	'Aacotroneo\Saml2\Events\Saml2LoginEvent' => [
-	    'Trackit\Listeners\Saml2LoginListener',
-	],
+        'Aacotroneo\Saml2\Events\Saml2LoginEvent' => [
+            'Trackit\Listeners\Saml2LoginListener',
+        ],
     ];
 
     /**

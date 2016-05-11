@@ -2,13 +2,14 @@
 
 namespace Trackit\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-use Trackit\Models\User;
 use Trackit\Contracts\RestrictsAccess;
+use Illuminate\Database\Eloquent\Model;
 
 class Attachment extends Model implements RestrictsAccess
 {
+    /**
+     * @var array
+     */
     protected $fillable = [
         'title',
         'path',
@@ -18,7 +19,7 @@ class Attachment extends Model implements RestrictsAccess
     ];
 
     /**
-     * @var
+     * @var array
      */
     protected $hidden = [
         'uploader_id',
@@ -28,20 +29,26 @@ class Attachment extends Model implements RestrictsAccess
     ];
 
     /**
-     * @var
+     * @var array
      */
     protected $appends = [
         'url'
     ];
 
     /**
+     * Add an attribute mutator to the model to get its
+     * url.
      *
+     * @return string
      */
     public function getUrlAttribute()
     {
         return env('APP_URL').'/attachments/'.$this->id;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function allowsActionFrom($action, $user)
     {
         // Allow if user is uploader of attachment
@@ -57,16 +64,21 @@ class Attachment extends Model implements RestrictsAccess
         return false;
     }
 
-    /*
+    /**
+     * Get the relationship between the attachment and its uploader.
      *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function uploader()
     {
         return $this->belongsTo(User::class, 'uploader_id');
     }
 
-    /*
+    /**
+     * Get the relationship between the attachment and its
+     * attachmentable model.
      *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function attachmentable()
     {

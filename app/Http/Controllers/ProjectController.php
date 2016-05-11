@@ -2,24 +2,25 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Response;
 use Auth;
-
+use Response;
+use Trackit\Models\Tag;
 use Trackit\Http\Requests;
 use Trackit\Models\Project;
+use Illuminate\Http\Request;
 use Trackit\Models\Proposal;
-use Trackit\Models\Tag;
-use Trackit\Http\Requests\ShowProjectRequest;
-use Trackit\Http\Requests\UpdateProjectRequest;
-use Trackit\Http\Requests\CreateProjectRequest;
 use Trackit\Http\Requests\DeleteRequest;
+use Trackit\Http\Requests\ShowProjectRequest;
+use Trackit\Http\Requests\CreateProjectRequest;
+use Trackit\Http\Requests\UpdateProjectRequest;
 
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return a JSON response listing all projects. If a proposal is
+     * given, lists all projects that is created from that proposal.
      *
+     * @param  \Trackit\Models\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
     public function index(Proposal $proposal)
@@ -32,9 +33,9 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Return a JSON response for the given project.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
     public function show(Project $project, ShowProjectRequest $request)
@@ -44,8 +45,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Creates a new project from the given proposal
      *
+     * @param  \Trackit\Models\Proposal  $proposal
+     * @param  \Trackit\Http\Requests\CreateProjectRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Proposal $proposal, CreateProjectRequest $request)
@@ -70,10 +73,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the project.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\Project  $project
+     * @param  \Trackit\Http\Requests\UpdateProjectRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function update(Project $project, UpdateProjectRequest $request)
@@ -83,9 +86,9 @@ class ProjectController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the project.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
     public function destroy(Project $project, DeleteRequest $request)

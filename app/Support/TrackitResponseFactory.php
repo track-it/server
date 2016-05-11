@@ -2,12 +2,12 @@
 
 namespace Trackit\Support;
 
-use Illuminate\Support\Collection;
-use Illuminate\Routing\ResponseFactory;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\JsonSerializable;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Routing\ResponseFactory;
+use Illuminate\Routing\JsonSerializable;
+use Illuminate\Contracts\Support\Arrayable;
 
 class TrackitResponseFactory extends ResponseFactory
 {

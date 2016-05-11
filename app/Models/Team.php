@@ -2,18 +2,20 @@
 
 namespace Trackit\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Trackit\Contracts\RestrictsAccess;
+use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model implements RestrictsAccess
 {
+    /**
+     * @var array
+     */
     protected $fillable = [
         'proposal_id',
     ];
 
     /**
-     *
+     * {@inheritdoc}
      */
     public function allowsActionFrom($action, $user)
     {
@@ -22,18 +24,33 @@ class Team extends Model implements RestrictsAccess
         }
     }
 
+    /**
+     * Get the relationship between the team and all
+     * of its users.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_teams');
     }
 
+    /**
+     * Get the relationship between the team and its
+     * project.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function project()
     {
         return $this->hasOne(Project::class, 'team_id');
     }
 
     /**
+     * Get the relationship between the team and its
+     * proposal.
      *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function proposal()
     {
