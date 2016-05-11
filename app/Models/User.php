@@ -17,6 +17,8 @@ class User extends Model implements Authenticatable
     protected $fillable = [
         'username',
         'password',
+        'email',
+        'displayname',
         'api_token',
         'role_id',
     ];
