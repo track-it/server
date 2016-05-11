@@ -2,19 +2,20 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Response;
-
+use Trackit\Models\Tag;
+use Illuminate\Http\Request;
+use Trackit\Contracts\Taggable;
 use Trackit\Http\Requests\CreateTagRequest;
 use Trackit\Http\Requests\UpdateTagRequest;
-use Trackit\Contracts\Taggable;
-use Trackit\Models\Tag;
 
 class TagController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return a JSON response for all tags of the given
+     * taggable model.
      *
+     * @param  \Trackit\Contracts\Taggable  $taggable
      * @return \Illuminate\Http\Response
      */
     public function index(Taggable $taggable)
@@ -25,14 +26,15 @@ class TagController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new tag for the given taggable model.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Trackit\Contracts\Taggable  $taggable
+     * @param  \Trackit\Http\Requests\CreateTagRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Taggable $taggable, CreateTagRequest $request)
     {
-        $tags = $request->tags == null ? [] : $request->tags; 
+        $tags = $request->tags == null ? [] : $request->tags;
 
         foreach ($tags as $tag) {
             $newTag = Tag::firstOrCreate(['name' => $tag]);
@@ -43,9 +45,9 @@ class TagController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Return a JSON response for the given tag.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
     public function show(Tag $tag)
@@ -56,23 +58,21 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\Tag  $tag
+     * @param  \Trackit\Http\Requests\UpdateTagRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function update(Tag $tag, UpdateTagRequest $request)
     {
-        $data = $request->all();
-
-        $tag->update($data);
+        $tag->update($request->all());
 
         return Response::json($tag);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the given tag.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
     public function destroy(Tag $tag)

@@ -2,13 +2,15 @@
 
 namespace Trackit\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-use Trackit\Contracts\RestrictsAccess;
 use Trackit\Contracts\Commentable;
+use Trackit\Contracts\RestrictsAccess;
+use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model implements RestrictsAccess
 {
+    /**
+     * @var array
+     */
     protected $fillable = [
         'author_id',
         'body',
@@ -17,12 +19,14 @@ class Comment extends Model implements RestrictsAccess
     ];
 
     /**
-     * @var
+     * @var array
      */
-    protected $with = ['author'];
+    protected $with = [
+        'author',
+    ];
 
     /**
-     *
+     * {@inheritdoc}
      */
     public function allowsActionFrom($action, $user)
     {
@@ -39,11 +43,23 @@ class Comment extends Model implements RestrictsAccess
         return false;
     }
 
+    /**
+     * Get the relationship between the comment and its
+     * author.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /**
+     * Get the relationship between the comment and its
+     * commentable model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function commentable()
     {
         return $this->morphTo();

@@ -2,20 +2,24 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Auth;
-use Response;
 use URL;
-
-use Trackit\Models\User;
-use Trackit\Http\Requests\LoginRequest;
-use Trackit\Http\Requests\CreateUserRequest;
-use Trackit\Http\Requests\CheckTokenRequest;
+use Auth;
 use Saml2;
+use Response;
+use Trackit\Models\User;
+use Illuminate\Http\Request;
+use Trackit\Http\Requests\LoginRequest;
+use Trackit\Http\Requests\CheckTokenRequest;
+use Trackit\Http\Requests\CreateUserRequest;
 
 class AuthController extends Controller
 {
-
+    /**
+     * Attempts to authenticate a user.
+     *
+     * @param  \Trackit\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(LoginRequest $request)
     {
         $credentials = $this->getCredentials($request);
@@ -32,7 +36,10 @@ class AuthController extends Controller
     }
 
     /**
+     * Attempts to register a user.
      *
+     * @param  \Trackit\Http\Requests\CreateUserRequest
+     * @return \Illuminate\Http\Response
      */
     public function register(CreateUserRequest $request)
     {
@@ -48,7 +55,10 @@ class AuthController extends Controller
     }
 
     /**
+     * Validates an api token.
      *
+     * @param  \Trackit\Http\Requests\CheckTokenRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function check(CheckTokenRequest $request)
     {
@@ -61,6 +71,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Attempts to log a user in through Saml2.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function saml(Request $request)
     {
         return Saml2::login($request->input('callback'), [ 'key' => 'asdasdasd' ]);
