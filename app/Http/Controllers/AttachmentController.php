@@ -2,17 +2,16 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Auth;
 use Storage;
 use Response;
-use Auth;
-
-use Trackit\Http\Requests;
-use Trackit\Models\Attachment;
 use Trackit\Models\User;
+use Trackit\Http\Requests;
+use Illuminate\Http\Request;
+use Trackit\Models\Attachment;
+use Trackit\Contracts\Attachmentable;
 use Trackit\Http\Requests\CreateAttachmentRequest;
 use Trackit\Http\Requests\UpdateAttachmentRequest;
-use Trackit\Contracts\Attachmentable;
 
 class AttachmentController extends Controller
 {
@@ -24,8 +23,9 @@ class AttachmentController extends Controller
     }
 
     /**
-     * List all attachments for an attachmentable
+     * List all attachments for an attachmentable model.
      *
+     * @param  \Trackit\Contracts\Attachmentable  $attachmentable
      * @return \Illuminate\Http\Response
      */
     public function index(Attachmentable $attachmentable)
@@ -38,11 +38,14 @@ class AttachmentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Trackit\Contracts\Attachmentable  $attachmentable
+     * @param  \Trackit\Http\Requests\CreateAttachmentRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Attachmentable $attachmentable, CreateAttachmentRequest $request)
     {
         $files = array_key_exists('files', $request->allFiles()) ? $request->allFiles()['files'] : [];
+
         foreach ($files as $file) {
             $path = 'attachments/'.
                     strtolower(class_basename(get_class($attachmentable))).'_'.$attachmentable->getId().'/'.
@@ -61,13 +64,14 @@ class AttachmentController extends Controller
 
             Storage::put($path, file_get_contents($file));
         }
+
         return Response::json($attachmentable->attachments);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Attachment  $attachment
      * @return \Illuminate\Http\Response
      */
     public function show(Attachment $attachment)
@@ -78,23 +82,25 @@ class AttachmentController extends Controller
     /**
      * Download a file attached to an attachment.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Attachment  $attachment
      * @return \Illuminate\Http\Response
      */
     public function download(Attachment $attachment)
     {
         $content = Storage::get($attachment->url);
+
         $headers = [
           'Content-Type' => $attachment->mime_type,
         ];
+
         return response($content, 200, $headers);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\Attachment  $attachment
+     * @param  \Trackit\Http\Requests\UpdateAttachmentRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function update(Attachment $attachment, UpdateAttachmentRequest $request)
@@ -107,7 +113,7 @@ class AttachmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\Attachment  $attachment
      * @return \Illuminate\Http\Response
      */
     public function destroy(Attachment $attachment)

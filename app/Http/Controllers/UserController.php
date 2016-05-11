@@ -2,22 +2,21 @@
 
 namespace Trackit\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
 use Response;
-
 use Trackit\Models\User;
 use Trackit\Models\Role;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
-     * @var
+     * @var \Trackit\Models\User
      */
     protected $user;
 
     /**
-     *
+     * Create a UserController object.
      */
     public function __construct(User $user)
     {
@@ -25,7 +24,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Return a JSON response listing all users.
      *
      * @return \Illuminate\Http\Response
      */
@@ -42,32 +41,27 @@ class UserController extends Controller
     }
 
     /**
-     * Display the user making the request
+     * Display a JSON response of the user making
+     * the request.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function self(Request $request)
     {
         $this->user->load(['proposals', 'role', 'teams']);
 
+        if ($user = Auth::user()) {
+            $user->load(['proposals', 'role', 'teams', 'projectUsers']);
+        }
+
         return Response::json($this->user);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display a JSON representation of a user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
+     * @param  \Trackit\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function show(User $user)
@@ -78,24 +72,23 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the given user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Trackit\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(User $user)
     {
         //
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the given user.
      *
-     * @param  int  $id
+     * @param  \Trackit\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
         //
     }

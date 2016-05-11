@@ -2,16 +2,17 @@
 
 namespace Trackit\Http\Controllers;
 
-use Aacotroneo\Saml2\Events\Saml2LoginEvent;
+use Auth;
+use Illuminate\Http\Request;
 use Aacotroneo\Saml2\Saml2Auth;
 use Illuminate\Routing\Controller;
-use Illuminate\Http\Request;
-use Auth;
-use Log;
+use Aacotroneo\Saml2\Events\Saml2LoginEvent;
 
 class Saml2Controller extends Controller
 {
-
+    /**
+     * @var \Aacotroneo\Saml2\Saml2Auth
+     */
     protected $saml2Auth;
 
     /**
@@ -25,6 +26,7 @@ class Saml2Controller extends Controller
 
     /**
      * Generate local sp metadata
+     *
      * @return \Illuminate\Http\Response
      */
     public function metadata()
@@ -36,8 +38,11 @@ class Saml2Controller extends Controller
     }
 
     /**
-     * Process an incoming saml2 assertion request.
-     * Fires 'saml2.loginRequestReceived' event if a valid user is Found
+     * Process an incoming saml2 assertion request. Fires
+     * 'saml2.loginRequestReceived' event if a valid user is
+     * found.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function acs()
     {
@@ -48,25 +53,26 @@ class Saml2Controller extends Controller
             session()->flash('saml2_error', $errors);
             return redirect(config('saml2_settings.errorRoute'));
         }
+
         $user = $this->saml2Auth->getSaml2User();
-	Log::info("before event");
         event(new Saml2LoginEvent($user));
-	Log::info("after event");
 
         $redirectUrl = $user->getIntendedUrl();
 
         if ($redirectUrl !== null) {
             return redirect($redirectUrl . '?api_token=' . Auth::guard('web')->user()->api_token);
-        } else {
-
-            return redirect(config('saml2_settings.loginRoute'));
         }
+
+        return redirect(config('saml2_settings.loginRoute'));
     }
 
     /**
-     * Process an incoming saml2 logout request.
-     * Fires 'saml2.logoutRequestReceived' event if its valid.
-     * This means the user logged out of the SSO infrastructure, you 'should' log him out locally too.
+     * Process an incoming saml2 logout request. Fires
+     * 'saml2.logoutRequestReceived' event if its valid.
+     * This means the user logged out of the SSO infrastructure,
+     * you 'should' log him out locally too.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function sls()
     {
@@ -79,24 +85,29 @@ class Saml2Controller extends Controller
     }
 
     /**
-     * This initiates a logout request across all the SSO infrastructure.
+     * Initiate a logout request across all
+     * the SSO infrastructure.
+     *
+     * @return void
      */
     public function logout(Request $request)
     {
         $returnTo = $request->query('returnTo');
         $sessionIndex = $request->query('sessionIndex');
         $nameId = $request->query('nameId');
-        $this->saml2Auth->logout($returnTo, $nameId, $sessionIndex); //will actually end up in the sls endpoint
-        //does not return
+
+        //will actually end up in the sls endpoint
+        $this->saml2Auth->logout($returnTo, $nameId, $sessionIndex);
     }
 
 
     /**
-     * This initiates a login request
+     * Initiate a logout request.
+     *
+     * @return void
      */
     public function login()
     {
         $this->saml2Auth->login(config('saml2_settings.loginRoute'));
     }
-
 }
