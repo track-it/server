@@ -14,7 +14,7 @@ class ProjectPermissionRoleTableSeeder extends Seeder
     public function run()
     {
         $projectRoles = ProjectRole::all();
-                       
+
         $permissions = [
             'stakeholder' => [
                 'project:view',
@@ -36,7 +36,6 @@ class ProjectPermissionRoleTableSeeder extends Seeder
                 'project:view',
                 'project:comment',
                 'project:submit',
-                'project:publish',
                 'project:edit',
                 'project:approve',
             ],

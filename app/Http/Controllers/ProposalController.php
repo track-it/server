@@ -38,7 +38,7 @@ class ProposalController extends Controller
      */
     public function index()
     {
-        $statuses = $this->user->role->accessTo('proposal:list');
+        $statuses = $this->user->role->accessTo('global:proposal:list');
 
         $proposals = Proposal::whereIn('status', $statuses);
 

@@ -23,59 +23,62 @@ class AccessesTableSeeder extends Seeder
         $administrator = Role::byName('administrator')->first();
 
         $guestStatuses = [
-            'proposal:list' => [
+            'global:proposal:list' => [
                 Proposal::APPROVED,
             ],
-            'proposal:view' => [
+            'global:proposal:view' => [
                 Proposal::APPROVED,
             ],
-            'project:list' => [
+            'global:project:list' => [
                 Project::COMPLETED,
             ],
-            'project:view' => [
+            'global:project:view' => [
                 Project::COMPLETED,
             ],
         ];
         $customerStatuses = [
-            'proposal:list' => [
+            'global:proposal:list' => [
                 Proposal::APPROVED,
             ],
-            'proposal:view' => [
+            'global:proposal:view' => [
                 Proposal::APPROVED,
             ],
-            'project:list' => [
+            'global:project:list' => [
                 Project::COMPLETED,
             ],
-            'project:view' => [
+            'global:project:view' => [
                 Project::COMPLETED,
             ],
         ];
         $studentStatuses = [
-            'proposal:list' => [
+            'global:proposal:list' => [
                 Proposal::APPROVED,
             ],
-            'proposal:view' => [
+            'global:proposal:view' => [
                 Proposal::APPROVED,
             ],
-            'project:list' => [
+            'global:project:list' => [
                 Project::COMPLETED,
             ],
-            'project:view' => [
+            'global:project:view' => [
+                Project::COMPLETED,
+            ],
+            'project:publish' => [
                 Project::COMPLETED,
             ],
         ];
         $teacherStatuses = [
-            'proposal:view' => Proposal::STATUSES,
-            'proposal:list' => Proposal::STATUSES,
-            'project:view' => Project::STATUSES,
-            'project:list' => Project::STATUSES,
+            'global:proposal:view' => Proposal::STATUSES,
+            'global:proposal:list' => Proposal::STATUSES,
+            'global:project:view' => Project::STATUSES,
+            'global:project:list' => Project::STATUSES,
 
         ];
         $administratorStatuses = [
-            'proposal:list' => Proposal::STATUSES,
-            'proposal:view' => Project::STATUSES,
-            'project:view' => Project::STATUSES,
-            'project:list' => Project::STATUSES,
+            'global:proposal:list' => Proposal::STATUSES,
+            'global:proposal:view' => Project::STATUSES,
+            'global:project:view' => Project::STATUSES,
+            'global:project:list' => Project::STATUSES,
         ];
 
         foreach ($guestStatuses as $permission => $statuses) {

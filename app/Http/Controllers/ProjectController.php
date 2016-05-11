@@ -13,6 +13,7 @@ use Trackit\Models\Tag;
 use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\UpdateProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
+use Trackit\Http\Requests\PublishProjectRequest;
 use Trackit\Http\Requests\DeleteRequest;
 
 class ProjectController extends Controller
@@ -92,5 +93,20 @@ class ProjectController extends Controller
     {
         $project->delete();
         return response('', 204);
+    }
+
+    /**
+     * Publishes the project
+     *
+     * @param \Trackit\Models\Project $proejct
+     * @param \Trackit\Http\Requests\PublishProjectRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function publish(Project $project, PublishProjectRequest $request)
+    {
+        $project->status = Project::PUBLISHED;
+        $project->save();
+
+        return Response::json($project);
     }
 }
