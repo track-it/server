@@ -52,6 +52,7 @@ class AuthController extends Controller
 
         $user = User::create($credentials);
         $user->role()->associate(Role::byName('customer')->first())->save();
+        $user->confirmed = false;
 
         return Response::json($user);
     }

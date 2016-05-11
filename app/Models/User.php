@@ -20,6 +20,7 @@ class User extends Model implements Authenticatable
         'email',
         'displayname',
         'api_token',
+        'confirmed',
         'role_id',
     ];
 
