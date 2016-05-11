@@ -13,10 +13,10 @@ class ShowProjectRequestTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function it_should_allow_guest_user_to_see_completed_project()
+    public function it_should_allow_guest_user_to_see_published_project()
     {
         $project = factory(Project::class)->create();
-        $project->status = Project::COMPLETED;
+        $project->status = Project::PUBLISHED;
         $project->save();
 
         $response = $this->json('GET', 'projects/'.$project->id)->response;
