@@ -57,6 +57,13 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable, R
     ];
 
     /**
+     * @var array
+     */
+    protected $with = [
+        'author',
+    ];
+
+    /**
      * Get the proposal's id.
      *
      * @return int
@@ -76,10 +83,11 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable, R
             return true;
         }
 
-        // Or if user has global permission, and access according to proposal status
-        $statuses = $user->role->accessTo($action);
-        $statuses = sizeof($statuses) > 0 ? $statuses : Proposal::STATUSES;
-        if ($user->can($action) && in_array($this->status, $statuses)) {
+        // We need to do this so that default if no status defined is all statuses
+        $globalStatuses = $user->role->accessTo('global:'.$action);
+        $globalStatuses = sizeof($globalStatuses) > 0 ? $globalStatuses : Proposal::STATUSES;
+        // Allow if user has global permission
+        if ($user->can($action) && in_array($this->status, $globalStatuses)) {
             return true;
         }
 

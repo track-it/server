@@ -13,7 +13,7 @@ class CreateProposalRequest extends Request
     {
         $this->user = $user;
     }
-    
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -32,8 +32,8 @@ class CreateProposalRequest extends Request
     public function rules()
     {
         return [
-            'title'         => config('validation.title'),
-            'description'   => config('validation.description') . '|required',
+            'title'         => 'required|'.config('validation.title'),
+            'description'   => 'required|'.config('validation.description'),
             'tags'          => config('validation.tags'),
             'tags.*'        => config('validation.tag'),
         ];
