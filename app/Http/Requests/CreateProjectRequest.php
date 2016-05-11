@@ -13,7 +13,7 @@ class CreateProjectRequest extends Request
     {
         $this->user = $user;
     }
-    
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -32,7 +32,7 @@ class CreateProjectRequest extends Request
     public function rules()
     {
         return [
-            'title'         => config('validation.title'),
+            'title'         => 'required|'.config('validation.title'),
             'description'   => config('validation.description'),
             'tags'          => config('validation.tags'),
             'tags.*'        => config('validation.tag'),

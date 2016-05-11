@@ -30,16 +30,23 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_a_list_of_projects()
+    public function it_should_return_a_filtered_list_of_projects()
     {
-        $projects = factory(Project::class, 3)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first());
+        $user->save();
+        factory(Project::class, 10)->create(['status' => Project::NOT_COMPLETED]);
+        factory(Project::class, 3)->create(['status' => Project::COMPLETED]);
+        factory(Project::class, 5)->create(['status' => Project::PUBLISHED]);
 
         $header = $this->createAuthHeader();
-        $response = $this->get('projects/', $header)->response;
+        $response = $this->json('GET', 'projects', [], $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(3, count($jsonObject->data));
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertInternalType('array', $jsonObject->data);
+        $this->assertEquals(18, $jsonObject->total);
     }
 
     /** @test */

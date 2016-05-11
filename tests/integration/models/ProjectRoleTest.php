@@ -10,10 +10,10 @@ class ProjectRoleTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function teacher_has_all_permissions()
+    public function teacher_has_all_permissions_except_submit()
     {
         $role = ProjectRole::byName('teacher')->first();
-        
+
         $canView = $role->can('project:view');
         $canComment = $role->can('project:comment');
         $canSubmit = $role->can('project:submit');
@@ -26,7 +26,6 @@ class ProjectRoleTest extends TestCase
         $this->assertTrue($canSubmit);
         $this->assertTrue($canApprove);
         $this->assertTrue($canEdit);
-        $this->assertTrue($canPublish);
     }
 
     /** @test */

@@ -70,16 +70,25 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
      */
     public function allowsActionFrom($action, $user)
     {
+        // Get project statuses for this action. These are limiting.
+        $projectStatuses = $user->role->accessTo($action);
+
         // Allow if user is part of project and has project permission
         $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
         if ($projectUser && $projectUser->can($action)) {
+            // If action is constrained by statuses, check them
+            if (sizeof($projectStatuses) > 0 && !in_array($this->status, $projectStatuses)) {
+                return false;
+            }
+
             return true;
         }
 
+        // We need to do this so that default if no status defined is all statuses
+        $globalStatuses = $user->role->accessTo('global:'.$action);
+        $globalStatuses = sizeof($globalStatuses) > 0 ? $globalStatuses : Project::STATUSES;
         // Allow if user has global permission
-        $statuses = $user->role->accessTo($action);
-        $statuses = sizeof($statuses) > 0 ? $statuses : Project::STATUSES;
-        if ($user->can($action) && in_array($this->status, $statuses)) {
+        if ($user->can($action) && in_array($this->status, $globalStatuses)) {
             return true;
         }
 
