@@ -5,7 +5,10 @@ namespace Trackit\Models;
 use Trackit\Contracts\Taggable;
 use Trackit\Models\ProjectRole;
 use Trackit\Models\ProjectUser;
+use Trackit\Contracts\Commentable;
+use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\RestrictsAccess;
+use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model implements Attachmentable, Commentable, Taggable, RestrictsAccess
 {
