@@ -57,6 +57,13 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable, R
     ];
 
     /**
+     * @var array
+     */
+    protected $with = [
+        'author',
+    ];
+
+    /**
      * Get the proposal's id.
      *
      * @return int
