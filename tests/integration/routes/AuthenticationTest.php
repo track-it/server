@@ -128,6 +128,24 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function it_should_set_confirmation_to_false_to_new_registered_user()
+    {
+        $data = [
+            'username' => 'newuser',
+            'password' => 'newpassword',
+            'displayname' => 'Nisse Aboo',
+            'email' => 'nissepisse@mail.com',
+        ];
+
+        $response = $this->json('POST', 'auth/register', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        // dd($jsonObject->data);
+        $this->assertFalse($jsonObject->data->confirmed);
+    }
+
+    /** @test */
     public function it_should_return_true_when_checking_valid_token()
     {
         $user = $this->getUser();
