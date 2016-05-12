@@ -141,7 +141,6 @@ class AuthenticationTest extends TestCase
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
-        // dd($jsonObject->data);
         $this->assertFalse($jsonObject->data->confirmed);
     }
 
