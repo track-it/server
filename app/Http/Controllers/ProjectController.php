@@ -74,6 +74,12 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->all());
 
+        dd($project);
+
+        $project->team->users->each(function ($user) use (&$project) {
+            $project->addParticipant('student', $user);
+        });
+
         $tags = $request->tags == null ? [] : $request->tags;
 
         foreach ($tags as $id) {
@@ -81,12 +87,12 @@ class ProjectController extends Controller
             $project->tags()->attach($newTag->id);
         }
 
-        $project->load('tags');
-
         $project->addProjectUser('teacher', Auth::user());
         $project->proposal()->associate($proposal);
         $project->status = Project::NOT_COMPLETED;
         $project->save();
+
+        $project->load('tags');
 
         return Response::json($project);
     }

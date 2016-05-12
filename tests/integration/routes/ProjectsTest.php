@@ -105,9 +105,10 @@ class ProjectsTest extends TestCase
         $user->role()->associate(Role::byName('teacher')->first())->save();
         $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $team = factory(Team::class)->create();
-        factory(User::class, 5)->create()->each(function ($user) use ($team) {
+        factory(User::class, 5)->create()->each(function ($user) use (&$team) {
             $team->users()->attach($user->id);
         });
+        $team->save();
         $data = [
             'title' => 'New Project',
             'team_id' => $team->id,
@@ -117,6 +118,8 @@ class ProjectsTest extends TestCase
         $header = $this->createAuthHeader();
         $response = $this->json('POST', 'proposals/'.$proposal->id.'/projects', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
+        dd($response);
+        dd($jsonObject);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($data['title'], $jsonObject->data->title);
