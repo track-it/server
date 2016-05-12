@@ -28,7 +28,27 @@ class ProposalsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(18, $jsonObject->total);
+    }
+
+    /** @test */
+    public function it_should_return_a_filtered_collection_of_proposals_including_your_own_with_pagination()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first());
+        $user->save();
+        factory(Proposal::class, 10)->create(['status' => Proposal::NOT_APPROVED]);
+        factory(Proposal::class, 3)->create(['status' => Proposal::UNDER_REVIEW]);
+        factory(Proposal::class, 5)->create(['status' => Proposal::APPROVED]);
+        factory(Proposal::class)->create(['status' => Proposal::NOT_APPROVED, 'author_id' => $user->id]);
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'proposals', [], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertInternalType('array', $jsonObject->data);
+        $this->assertEquals(6, sizeof($jsonObject->data));
     }
 
     /** @test */
@@ -44,7 +64,6 @@ class ProposalsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(5, $jsonObject->total);
     }
 
     /** @test */

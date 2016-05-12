@@ -9,16 +9,31 @@ use Trackit\Http\Requests;
 use Trackit\Models\Project;
 use Illuminate\Http\Request;
 use Trackit\Models\Proposal;
+use Trackit\Models\User;
 use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
+use Trackit\Http\Requests\PublishProjectRequest;
 use Trackit\Http\Requests\UpdateProjectRequest;
 
 class ProjectController extends Controller
 {
     /**
-     * Return a JSON response listing all projects. If a proposal is
-     * given, lists all projects that is created from that proposal.
+     * @var \Trackit\Models\User
+     */
+    protected $user;
+
+    /**
+     * Create a new ProjectController object.
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Return a JSON response listing all projects, filtered by user role access.
+     * If a proposal is given, lists all projects that is created from that proposal.
      *
      * @param  \Trackit\Models\Proposal  $proposal
      * @return \Illuminate\Http\Response
@@ -26,7 +41,11 @@ class ProjectController extends Controller
     public function index(Proposal $proposal)
     {
         if (!$proposal->exists) {
-            return Response::json(Project::orderBy('updated_at', 'desc')->paginate(20));
+            $statuses = $this->user->role->accessTo('global:project:list');
+
+            $proposals = Project::whereIn('status', $statuses);
+
+            return Response::json($proposals->orderBy('updated_at', 'desc')->paginate(20));
         } else {
             return Response::json($proposal->projects()->orderBy('updated_at', 'desc')->paginate(20));
         }
@@ -95,5 +114,20 @@ class ProjectController extends Controller
     {
         $project->delete();
         return response('', 204);
+    }
+
+    /**
+     * Publish the project.
+     *
+     * @param \Trackit\Models\Project $project
+     * @param \Trackit\Http\Requests\PublishProjectRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function publish(Project $project, PublishProjectRequest $request)
+    {
+        $project->status = Project::PUBLISHED;
+        $project->save();
+
+        return Response::json($project);
     }
 }

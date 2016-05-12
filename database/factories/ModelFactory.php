@@ -39,7 +39,7 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
 
 $factory->define(Trackit\Models\Project::class, function (Faker\Generator $faker) {
     return [
-        // 'proposal_id' => factory(Trackit\Models\Proposal::class)->create()->id,
+        'description' => $faker->paragraph(6, true),
         'title' => $faker->sentence(6, true),
         'status' => collect(Trackit\Models\Project::STATUSES)->random(),
         'team_id' => factory(Trackit\Models\Team::class)->create()->id,

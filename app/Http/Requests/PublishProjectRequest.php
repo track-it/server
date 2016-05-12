@@ -5,7 +5,7 @@ namespace Trackit\Http\Requests;
 use Trackit\Http\Requests\Request;
 use Trackit\Models\User;
 
-class ShowProjectRequest extends Request
+class PublishProjectRequest extends Request
 {
     /**
      * @var
@@ -29,7 +29,7 @@ class ShowProjectRequest extends Request
     {
         $project = $this->route('project');
 
-        return $project->allowsActionFrom('project:view', $this->user);
+        return $project->allowsActionFrom('project:publish', $this->user);
     }
 
     /**

@@ -38,7 +38,7 @@ Route::group([
 });
 
 Route::group([], function () {
-    
+
     // Saml2
     Route::get('login', 'AuthController@saml');
     Route::get('error', function () {
@@ -108,7 +108,7 @@ Route::group([], function () {
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::singularResourceParameters();
-    
+
     // Define models
     Route::model('proposal', 'Trackit\Models\Proposal');
     Route::model('project', 'Trackit\Models\Project');
@@ -133,6 +133,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('projects/{project}/tags', 'TagController@store');
     Route::get('projects/{project}/comments', 'CommentController@index');
     Route::post('projects/{project}/comments', 'CommentController@store');
+    Route::post('projects/{project}/publish', 'ProjectController@publish');
 
     // Team routes
     Route::get('teams/{team}', 'TeamController@show');

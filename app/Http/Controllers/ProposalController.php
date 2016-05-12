@@ -3,6 +3,7 @@
 namespace Trackit\Http\Controllers;
 
 use Auth;
+use Illuminate\Pagination\Paginator;
 use Response;
 use Trackit\Models\Tag;
 use Trackit\Models\User;
@@ -30,18 +31,31 @@ class ProposalController extends Controller
     }
 
     /**
-     * Display a lising of all proposals. If the user is not logged,
-     * then only approved proposals will appear.
+     * Display a listing of all proposals. Which proposals returned are
+     * decided by the level of access a user has. Also includes any proposals
+     * that you have authored.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $statuses = $this->user->role->accessTo('proposal:list');
+        // Get all proposals with statuses you have access to
+        $statuses = $this->user->role->accessTo('global:proposal:list');
+        $proposals = Proposal::whereIn('status', $statuses)->get();
 
-        $proposals = Proposal::whereIn('status', $statuses);
+        // Get all of your own proposals
+        $ownProposals = $this->user->proposals;
 
-        return Response::json($proposals->orderBy('created_at', 'desc')->paginate(10));
+        // Merge collections and sort on created_at
+        $allProposals = $proposals->merge($ownProposals);
+        $allProposals = $allProposals->sortByDesc(function ($proposal) {
+            return $proposal->created_at;
+        });
+
+        // Create a paginator
+        $paginator = $this->simplePaginate($allProposals, 10);
+
+        return Response::json($paginator);
     }
 
     /**
@@ -105,5 +119,22 @@ class ProposalController extends Controller
     {
         $proposal->delete();
         return response('', 204);
+    }
+
+    /**
+     * Get a paginator only supporting simple next and previous links.
+     *
+     * This is more efficient on larger data-sets, etc.
+     *
+     * @param  int  $perPage
+     * @return \Illuminate\Contracts\Pagination\Paginator
+     */
+    private function simplePaginate($collection, $perPage = 15)
+    {
+        $page = Paginator::resolveCurrentPage();
+        $spliced = $collection->splice(($page - 1) * $perPage, $perPage + 1);
+        return new Paginator($spliced, $perPage, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+        ]);
     }
 }
