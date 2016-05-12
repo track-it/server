@@ -95,12 +95,12 @@ class TestSeeder extends Seeder
 
         $project1->proposal()->associate($proposal1)->save();
 
-        $project1->addProjectUser('student', $student);
-        $project1->addProjectUser('student', $student2);
-        $project1->addProjectUser('student', $student3);
-        $project1->addProjectUser('teacher', $teacher);
-        $project2->addProjectUser('teacher', $teacher);
-        $project1->addProjectUser('stakeholder', $customer);
+        $project1->addParticiPant('student', $student);
+        $project1->addParticiPant('student', $student2);
+        $project1->addParticiPant('student', $student3);
+        $project1->addParticiPant('teacher', $teacher);
+        $project2->addParticiPant('teacher', $teacher);
+        $project1->addParticiPant('stakeholder', $customer);
 
         // Comments
         $comment1 = factory(Comment::class)->create();

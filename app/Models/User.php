@@ -32,13 +32,6 @@ class User extends Model implements Authenticatable
     ];
 
     /**
-     * @var array
-     */
-    protected $appends = [
-        'projects',
-    ];
-
-    /**
      * Boots the Eloquent model.
      *
      * @return void
@@ -54,21 +47,6 @@ class User extends Model implements Authenticatable
         static::creating(function ($user) {
             $user->password = Hash::make($user->password);
         });
-    }
-
-    /**
-     * Add an attribute mutator to the user model listing all
-     * of its projects.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getProjectsAttribute()
-    {
-        $projects = $this->manyThroughMany(Project::class, ProjectUser::class, 'user_id', 'id', 'project_id');
-        $projects->select('projects.*', 'project_roles.name AS my_role');
-        $projects->join('project_roles', 'project_roles.id', '=', 'project_users.project_role_id');
-
-        return $projects->get();
     }
 
     /**
@@ -161,29 +139,22 @@ class User extends Model implements Authenticatable
     }
 
     /**
-     * Get the relationship between the user and its representation
-     * of models related to any projects.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get the relationship betweent the user and the projects it is participating in
      */
-    public function projectUsers()
+    public function projects()
     {
-        return $this->hasMany(ProjectUser::class)->with(['project', 'projectRole']);
+        return $this->belongsToMany(Project::class, 'project_user')->withPivot('project_role_id');
     }
 
     /**
-     * @blame albert@kaaman.nu
+     * Override newPivot function to provide custom ProjectUser pivot model
      */
-    public function manyThroughMany($related, $through, $firstKey, $secondKey, $pivotKey)
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
     {
-        $model = new $related;
-        $table = $model->getTable();
-        $throughModel = new $through;
-        $pivot = $throughModel->getTable();
-
-        return $model
-            ->join($pivot, $pivot . '.' . $pivotKey, '=', $table . '.' . $secondKey)
-            ->select($table . '.*')
-            ->where($pivot . '.' . $firstKey, '=', $this->id);
+        if ($parent instanceof Project) {
+            //dd(compact('attributes', ''))
+            return new ProjectUser($parent, $attributes, $table, $exists);
+        }
+        return parent::newPivot($parent, $attributes, $table, $exists);
     }
 }

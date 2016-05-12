@@ -59,7 +59,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project, ShowProjectRequest $request)
     {
-        $project->load('team.users', 'projectUsers.user', 'attachments');
+        $project->load('participants', 'attachments');
         return Response::json($project);
     }
 
@@ -83,7 +83,7 @@ class ProjectController extends Controller
 
         $project->load('tags');
 
-        $project->addProjectUser('teacher', Auth::user());
+        $project->addParticipant('teacher', Auth::user());
         $project->proposal()->associate($proposal);
         $project->status = Project::NOT_COMPLETED;
         $project->save();
