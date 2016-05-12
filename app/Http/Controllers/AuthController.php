@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Trackit\Http\Requests\LoginRequest;
 use Trackit\Http\Requests\CheckTokenRequest;
 use Trackit\Http\Requests\CreateUserRequest;
+use Trackit\Models\Role;
 
 class AuthController extends Controller
 {
@@ -43,13 +44,15 @@ class AuthController extends Controller
      */
     public function register(CreateUserRequest $request)
     {
-        $credentials = $this->getCredentials($request);
+        $credentials = $request->only('username', 'password', 'email', 'displayname');
 
         if (User::byUsername($credentials['username'])->first()) {
             return Response::json(['error' => 'User already exists.'], 422);
         }
 
         $user = User::create($credentials);
+        $user->role()->associate(Role::byName('customer')->first())->save();
+        $user->confirmed = false;
 
         return Response::json($user);
     }

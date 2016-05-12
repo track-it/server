@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use Trackit\Models\User;
+use Trackit\Models\Role;
 
 class AuthenticationTest extends TestCase
 {
@@ -78,8 +79,10 @@ class AuthenticationTest extends TestCase
         $data = [
             'username' => 'newuser',
             'password' => 'newpassword',
+            'displayname' => 'Nisse Aboo',
+            'email' => 'nissepisse@mail.com',
         ];
-        
+
         $response = $this->json('POST', 'auth/register', $data)->response;
         $jsonObject = json_decode($response->getContent());
 
@@ -93,14 +96,52 @@ class AuthenticationTest extends TestCase
         $data = [
             'username' => 'newuser',
             'password' => 'newpassword',
+            'displayname' => 'Nisse Aboo',
+            'email' => 'nissepisse@mail.com',
         ];
+
         factory(User::class)->create($data);
-        
+
         $response = $this->json('POST', 'auth/register', $data)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertEquals('User already exists.', $jsonObject->error);
+    }
+
+    /** @test */
+    public function it_should_assign_customer_role_to_new_registered_user()
+    {
+        $data = [
+            'username' => 'newuser',
+            'password' => 'newpassword',
+            'displayname' => 'Nisse Aboo',
+            'email' => 'nissepisse@mail.com',
+        ];
+        $role = Role::byName('customer')->first();
+
+        $response = $this->json('POST', 'auth/register', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($role->id, $jsonObject->data->role_id);
+    }
+
+    /** @test */
+    public function it_should_set_confirmation_to_false_to_new_registered_user()
+    {
+        $data = [
+            'username' => 'newuser',
+            'password' => 'newpassword',
+            'displayname' => 'Nisse Aboo',
+            'email' => 'nissepisse@mail.com',
+        ];
+
+        $response = $this->json('POST', 'auth/register', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertFalse($jsonObject->data->confirmed);
     }
 
     /** @test */
