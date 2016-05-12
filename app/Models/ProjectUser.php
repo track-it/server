@@ -3,9 +3,12 @@
 namespace Trackit\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ProjectUser extends Model
+class ProjectUser extends Pivot
 {
+    protected $table = 'project_user';
+
     /**
      * @var array
      */

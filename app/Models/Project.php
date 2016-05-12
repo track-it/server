@@ -75,8 +75,8 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
         $projectStatuses = $user->role->accessTo($action);
 
         // Allow if user is part of project and has project permission
-        $projectUser = $this->projectUsers()->where(['user_id' => $user->id])->first();
-        if ($projectUser && $projectUser->can($action)) {
+        $participant = $this->participants()->find($user->id);
+        if ($participant && $participant->pivot->projectRole->can($action)) {
             // If action is constrained by statuses, check them
             if (sizeof($projectStatuses) > 0 && !in_array($this->status, $projectStatuses)) {
                 return false;
@@ -103,15 +103,13 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
      * @param  \Trackit\Models\User  $user
      * @return \Trackit\Models\ProjectUser
      */
-    public function addProjectUser($role, $user)
+    public function addParticipant($role, $user)
     {
-        $projectUser = ProjectUser::create([
-            'user_id' => $user->id,
-            'project_role_id' => ProjectRole::byName($role)->first()->id,
-            'project_id' => $this->id,
+        $this->participants()->attach([
+            $user->id => [
+                'project_role_id' => ProjectRole::byName($role)->first()->id,
+            ],
         ]);
-
-        return $projectUser;
     }
 
     /**
@@ -167,14 +165,11 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
     }
 
     /**
-     * Get the relationship between the project and its
-     * ProjectUser models.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get the relationship between the projects and its participating users
      */
-    public function projectUsers()
+    public function participants()
     {
-        return $this->hasMany(ProjectUser::class);
+        return $this->belongsToMany(User::class)->withPivot('project_role_id');
     }
 
     /**
@@ -185,5 +180,13 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        if ($parent instanceof User) {
+            return new ProjectUser($parent, $attributes, $table, $exists);
+        }
+        return parent::newPivot($parent, $attributes, $table, $exists);
     }
 }
