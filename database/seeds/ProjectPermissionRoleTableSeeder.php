@@ -25,12 +25,14 @@ class ProjectPermissionRoleTableSeeder extends Seeder
                 'project:comment',
                 'project:submit',
                 'project:publish',
+                'attachment:delete',
             ],
             'supervisor' => [
                 'project:view',
                 'project:comment',
                 'project:submit',
                 'project:approve',
+                'attachment:delete',
             ],
             'teacher' => [
                 'project:view',
@@ -38,12 +40,13 @@ class ProjectPermissionRoleTableSeeder extends Seeder
                 'project:submit',
                 'project:edit',
                 'project:approve',
+                'attachment:delete',
             ],
         ];
 
         $projectRoles->each(function ($projectRole) use ($permissions) {
             foreach ($permissions[$projectRole->name] as $perm) {
-            	$projectRole->givePermissionTo($perm);
+                $projectRole->givePermissionTo($perm);
             }
         });
     }

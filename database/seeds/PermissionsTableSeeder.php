@@ -40,6 +40,9 @@ class PermissionsTableSeeder extends Seeder
             'team:view',
             'team:edit',
             'team:delete',
+            'attachment:delete',
+            'attachment:view',
+            'attachment:edit',
         ];
 
         foreach ($permissions as $permission) {
