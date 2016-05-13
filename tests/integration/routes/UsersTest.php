@@ -18,7 +18,7 @@ class UsersTest extends TestCase
         $user = $this->getUser();
         $user->role()->associate(Role::byName('teacher')->first())->save();
         $user->proposals()->save(factory(Proposal::class)->create());
-        
+
         $header = $this->createAuthHeader();
         $response = $this->json('GET', 'me', [], $header)->response;
 
@@ -51,7 +51,7 @@ class UsersTest extends TestCase
     public function it_should_return_a_paginated_list_of_users()
     {
         factory(User::class, 30)->create();
-        
+
         $header = $this->createAuthHeader();
         $response = $this->json('GET', 'users', [], $header)->response;
         $jsonObject = json_decode($response->getContent());

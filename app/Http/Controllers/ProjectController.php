@@ -5,16 +5,17 @@ namespace Trackit\Http\Controllers;
 use Auth;
 use Response;
 use Trackit\Models\Tag;
+use Trackit\Models\User;
 use Trackit\Http\Requests;
 use Trackit\Models\Project;
 use Illuminate\Http\Request;
 use Trackit\Models\Proposal;
-use Trackit\Models\User;
+use Illuminate\Pagination\Paginator;
 use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
-use Trackit\Http\Requests\PublishProjectRequest;
 use Trackit\Http\Requests\UpdateProjectRequest;
+use Trackit\Http\Requests\PublishProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -38,17 +39,26 @@ class ProjectController extends Controller
      * @param  \Trackit\Models\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
-    public function index(Proposal $proposal)
+    public function index(Request $request, Proposal $proposal)
     {
-        if (!$proposal->exists) {
-            $statuses = $this->user->role->accessTo('global:project:list');
-
-            $proposals = Project::whereIn('status', $statuses);
-
-            return Response::json($proposals->orderBy('updated_at', 'desc')->paginate(20));
+        $statuses = $this->user->role->accessTo('global:project:list');
+        // If searching for projects
+        if ($request->has('search')) {
+            $allProjects = Project::search($request->search, $statuses);
+        // Else list all projects
+        } else if (!$proposal->exists) {
+            $allProjects = Project::whereIn('status', $statuses)->get();
         } else {
-            return Response::json($proposal->projects()->orderBy('updated_at', 'desc')->paginate(20));
+            $allProjects = $proposal->projects;
         }
+        // Sort descending on updated at
+        $allProjects = $allProjects->sortByDesc(function ($project) {
+            return $project->updated_at;
+        });
+        // Create a paginator
+        $paginator = $this->simplePaginate($allProjects, 20);
+
+        return Response::json($paginator);
     }
 
     /**
@@ -133,5 +143,22 @@ class ProjectController extends Controller
         $project->save();
 
         return Response::json($project);
+    }
+
+    /**
+     * Get a paginator only supporting simple next and previous links.
+     *
+     * This is more efficient on larger data-sets, etc.
+     *
+     * @param  int  $perPage
+     * @return \Illuminate\Contracts\Pagination\Paginator
+     */
+    private function simplePaginate($collection, $perPage = 15)
+    {
+        $page = Paginator::resolveCurrentPage();
+        $spliced = $collection->splice(($page - 1) * $perPage, $perPage + 1);
+        return new Paginator($spliced, $perPage, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+        ]);
     }
 }
