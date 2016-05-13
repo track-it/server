@@ -29,6 +29,7 @@ class User extends Model implements Authenticatable
      */
     protected $hidden = [
         'password',
+        'api_token',
     ];
 
     /**
@@ -47,6 +48,16 @@ class User extends Model implements Authenticatable
         static::creating(function ($user) {
             $user->password = Hash::make($user->password);
         });
+    }
+
+    /**
+     * Returns the User model with api_token visible.
+     */
+    public function withApiToken()
+    {
+        return $this->makeVisible([
+            'api_token',
+        ]);
     }
 
     /**
