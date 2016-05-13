@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Trackit\Models\Proposal;
 use Trackit\Models\Comment;
 use Trackit\Models\Role;
+use Trackit\Models\Project;
 
 class CreateCommentRequestTest extends TestCase
 {
@@ -84,12 +85,28 @@ class CreateCommentRequestTest extends TestCase
         $user = $this->getUser();
         $user->role()->associate(Role::byName('administrator')->first())->save();
         $proposal = factory(Proposal::class)->create();
-        $comment = factory(Comment::class)->create();
         $data = [
             'body' => str_random(500),
         ];
 
         $response = $this->json('POST', 'proposals/' . $proposal->id . '/comments', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_allow_administrator_to_comment_on_projects()
+    {
+        $header = $this->createAuthHeader();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
+        $project = factory(Project::class)->create();
+        $data = [
+            'body' => str_random(500),
+        ];
+
+        $response = $this->json('POST', 'projects/' . $project->id . '/comments', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
         $this->assertEquals(200, $response->getStatusCode());
