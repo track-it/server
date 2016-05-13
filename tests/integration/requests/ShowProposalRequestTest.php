@@ -68,4 +68,36 @@ class ShowProposalRequestTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
     }
+
+    /** @test */
+    public function it_should_allow_user_with_administrator_role_to_see_approved_proposal()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
+        $proposal = factory(Proposal::class)->create();
+        $proposal->status = Proposal::APPROVED;
+        $proposal->save();
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'proposals/'.$proposal->id, [], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_allow_user_with_administrator_role_to_see_archived_proposal()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('administrator')->first())->save();
+        $proposal = factory(Proposal::class)->create();
+        $proposal->status = Proposal::ARCHIVED;
+        $proposal->save();
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'proposals/'.$proposal->id, [], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
