@@ -74,8 +74,6 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->all());
 
-        dd($project);
-
         $project->team->users->each(function ($user) use (&$project) {
             $project->addParticipant('student', $user);
         });
@@ -92,7 +90,7 @@ class ProjectController extends Controller
         $project->status = Project::NOT_COMPLETED;
         $project->save();
 
-        $project->load('tags');
+        $project->load('tags', 'participants');
 
         return Response::json($project);
     }

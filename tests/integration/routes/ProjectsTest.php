@@ -116,14 +116,19 @@ class ProjectsTest extends TestCase
         $header = $this->createAuthHeader();
         $response = $this->json('POST', 'proposals/'.$proposal->id.'/projects', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
-        dd($response);
-        dd($jsonObject);
+
+        $participants = $jsonObject->data->participants;
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($data['title'], $jsonObject->data->title);
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
         $this->assertEquals($data['tags'][0], $jsonObject->data->tags[0]->name);
+        $this->assertEquals(Project::NOT_COMPLETED, $jsonObject->data->status);
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($participants, "id", $user->id));
+        foreach ($team->users as $teamUser) {
+            $this->assertTrue($this->assertArrayContainsSameObjectWithValue($participants, "id", $teamUser->id));
+        }
     }
 
     /** @test */
