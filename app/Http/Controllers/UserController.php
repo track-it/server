@@ -52,7 +52,7 @@ class UserController extends Controller
         $this->user->load(['proposals', 'role', 'teams']);
 
         if ($user = Auth::user()) {
-            $user->load(['proposals', 'role', 'teams', 'projectUsers']);
+            $user->load(['proposals', 'role', 'teams', 'projects']);
         }
 
         return Response::json($this->user);

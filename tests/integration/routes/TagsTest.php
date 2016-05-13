@@ -58,7 +58,7 @@ class TagsTest extends TestCase
     public function it_should_add_a_new_tag_to_a_project()
     {
         $project = factory(Project::class)->create();
-        $project->addProjectUser('teacher', $this->getUser());
+        $project->addParticipant('teacher', $this->getUser());
 
         $data = [
             'tags' => ['tagtagtagtag'],

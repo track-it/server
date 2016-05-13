@@ -89,27 +89,27 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
-    public function it_has_a_stakeholder()
+    public function it_can_have_a_stakeholder()
     {
-        $this->setUpProjectWithProjectUser('stakeholder');
-        $project = $this->project;
-        $projectUser = $this->projectUser;
-        $projectRole = $this->projectRole;
+        $setup = $this->setUpProjectWithProjectUser('stakeholder');
+        $project = $setup['project'];
+        $user = $setup['user'];
+        $projectRole = $setup['projectRole'];
 
-        $this->assertEquals($project->id, $projectUser->project->id);
-        $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
+        $this->assertEquals($project->id, $user->projects->get(0)->id);
+        $this->assertEquals($projectRole->id, $user->projects->get(0)->pivot->project_role_id);
     }
 
     /** @test */
-    public function it_has_at_least_one_supervisor()
+    public function it_can_have_a_supervisor()
     {
-        $this->setUpProjectWithProjectUser('supervisor');
-        $project = $this->project;
-        $projectUser = $this->projectUser;
-        $projectRole = $this->projectRole;
+        $setup = $this->setUpProjectWithProjectUser('stakeholder');
+        $project = $setup['project'];
+        $user = $setup['user'];
+        $projectRole = $setup['projectRole'];
 
-        $this->assertEquals($project->id, $projectUser->project->id);
-        $this->assertEquals($projectRole->name, $projectUser->projectRole->name);
+        $this->assertEquals($project->id, $user->projects->get(0)->id);
+        $this->assertEquals($projectRole->id, $user->projects->get(0)->pivot->project_role_id);
     }
 
     /** @test */
@@ -119,9 +119,9 @@ class ProjectTest extends TestCase
         $user = factory(User::class)->create();
         $projectRole = ProjectRole::byName('teacher')->first();
 
-        $project->addProjectUser('teacher', $user);
+        $project->addParticipant('teacher', $user);
 
-        $this->assertNotNull($project->projectUsers()->where(['user_id' => $user->id, 'project_role_id' => $projectRole->id])->first());
+        $this->assertNotNull($project->participants()->where(['user_id' => $user->id, 'project_role_id' => $projectRole->id])->first());
     }
 
     private function setUpTeam()
@@ -136,32 +136,38 @@ class ProjectTest extends TestCase
 
     private function setUpProjectWithProjectUser($role)
     {
-        $this->project = factory(Project::class)->create();
+        $project = factory(Project::class)->create();
         $user = factory(User::class)->create();
-        $this->projectRole = ProjectRole::where('name', $role)->first();
+        $projectRole = ProjectRole::where('name', $role)->first();
 
-        $this->projectUser = factory(ProjectUser::class)->create();
-        $this->projectUser->user()->associate($user);
-        $this->projectUser->project()->associate($this->project);
-        $this->projectUser->projectRole()->associate($this->projectRole);
-        $this->projectUser->save();
+        $project->addParticipant($projectRole->name, $user);
+
+        return [
+            'project' => $project,
+            'user' => $user,
+            'projectRole' => $projectRole,
+        ];
     }
 
     /** @test */
     public function it_should_allow_edits_from_project_user_with_proper_permissions()
     {
-        $this->setUpProjectWithProjectUser('teacher');
+        $setup = $this->setUpProjectWithProjectUser('teacher');
+        $project = $setup['project'];
+        $user = $setup['user'];
 
-        $this->assertTrue($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
+        $this->assertTrue($project->allowsActionFrom('project:edit', $user));
     }
 
     /** @test */
     public function it_should_disallow_edits_from_project_user_without_proper_permissions()
     {
-        $this->setUpProjectWithProjectUser('stakeholder');
-        $this->projectUser->user->role()->associate(Role::byName('customer')->first())->save();
+        $setup = $this->setUpProjectWithProjectUser('stakeholder');
+        $project = $setup['project'];
+        $user = $setup['user'];
+        $user->role()->associate(Role::byName('customer')->first())->save();
 
-        $this->assertFalse($this->project->allowsActionFrom('project:edit', $this->projectUser->user));
+        $this->assertFalse($project->allowsActionFrom('project:edit', $user));
     }
 
     /** @test */

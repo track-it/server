@@ -18,7 +18,7 @@ class UpdateProjectRequestTest extends TestCase
     {
         $user = $this->getUser();
         $project = factory(Project::class)->create();
-        $project->addProjectUser('teacher', $user);
+        $project->addParticipant('teacher', $user);
         $data = [
             'title' => 'New Project',
         ];
