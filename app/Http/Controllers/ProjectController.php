@@ -10,6 +10,7 @@ use Trackit\Models\Project;
 use Illuminate\Http\Request;
 use Trackit\Models\Proposal;
 use Trackit\Models\User;
+use Trackit\Models\Team;
 use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
@@ -74,9 +75,12 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->all());
 
-        $project->team->users->each(function ($user) use (&$project) {
+        $team = Team::find($request->team_id);
+
+        $team->users->each(function ($user) use (&$project) {
             $project->addParticipant('student', $user);
         });
+        $team->delete();
 
         $tags = $request->tags == null ? [] : $request->tags;
 

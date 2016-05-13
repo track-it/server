@@ -19,7 +19,7 @@ class Team extends Model implements RestrictsAccess
      */
     public function allowsActionFrom($action, $user)
     {
-        if ($this->project->allowsActionFrom($action, $user)) {
+        if ($this->proposal->allowsActionFrom($action, $user)) {
             return true;
         }
     }
