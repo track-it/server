@@ -46,12 +46,10 @@ class ProjectController extends Controller
         if ($request->has('search')) {
             $allProjects = Project::search($request->search, $statuses);
         // Else list all projects
+        } else if (!$proposal->exists) {
+            $allProjects = Project::whereIn('status', $statuses)->get();
         } else {
-            if (!$proposal->exists) {
-                $allProjects = Project::whereIn('status', $statuses)->get();
-            } else {
-                $allProjects = $proposal->projects;
-            }
+            $allProjects = $proposal->projects;
         }
         // Sort descending on updated at
         $allProjects = $allProjects->sortByDesc(function ($project) {
