@@ -56,6 +56,7 @@ class PermissionRoleTableSeeder extends Seeder
                 'tag:edit',
                 'tag:delete',
                 'project:view',
+                'project:comment',
                 'project:edit',
                 'project:delete',
                 'team:view',

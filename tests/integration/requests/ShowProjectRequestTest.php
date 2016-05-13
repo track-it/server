@@ -60,7 +60,7 @@ class ShowProjectRequestTest extends TestCase
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
         $project = factory(Project::class)->create();
-        $project->addProjectUser('student', $user);
+        $project->addParticipant('student', $user);
         $project->status = Project::NOT_COMPLETED;
         $project->save();
 
@@ -77,7 +77,7 @@ class ShowProjectRequestTest extends TestCase
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
         $project = factory(Project::class)->create();
-        $project->addProjectUser('student', $user);
+        $project->addParticipant('student', $user);
         $project->status = Project::PUBLISHED;
         $project->save();
 
