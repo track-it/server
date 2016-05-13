@@ -103,9 +103,10 @@ class ProjectsTest extends TestCase
         $user->role()->associate(Role::byName('teacher')->first())->save();
         $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $team = factory(Team::class)->create();
-        factory(User::class, 5)->create()->each(function ($user) use ($team) {
+        factory(User::class, 5)->create()->each(function ($user) use (&$team) {
             $team->users()->attach($user->id);
         });
+        $team->save();
         $data = [
             'title' => 'New Project',
             'team_id' => $team->id,
@@ -116,11 +117,18 @@ class ProjectsTest extends TestCase
         $response = $this->json('POST', 'proposals/'.$proposal->id.'/projects', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
+        $participants = $jsonObject->data->participants;
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($data['title'], $jsonObject->data->title);
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
         $this->assertEquals($data['tags'][0], $jsonObject->data->tags[0]->name);
+        $this->assertEquals(Project::NOT_COMPLETED, $jsonObject->data->status);
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($participants, "id", $user->id));
+        foreach ($team->users as $teamUser) {
+            $this->assertTrue($this->assertArrayContainsSameObjectWithValue($participants, "id", $teamUser->id));
+        }
     }
 
     /** @test */

@@ -44,4 +44,17 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         return $this->user;
     }
+
+    /**
+     * Asserts that an array has an object, which has the attribute and value specified
+     */
+    protected function assertArrayContainsSameObjectWithValue($theArray, $attribute, $value)
+    {
+        foreach ($theArray as $arrayItem) {
+            if ($arrayItem->$attribute == $value) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -14,19 +14,19 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
 {
     /**
      * Status indicating that the project is
-     * completed.
-     *
-     * @var int
-     */
-    const COMPLETED = 1;
-
-    /**
-     * Status indicating that the project is
      * not completed.
      *
      * @var int
      */
-    const NOT_COMPLETED = 2;
+    const NOT_COMPLETED = 1;
+
+    /**
+     * Status indicating that the project is
+     * completed.
+     *
+     * @var int
+     */
+    const COMPLETED = 2;
 
     /**
      * Status indicating that the project is

@@ -42,7 +42,7 @@ class TeamController extends Controller
             });
         }
 
-        return Response::json($query->get()->load('users'));
+        return Response::json($query->get()->load('users', 'project'));
     }
 
     /**
