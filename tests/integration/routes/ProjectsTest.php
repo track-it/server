@@ -67,8 +67,6 @@ class ProjectsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($project->id, $jsonObject->data->id);
-        $this->assertEquals($project->team->id, $jsonObject->data->team->id);
-        $this->assertEquals(5, count($jsonObject->data->team->users));
     }
 
     /** @test */
@@ -157,7 +155,7 @@ class ProjectsTest extends TestCase
         $project = factory(Project::class)->create();
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
-        $project->addProjectUser('teacher', $user);
+        $project->addParticipant('teacher', $user);
         $header = $this->createAuthHeader();
 
         $response = $this->put('projects/'.$project->id, ['title' => 'new'], $header)->response;

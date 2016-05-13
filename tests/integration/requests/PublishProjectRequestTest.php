@@ -17,7 +17,7 @@ class PublishProjectRequestTest extends TestCase
         $project = factory(Project::class)->create();
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
-        $project->addProjectUser('student', $user);
+        $project->addParticipant('student', $user);
         $project->status = Project::COMPLETED;
         $project->save();
         $header = $this->createAuthHeader();
@@ -37,7 +37,7 @@ class PublishProjectRequestTest extends TestCase
         $project = factory(Project::class)->create();
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
-        $project->addProjectUser('student', $user);
+        $project->addParticipant('student', $user);
         $project->status = Project::NOT_COMPLETED;
         $project->save();
         $header = $this->createAuthHeader();
@@ -57,7 +57,7 @@ class PublishProjectRequestTest extends TestCase
         $project = factory(Project::class)->create();
         $user = $this->getUser();
         $user->role()->associate(Role::byName('teacher')->first())->save();
-        $project->addProjectUser('teacher', $user);
+        $project->addParticipant('teacher', $user);
         $project->status = Project::NOT_COMPLETED;
         $project->save();
         $header = $this->createAuthHeader();

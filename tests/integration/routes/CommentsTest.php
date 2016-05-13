@@ -51,11 +51,11 @@ class CommentsTest extends TestCase
     public function it_should_create_a_new_comment_on_a_project()
     {
         $project = factory(Project::class)->create();
-        $project->addProjectUser('student', $this->getUser());
+        $project->addParticipant('student', $this->getUser());
         $user = factory(User::class)->create();
-        $project->addProjectUser('student', $user);
+        $project->addParticipant('student', $user);
         $content = ['body' => 'This is a body.'];
-        
+
         $header = $this->createAuthHeader();
         $url = 'projects/'.$project->id.'/comments';
         $response = $this->post($url, $content, $header)->response;
@@ -135,7 +135,7 @@ class CommentsTest extends TestCase
 
         $response = $this->get($url, $header)->response;
         $jsonObject = json_decode($response->getContent());
-        
+
         $this->assertEquals(404, $response->getStatusCode());
     }
 }
