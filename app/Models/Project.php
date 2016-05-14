@@ -5,12 +5,13 @@ namespace Trackit\Models;
 use Trackit\Contracts\Taggable;
 use Trackit\Models\ProjectRole;
 use Trackit\Models\ProjectUser;
+use Trackit\Contracts\Searchable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\RestrictsAccess;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model implements Attachmentable, Commentable, Taggable, RestrictsAccess
+class Project extends Model implements Attachmentable, Commentable, Searchable, Taggable, RestrictsAccess
 {
     /**
      * Status indicating that the project is
@@ -64,6 +65,16 @@ class Project extends Model implements Attachmentable, Commentable, Taggable, Re
     public function getId()
     {
         return $this->id;
+    }
+
+    public static function search($string, $statuses)
+    {
+        return self::where('title', 'like', "%$string%")
+                    ->orWhereHas('tags', function ($query) use ($string) {
+                        $query->where('name', 'LIKE', "%$string%");
+                    })->get()->filter(function ($proposal) use ($statuses) {
+                        return in_array($proposal->status, $statuses);
+                    });
     }
 
     /**

@@ -3,12 +3,13 @@
 namespace Trackit\Models;
 
 use Trackit\Contracts\Taggable;
+use Trackit\Contracts\Searchable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\RestrictsAccess;
 use Illuminate\Database\Eloquent\Model;
 
-class Proposal extends Model implements Attachmentable, Taggable, Commentable, RestrictsAccess
+class Proposal extends Model implements Attachmentable, Taggable, Searchable, Commentable, RestrictsAccess
 {
     /**
      * @var int
@@ -71,6 +72,21 @@ class Proposal extends Model implements Attachmentable, Taggable, Commentable, R
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get searchresult
+     * @param $string search string
+     * @return collection
+     */
+    public static function search($string, $statuses)
+    {
+        return self::where('title', 'like', "%$string%")
+                    ->orWhereHas('tags', function ($query) use ($string) {
+                        $query->where('name', 'LIKE', "%$string%");
+                    })->get()->filter(function ($proposal) use ($statuses) {
+                        return in_array($proposal->status, $statuses);
+                    });
     }
 
     /**
