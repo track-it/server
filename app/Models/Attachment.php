@@ -57,7 +57,7 @@ class Attachment extends Model implements RestrictsAccess
         }
 
         // Allow if user has permission to do action on the attachment's parent resource
-        if ($this->attachmentable()->allowsActionFrom($action, $user)) {
+        if ($this->attachmentable->allowsActionFrom($action, $user)) {
             return true;
         }
 

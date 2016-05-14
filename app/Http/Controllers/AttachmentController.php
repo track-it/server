@@ -12,6 +12,8 @@ use Trackit\Models\Attachment;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Http\Requests\CreateAttachmentRequest;
 use Trackit\Http\Requests\UpdateAttachmentRequest;
+use Trackit\Http\Requests\DeleteRequest;
+use Trackit\Http\Requests\MassDeleteAttachmentRequest;
 
 class AttachmentController extends Controller
 {
@@ -116,9 +118,25 @@ class AttachmentController extends Controller
      * @param  \Trackit\Models\Attachment  $attachment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Attachment $attachment)
+    public function destroy(Attachment $attachment, DeleteRequest $request)
     {
         $attachment->delete();
+
+        return response('', 204);
+    }
+
+    /**
+     * Removes all specified resources from storage.
+     */
+    public function massDestroy(MassDeleteAttachmentRequest $request)
+    {
+        foreach ($request->attachment_ids as $id) {
+            $attachment = Attachment::find($id);
+            if ($attachment) {
+                Storage::delete($attachment->path);
+                $attachment->delete();
+            }
+        }
 
         return response('', 204);
     }
