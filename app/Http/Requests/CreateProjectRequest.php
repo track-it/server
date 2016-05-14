@@ -32,10 +32,10 @@ class CreateProjectRequest extends Request
     public function rules()
     {
         return [
-            'title'         => 'required|'.config('validation.title'),
+            'title'         => config('validation.title') . '|required',
             'description'   => config('validation.description'),
             'tags'          => config('validation.tags'),
-            'tags.*'        => config('validation.tag'),
+            'tags.*.name'   => config('validation.tag'),
         ];
     }
 }

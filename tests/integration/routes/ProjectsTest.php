@@ -9,6 +9,7 @@ use Trackit\Models\Proposal;
 use Trackit\Models\Team;
 use Trackit\Models\User;
 use Trackit\Models\Role;
+use Trackit\Models\Tag;
 use Trackit\Models\Attachment;
 
 class ProjectsTest extends TestCase
@@ -110,7 +111,14 @@ class ProjectsTest extends TestCase
         $data = [
             'title' => 'New Project',
             'team_id' => $team->id,
-            'tags' => ['tag1', 'tag2'],
+            'tags' => [
+                [
+                    'name' => 'tag1',
+                ],
+                [
+                    'name' => 'tag2'
+                ],
+            ],
         ];
 
         $header = $this->createAuthHeader();
@@ -123,7 +131,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals($data['title'], $jsonObject->data->title);
         $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
-        $this->assertEquals($data['tags'][0], $jsonObject->data->tags[0]->name);
+        $this->assertEquals($data['tags'][0]['name'], $jsonObject->data->tags[0]->name);
         $this->assertEquals(Project::NOT_COMPLETED, $jsonObject->data->status);
         $this->assertTrue($this->assertArrayContainsSameObjectWithValue($participants, "id", $user->id));
         foreach ($team->users as $teamUser) {
@@ -144,7 +152,14 @@ class ProjectsTest extends TestCase
         $data = [
             'name' => 'New Project',
             'team_id' => $team->id,
-            'tag_ids' => ['tag1', 'tag2'],
+            'tags' => [
+                [
+                    'name' => 'tag1',
+                ],
+                [
+                    'name' => 'tag2'
+                ],
+            ],
         ];
 
         $header = $this->createAuthHeader();
@@ -168,6 +183,34 @@ class ProjectsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('new', $jsonObject->data->title);
+    }
+
+    /** @test */
+    public function it_should_update_an_existing_project_with_new_tags()
+    {
+        $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('teacher', $user);
+        $project->tags()->attach(Tag::create(['name' => 'ASD']));
+        $header = $this->createAuthHeader();
+        $data = [
+            'tags' => [
+                [
+                    'name' => 'ZXC',
+                ],
+                [
+                    'name' => 'QWE',
+                ],
+            ],
+        ];
+
+        $response = $this->json('PUT', 'projects/'.$project->id, $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ZXC'));
+        $this->assertFalse($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ASD'));
     }
 
     /** @test */

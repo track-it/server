@@ -80,8 +80,8 @@ class ProjectController extends Controller
 
         $tags = $request->tags == null ? [] : $request->tags;
 
-        foreach ($tags as $id) {
-            $newTag = Tag::firstOrCreate(['name' => $id]);
+        foreach ($tags as $tag) {
+            $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
             $project->tags()->attach($newTag->id);
         }
 
@@ -105,6 +105,18 @@ class ProjectController extends Controller
     public function update(Project $project, UpdateProjectRequest $request)
     {
         $project->update($request->all());
+
+        if ($request->tags) {
+            $newTags = [];
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
+                $newTags[] = $newTag->id;
+            }
+            $project->tags()->sync($newTags);
+        }
+
+        $project->load('tags');
+
         return Response::json($project);
     }
 

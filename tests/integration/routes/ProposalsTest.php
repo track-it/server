@@ -116,8 +116,12 @@ class ProposalsTest extends TestCase
             'title' => 'This is a title',
             'description' => 'This is a description',
             'tags' => [
-                'tagOne',
-                'tagTwo',
+                [
+                    'name' => 'ZXC',
+                ],
+                [
+                    'name' => 'QWE',
+                ],
             ],
         ];
 
@@ -126,8 +130,8 @@ class ProposalsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('This is a title', $jsonObject->data->title);
-        $this->assertEquals('tagOne', $jsonObject->data->tags[0]->name);
-        $this->assertEquals('tagTwo', $jsonObject->data->tags[1]->name);
+        $this->assertEquals('ZXC', $jsonObject->data->tags[0]->name);
+        $this->assertEquals('QWE', $jsonObject->data->tags[1]->name);
     }
 
     /** @test */
