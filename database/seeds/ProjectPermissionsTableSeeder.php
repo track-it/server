@@ -31,6 +31,9 @@ class ProjectPermissionsTableSeeder extends Seeder
             [
                 'name'      => 'project:approve'
             ],
+            [
+                'name'      => 'attachment:delete'
+            ]
         ];
 
         foreach ($permissions as $permission) {

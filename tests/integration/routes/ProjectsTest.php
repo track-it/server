@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use Trackit\Models\Project;
-use Trackit\Models\Proposal;
+use Trackit\Models\Tag;
 use Trackit\Models\Team;
 use Trackit\Models\User;
 use Trackit\Models\Role;
+use Trackit\Models\Project;
+use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProjectsTest extends TestCase
 {
@@ -46,7 +46,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(18, $jsonObject->total);
+        $this->assertEquals(18, $jsonObject->to);
     }
 
     /** @test */
@@ -182,5 +182,29 @@ class ProjectsTest extends TestCase
         $response = $this->delete('projects/'.$project->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_return_a_collection_of_projects_matching_search_criteria()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first());
+        $user->save();
+        factory(Project::class, 10)->create(['title' => 'First project', 'status' => Project::NOT_COMPLETED]);
+        factory(Project::class, 3)->create(['title' => 'Java project', 'status' => Project::COMPLETED]);
+        factory(Project::class, 5)->create(['title' => 'Third project', 'status' => Project::PUBLISHED]);
+
+        $project = Project::all()->first();
+        $project->tags()->attach(factory(Tag::class)->create(['name' => 'Java']));
+
+        $searchterm = 'java';
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'projects?search='.$searchterm, [], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertInternalType('array', $jsonObject->data);
+        $this->assertEquals(4, $jsonObject->to);
     }
 }
