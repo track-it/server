@@ -116,8 +116,12 @@ class ProposalsTest extends TestCase
             'title' => 'This is a title',
             'description' => 'This is a description',
             'tags' => [
-                'tagOne',
-                'tagTwo',
+                [
+                    'name' => 'ZXC',
+                ],
+                [
+                    'name' => 'QWE',
+                ],
             ],
         ];
 
@@ -126,8 +130,8 @@ class ProposalsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('This is a title', $jsonObject->data->title);
-        $this->assertEquals('tagOne', $jsonObject->data->tags[0]->name);
-        $this->assertEquals('tagTwo', $jsonObject->data->tags[1]->name);
+        $this->assertEquals('ZXC', $jsonObject->data->tags[0]->name);
+        $this->assertEquals('QWE', $jsonObject->data->tags[1]->name);
     }
 
     /** @test */
@@ -145,6 +149,32 @@ class ProposalsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('This is a title', $jsonObject->data->title);
+    }
+
+    /** @test */
+    public function it_should_update_an_existing_proposal_with_new_tags()
+    {
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $proposal->tags()->attach(Tag::create(['name' => 'ASD']));
+        $header = $this->createAuthHeader();
+        $data = [
+            'tags' => [
+                [
+                    'name' => 'ZXC',
+                ],
+                [
+                    'name' => 'QWE',
+                ],
+            ],
+        ];
+
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ZXC'));
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'QWE'));
+        $this->assertFalse($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ASD'));
     }
 
     /** @test */

@@ -43,7 +43,7 @@ class UpdateProjectRequest extends Request
             'title'         => config('validation.title'),
             'description'   => config('validation.description'),
             'tags'          => config('validation.tags'),
-            'tags.*'        => config('validation.tag'),
+            'tags.*.name'   => config('validation.tag'),
         ];
     }
 }

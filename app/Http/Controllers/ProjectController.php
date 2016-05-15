@@ -2,15 +2,17 @@
 
 namespace Trackit\Http\Controllers;
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Http\Request;
 use Auth;
 use Response;
+
 use Trackit\Models\Tag;
 use Trackit\Models\User;
 use Trackit\Http\Requests;
 use Trackit\Models\Project;
-use Illuminate\Http\Request;
 use Trackit\Models\Proposal;
-use Illuminate\Pagination\Paginator;
+use Trackit\Models\Team;
 use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
@@ -69,7 +71,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project, ShowProjectRequest $request)
     {
-        $project->load('participants', 'attachments');
+        $project->load('participants', 'attachments', 'tags');
         return Response::json($project);
     }
 
@@ -84,15 +86,18 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->all());
 
-        $project->team->users->each(function ($user) use (&$project) {
+        $team = Team::find($request->team_id);
+
+        $team->users->each(function ($user) use (&$project) {
             $project->addParticipant('student', $user);
         });
+        $team->delete();
 
-        $tags = $request->tags == null ? [] : $request->tags;
-
-        foreach ($tags as $id) {
-            $newTag = Tag::firstOrCreate(['name' => $id]);
-            $project->tags()->attach($newTag->id);
+        if ($request->tags) {
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
+                $project->tags()->attach($newTag->id);
+            }
         }
 
         $project->addParticipant('teacher', Auth::user());
@@ -115,6 +120,18 @@ class ProjectController extends Controller
     public function update(Project $project, UpdateProjectRequest $request)
     {
         $project->update($request->all());
+
+        if ($request->tags) {
+            $newTags = [];
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
+                $newTags[] = $newTag->id;
+            }
+            $project->tags()->sync($newTags);
+        }
+
+        $project->load('tags');
+
         return Response::json($project);
     }
 

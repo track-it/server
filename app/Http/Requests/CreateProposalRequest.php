@@ -35,7 +35,7 @@ class CreateProposalRequest extends Request
             'title'         => 'required|'.config('validation.title'),
             'description'   => 'required|'.config('validation.description'),
             'tags'          => config('validation.tags'),
-            'tags.*'        => config('validation.tag'),
+            'tags.*.name'        => config('validation.tag'),
         ];
     }
 }

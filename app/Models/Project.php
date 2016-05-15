@@ -161,16 +161,6 @@ class Project extends Model implements Attachmentable, Commentable, Searchable, 
     }
 
     /**
-     * Get the relationship between the project and its team.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function team()
-    {
-        return $this->belongsTo(Team::class);
-    }
-
-    /**
      * Get the relationship between the project and its comments.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany

@@ -79,7 +79,7 @@ class ProposalController extends Controller
         $tags = $request->tags == null ? [] : $request->tags;
 
         foreach ($tags as $tag) {
-            $newTag = Tag::firstOrCreate(['name' => $tag]);
+            $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
             $proposal->tags()->attach($newTag->id);
         }
 
@@ -113,6 +113,18 @@ class ProposalController extends Controller
     public function update(Proposal $proposal, UpdateProposalRequest $request)
     {
         $proposal->update($request->all());
+
+        if ($request->tags) {
+            $newTags = [];
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
+                $newTags[] = $newTag->id;
+            }
+            $proposal->tags()->sync($newTags);
+        }
+
+        $proposal->load(['tags', 'attachments']);
+
         return Response::json($proposal);
     }
 

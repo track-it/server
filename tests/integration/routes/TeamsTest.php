@@ -82,8 +82,9 @@ class TeamsTest extends TestCase
     {
         $user = $this->getUser();
         $user->role()->associate(Role::byName('administrator')->first())->save();
-        $project = factory(Project::class)->create();
-        $team = $project->team;
+        $proposal = factory(Proposal::class)->create();
+        $team = factory(Team::class)->create();
+        $team->proposal()->associate($proposal)->save();
         $user = factory(User::class)->create();
         $data = [
             'users' => [$user->id],
@@ -101,10 +102,11 @@ class TeamsTest extends TestCase
     public function it_should_delete_an_existing_team()
     {
         $header = $this->createAuthHeader();
-        $project = factory(Project::class)->create();
+        $proposal = factory(Proposal::class)->create();
+        $team = factory(Team::class)->create();
+        $team->proposal()->associate($proposal)->save();
         $user = $this->getUser();
         $user->role()->associate(Role::byName('administrator')->first())->save();
-        $team = $project->team;
 
         $response = $this->delete('teams/'.$team->id, [], $header)->response;
 
