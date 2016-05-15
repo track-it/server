@@ -19,8 +19,9 @@ class UpdateTeamRequestTest extends TestCase
     {
         $user = $this->getUser();
         $user->role()->associate(Role::byName('administrator')->first())->save();
-        $project = factory(Project::class)->create();
-        $team = $project->team;
+        $proposal = factory(Proposal::class)->create();
+        $team = factory(Team::class)->create();
+        $team->proposal()->associate($proposal)->save();
         $data = [
             'proposal_id' => 2,
         ];
@@ -37,8 +38,9 @@ class UpdateTeamRequestTest extends TestCase
     {
         $user = $this->getUser();
         $user->role()->associate(Role::byName('student')->first())->save();
-        $project = factory(Project::class)->create();
-        $team = $project->team;
+        $proposal = factory(Proposal::class)->create();
+        $team = factory(Team::class)->create();
+        $team->proposal()->associate($proposal)->save();
         $data = [
             'proposal_id' => 2,
         ];
