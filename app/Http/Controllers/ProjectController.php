@@ -59,7 +59,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project, ShowProjectRequest $request)
     {
-        $project->load('participants', 'attachments');
+        $project->load('participants', 'attachments', 'tags');
         return Response::json($project);
     }
 
@@ -78,11 +78,11 @@ class ProjectController extends Controller
             $project->addParticipant('student', $user);
         });
 
-        $tags = $request->tags == null ? [] : $request->tags;
-
-        foreach ($tags as $tag) {
-            $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
-            $project->tags()->attach($newTag->id);
+        if ($request->tags) {
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag['name']]);
+                $project->tags()->attach($newTag->id);
+            }
         }
 
         $project->addParticipant('teacher', Auth::user());
