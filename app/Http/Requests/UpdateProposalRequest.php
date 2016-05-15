@@ -41,9 +41,9 @@ class UpdateProposalRequest extends Request
     {
         return [
             'title'         => config('validation.title'),
-            'description'   => config('validation.description') . '|required',
+            'description'   => config('validation.description'),
             'tags'          => config('validation.tags'),
-            'tags.*'        => config('validation.tag'),
+            'tags.*.name'   => config('validation.tag'),
         ];
     }
 }
