@@ -147,7 +147,11 @@ class ProjectsTest extends TestCase
         $data = [
             'title' => 'New Project',
             'team_id' => $team->id,
-            'tags' => ['tag1', 'tag2'],
+            'tags' => [
+                [
+                    'name' => 'ASD'
+                ],
+            ],
         ];
 
         $header = $this->createAuthHeader();

@@ -152,6 +152,32 @@ class ProposalsTest extends TestCase
     }
 
     /** @test */
+    public function it_should_update_an_existing_proposal_with_new_tags()
+    {
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $proposal->tags()->attach(Tag::create(['name' => 'ASD']));
+        $header = $this->createAuthHeader();
+        $data = [
+            'tags' => [
+                [
+                    'name' => 'ZXC',
+                ],
+                [
+                    'name' => 'QWE',
+                ],
+            ],
+        ];
+
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ZXC'));
+        $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'QWE'));
+        $this->assertFalse($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ASD'));
+    }
+
+    /** @test */
     public function it_should_delete_an_existing_proposal()
     {
         $header = $this->createAuthHeader();
