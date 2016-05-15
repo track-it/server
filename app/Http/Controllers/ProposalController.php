@@ -3,13 +3,13 @@
 namespace Trackit\Http\Controllers;
 
 use Auth;
-use Illuminate\Pagination\Paginator;
 use Response;
 use Trackit\Models\Tag;
 use Trackit\Models\User;
 use Trackit\Http\Requests;
 use Trackit\Models\Proposal;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\ShowProposalRequest;
 use Trackit\Http\Requests\CreateProposalRequest;
@@ -37,23 +37,30 @@ class ProposalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Get all proposals with statuses you have access to
         $statuses = $this->user->role->accessTo('global:proposal:list');
-        $proposals = Proposal::whereIn('status', $statuses)->get();
+        // If searching for projects
+        if ($request->has('search')) {
+            $allProposals = Proposal::search($request->search, $statuses);
 
-        // Get all of your own proposals
-        $ownProposals = $this->user->proposals;
+        } else {
+            // Get all proposals with statuses you have access to
+            $proposals = Proposal::whereIn('status', $statuses)->get();
 
-        // Merge collections and sort on created_at
-        $allProposals = $proposals->merge($ownProposals);
+            // Get all of your own proposals
+            $ownProposals = $this->user->proposals;
+
+            // Merge collections
+            $allProposals = $proposals->merge($ownProposals);
+        }
+        //Sort on created at
         $allProposals = $allProposals->sortByDesc(function ($proposal) {
             return $proposal->created_at;
         });
 
         // Create a paginator
-        $paginator = $this->simplePaginate($allProposals, 10);
+        $paginator = $this->simplePaginate($allProposals, 20);
 
         return Response::json($paginator);
     }
