@@ -4,12 +4,12 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use Trackit\Models\Project;
-use Trackit\Models\Proposal;
+use Trackit\Models\Tag;
 use Trackit\Models\Team;
 use Trackit\Models\User;
 use Trackit\Models\Role;
-use Trackit\Models\Tag;
+use Trackit\Models\Project;
+use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
 
 class ProjectsTest extends TestCase
@@ -47,7 +47,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(18, $jsonObject->total);
+        $this->assertEquals(18, $jsonObject->to);
     }
 
     /** @test */
@@ -55,11 +55,6 @@ class ProjectsTest extends TestCase
     {
         $project = factory(Project::class)->create();
         $project->status = Project::COMPLETED;
-        $team = factory(Team::class)->create();
-        factory(User::class, 5)->create()->each(function ($user) use ($team) {
-            $team->users()->attach($user->id);
-        });
-        $project->team()->associate($team);
         $project->save();
 
         $header = $this->createAuthHeader();
@@ -129,7 +124,6 @@ class ProjectsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($data['title'], $jsonObject->data->title);
-        $this->assertEquals($data['team_id'], $jsonObject->data->team_id);
         $this->assertEquals($proposal->id, $jsonObject->data->proposal_id);
         $this->assertEquals($data['tags'][0]['name'], $jsonObject->data->tags[0]->name);
         $this->assertEquals(Project::NOT_COMPLETED, $jsonObject->data->status);
@@ -137,6 +131,33 @@ class ProjectsTest extends TestCase
         foreach ($team->users as $teamUser) {
             $this->assertTrue($this->assertArrayContainsSameObjectWithValue($participants, "id", $teamUser->id));
         }
+    }
+
+    /** @test */
+    public function it_should_remove_team_when_creating_a_new_project_from_a_proposal()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first())->save();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $team = factory(Team::class)->create();
+        factory(User::class, 5)->create()->each(function ($user) use (&$team) {
+            $team->users()->attach($user->id);
+        });
+        $team->save();
+        $data = [
+            'title' => 'New Project',
+            'team_id' => $team->id,
+            'tags' => ['tag1', 'tag2'],
+        ];
+
+        $header = $this->createAuthHeader();
+        $response = $this->json('POST', 'proposals/'.$proposal->id.'/projects', $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $participants = $jsonObject->data->participants;
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNull(Team::find($team->id));
     }
 
     /** @test */
@@ -225,5 +246,29 @@ class ProjectsTest extends TestCase
         $response = $this->delete('projects/'.$project->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_return_a_collection_of_projects_matching_search_criteria()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('teacher')->first());
+        $user->save();
+        factory(Project::class, 10)->create(['title' => 'First project', 'status' => Project::NOT_COMPLETED]);
+        factory(Project::class, 3)->create(['title' => 'Java project', 'status' => Project::COMPLETED]);
+        factory(Project::class, 5)->create(['title' => 'Third project', 'status' => Project::PUBLISHED]);
+
+        $project = Project::all()->first();
+        $project->tags()->attach(factory(Tag::class)->create(['name' => 'Java']));
+
+        $searchterm = 'java';
+        $header = $this->createAuthHeader();
+        $response = $this->json('GET', 'projects?search='.$searchterm, [], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertObjectHasAttribute('data', $jsonObject);
+        $this->assertInternalType('array', $jsonObject->data);
+        $this->assertEquals(4, $jsonObject->to);
     }
 }

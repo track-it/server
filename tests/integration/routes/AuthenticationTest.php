@@ -14,7 +14,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_should_allow_user_to_log_in_with_valid_credentials()
     {
-        $user = factory(User::class)->create(['password' => 'nisse']);
+        $user = factory(User::class)->create(['password' => 'nisse'])->withApiToken();
 
         $data = [
             'username'  => $user->username,
@@ -142,6 +142,23 @@ class AuthenticationTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertFalse($jsonObject->data->confirmed);
+    }
+
+    /** @test */
+    public function it_should_include_api_token_when_registering_user()
+    {
+        $data = [
+            'username' => 'newuser',
+            'password' => 'newpassword',
+            'displayname' => 'Nisse Aboo',
+            'email' => 'nissepisse@mail.com',
+        ];
+
+        $response = $this->json('POST', 'auth/register', $data)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertObjectHasAttribute('api_token', $jsonObject->data);
     }
 
     /** @test */

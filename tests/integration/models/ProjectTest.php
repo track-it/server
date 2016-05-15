@@ -56,17 +56,6 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
-    public function it_has_a_userteam()
-    {
-        $project = factory(Project::class)->create();
-        $this->setUpTeam();
-
-        $project->team()->associate($this->team);
-
-        $this->assertEquals($this->team->id, $project->team_id);
-    }
-
-    /** @test */
     public function it_can_have_comments()
     {
         $project = factory(Project::class)->create();

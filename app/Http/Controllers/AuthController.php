@@ -30,7 +30,7 @@ class AuthController extends Controller
         }
 
         if (Auth::guard('web')->attempt($credentials)) {
-            return Response::json(User::byUsername($credentials['username'])->first());
+            return Response::json(User::byUsername($credentials['username'])->first()->withApiToken());
         } else {
             return Response::json(['error' => 'Incorrect password.'], 401);
         }
@@ -54,7 +54,7 @@ class AuthController extends Controller
         $user->role()->associate(Role::byName('customer')->first())->save();
         $user->confirmed = false;
 
-        return Response::json($user);
+        return Response::json($user->withApiToken());
     }
 
     /**

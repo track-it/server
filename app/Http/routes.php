@@ -160,6 +160,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('attachments/{attachment}', 'AttachmentController@update');
     Route::delete('attachments/{attachment}', 'AttachmentController@destroy');
     Route::get('attachments/{attachment}/download', 'AttachmentController@download');
+    Route::delete('attachments', 'AttachmentController@massDestroy');
 
     // User routes
     Route::get('me', 'UserController@self');

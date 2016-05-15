@@ -84,12 +84,36 @@ class AttachmentsTest extends TestCase
     /** @test */
     public function it_should_delete_an_existing_attachment()
     {
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $attachment = factory(Attachment::class)->create();
+        $proposal->attachments()->save($attachment);
+        $proposal->save();
 
         $header = $this->createAuthHeader();
         $response = $this->delete('attachments/'.$attachment->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_delete_multiple_existing_attachments()
+    {
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $attachment_ids = [];
+        factory(Attachment::class, 3)->create()->each(function ($attachment) use (&$attachment_ids, &$proposal) {
+            $attachment_ids[] = $attachment->id;
+            $proposal->attachments()->save($attachment);
+        });
+
+        $data = [
+            'attachment_ids' => $attachment_ids
+        ];
+
+        $header = $this->createAuthHeader();
+        $response = $this->delete('attachments/', $data, $header)->response;
+
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(0, Attachment::where(['id' => $attachment_ids])->get()->count());
     }
 
     /** @test */
