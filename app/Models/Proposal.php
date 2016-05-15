@@ -65,6 +65,24 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
     ];
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'url'
+    ];
+
+    /**
+     * Add an attribute mutator to the model to get its
+     * url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return env('APP_URL').'/proposals/'.$this->id;
+    }
+
+    /**
      * Get the proposal's id.
      *
      * @return int
@@ -108,6 +126,28 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
         }
 
         return false;
+    }
+
+    /**
+     * Returns an array of users that should be notified
+     */
+    public function getNotificationRecipients(User $user)
+    {
+        $author = $this->author;
+        $recipients = $this->comments
+            ->filter(function ($comment) use ($user, $author) {
+                return $comment->author->id !== $user->id
+                    && $comment->author->id !== $author->id;
+            })
+            ->map(function ($commentAuthor) {
+                return $commentAuthor->email;
+            });
+
+        if ($user->id !== $author->id) {
+            $recipients->push($this->author->email);
+        }
+
+        return $recipients->toArray();
     }
 
     /**

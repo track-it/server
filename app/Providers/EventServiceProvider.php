@@ -13,8 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Trackit\Events\SomeEvent' => [
-            'Trackit\Listeners\EventListener',
+        'Trackit\Events\CommentWasPosted' => [
+            'Trackit\Listeners\EmailCommentNotification',
         ],
         'Aacotroneo\Saml2\Events\Saml2LoginEvent' => [
             'Trackit\Listeners\Saml2LoginListener',

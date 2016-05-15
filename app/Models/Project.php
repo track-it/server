@@ -124,6 +124,21 @@ class Project extends Model implements Attachmentable, Commentable, Searchable, 
     }
 
     /**
+     * Returns an array of users that should be notified
+     */
+    public function getNotificationRecipients(User $user)
+    {
+        return $this->participants
+            ->filter(function ($participant) use ($user) {
+                return $participant->id != $user->id;
+            })
+            ->map(function ($participant) {
+                return $participant->email;
+            })
+            ->toArray();
+    }
+
+    /**
      * Get the relationship between the project and its
      * attachments.
      *

@@ -11,6 +11,7 @@ use Trackit\Models\Proposal;
 use Trackit\Contracts\Commentable;
 use Trackit\Http\Requests\CreateCommentRequest;
 use Trackit\Http\Requests\UpdateCommentRequest;
+use Trackit\Events\CommentWasPosted;
 
 class CommentController extends Controller
 {
@@ -71,6 +72,8 @@ class CommentController extends Controller
         ]);
 
         $comment->load('author');
+
+        event(new CommentWasPosted($comment));
 
         return Response::json($comment);
     }
