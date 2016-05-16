@@ -54,8 +54,9 @@ class TestSeeder extends Seeder
 
         // Proposals
         $proposal1 = factory(Proposal::class)->create([
-            'author_id' => $customer->id,
-            'status' => Proposal::NOT_REVIEWED,
+            'title' => 'Supercalifragilisticexpialidocious title!',
+            'author_id' => $student->id,
+            'status' => Proposal::APPROVED,
         ]);
         $proposal2 = factory(Proposal::class)->create([
             'author_id' => $customer->id,
@@ -75,7 +76,7 @@ class TestSeeder extends Seeder
         ]);
         $proposal6 = factory(Proposal::class)->create([
             'author_id' => $student2->id,
-            'status' => Proposal::APPROVED,
+            'status' => Proposal::NOT_REVIEWED,
         ]);
         $proposal7 = factory(Proposal::class)->create([
             'author_id' => $student3->id,
@@ -99,29 +100,38 @@ class TestSeeder extends Seeder
         $project1->addParticiPant('student', $student2);
         $project1->addParticiPant('student', $student3);
         $project1->addParticiPant('teacher', $teacher);
-        $project2->addParticiPant('teacher', $teacher);
         $project1->addParticiPant('stakeholder', $customer);
+
+        $project2->addParticiPant('teacher', $teacher);
 
         // Comments
         $comment1 = factory(Comment::class)->create();
         $comment2 = factory(Comment::class)->create();
         $comment3 = factory(Comment::class)->create();
         $comment4 = factory(Comment::class)->create();
+        $comment5 = factory(Comment::class)->create();
+        $comment6 = factory(Comment::class)->create();
+        $comment7 = factory(Comment::class)->create();
+        $comment8 = factory(Comment::class)->create();
 
         $comment1->author()->associate($student)->save();
         $comment2->author()->associate($teacher)->save();
         $comment3->author()->associate($customer)->save();
         $comment4->author()->associate($admin)->save();
+        $comment5->author()->associate($student)->save();
+        $comment6->author()->associate($teacher)->save();
+        $comment7->author()->associate($customer)->save();
+        $comment8->author()->associate($admin)->save();
 
         $proposal1->comments()->save($comment1);
         $proposal1->comments()->save($comment2);
         $proposal1->comments()->save($comment3);
         $proposal1->comments()->save($comment4);
 
-        $proposal2->comments()->save($comment1);
-        $proposal2->comments()->save($comment2);
-        $proposal2->comments()->save($comment3);
-        $proposal2->comments()->save($comment4);
+        $project1->comments()->save($comment5);
+        $project1->comments()->save($comment6);
+        $project1->comments()->save($comment7);
+        $project1->comments()->save($comment8);
 
         // Attachments
         $attachment1 = factory(Attachment::class)->create();
