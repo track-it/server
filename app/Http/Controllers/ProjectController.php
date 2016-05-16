@@ -57,6 +57,9 @@ class ProjectController extends Controller
         $allProjects = $allProjects->sortByDesc(function ($project) {
             return $project->updated_at;
         });
+
+        $allProjects = $allProjects->merge($this->user->projects);
+
         // Create a paginator
         $paginator = $this->simplePaginate($allProjects, 20);
 
