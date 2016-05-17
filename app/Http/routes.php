@@ -41,6 +41,7 @@ Route::group([], function () {
 
     // Saml2
     Route::get('login', 'AuthController@saml');
+    Route::get('logout', 'AuthController@samlLogout');
     Route::get('error', function () {
         dd($this);
     });
