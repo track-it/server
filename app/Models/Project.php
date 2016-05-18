@@ -2,6 +2,8 @@
 
 namespace Trackit\Models;
 
+use Illuminate\Database\Eloquent\Model;
+
 use Trackit\Contracts\Taggable;
 use Trackit\Models\ProjectRole;
 use Trackit\Models\ProjectUser;
@@ -9,9 +11,9 @@ use Trackit\Contracts\Searchable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\RestrictsAccess;
-use Illuminate\Database\Eloquent\Model;
+use Trackit\Contracts\HasStatus;
 
-class Project extends Model implements Attachmentable, Commentable, Searchable, Taggable, RestrictsAccess
+class Project extends Model implements Attachmentable, Commentable, Searchable, Taggable, RestrictsAccess, HasStatus
 {
     /**
      * Status indicating that the project is
@@ -58,6 +60,13 @@ class Project extends Model implements Attachmentable, Commentable, Searchable, 
     ];
 
     /**
+     * @var
+     */
+    protected $appends = [
+        'url'
+    ];
+
+    /**
      * Get the project’s id.
      *
      * @return int
@@ -65,6 +74,17 @@ class Project extends Model implements Attachmentable, Commentable, Searchable, 
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Add an attribute mutator to the model to get its
+     * url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return env('APP_URL').'/projects/'.$this->id;
     }
 
     public static function search($string, $statuses)
@@ -124,18 +144,17 @@ class Project extends Model implements Attachmentable, Commentable, Searchable, 
     }
 
     /**
-     * Returns an array of users that should be notified
+     * Returns a collection of users that should be notified
      */
     public function getNotificationRecipients(User $user)
     {
+        // All participants in project should get notification,
+        // except comment author.
         return $this->participants
             ->filter(function ($participant) use ($user) {
                 return $participant->id != $user->id;
-            })
-            ->map(function ($participant) {
-                return $participant->email;
-            })
-            ->toArray();
+            });
+
     }
 
     /**

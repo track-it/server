@@ -18,6 +18,7 @@ use Trackit\Http\Requests\ShowProjectRequest;
 use Trackit\Http\Requests\CreateProjectRequest;
 use Trackit\Http\Requests\UpdateProjectRequest;
 use Trackit\Http\Requests\PublishProjectRequest;
+use Trackit\Events\StatusWasChanged;
 
 class ProjectController extends Controller
 {
@@ -119,6 +120,11 @@ class ProjectController extends Controller
      */
     public function update(Project $project, UpdateProjectRequest $request)
     {
+        $statusChanged = false;
+        if ($request->status && $request->status != $project->status) {
+            $statusChanged = true;
+        }
+
         $project->update($request->all());
 
         if ($request->tags) {
@@ -131,6 +137,10 @@ class ProjectController extends Controller
         }
 
         $project->load('tags');
+
+        if ($statusChanged) {
+            event(new StatusWasChanged($this->user, $project));
+        }
 
         return Response::json($project);
     }

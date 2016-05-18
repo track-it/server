@@ -7,9 +7,10 @@ use Trackit\Contracts\Searchable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\RestrictsAccess;
+use Trackit\Contracts\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 
-class Proposal extends Model implements Attachmentable, Taggable, Searchable, Commentable, RestrictsAccess
+class Proposal extends Model implements Attachmentable, Taggable, Searchable, Commentable, RestrictsAccess, HasStatus
 {
     /**
      * @var int
@@ -129,25 +130,27 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
     }
 
     /**
-     * Returns an array of users that should be notified
+     * Returns a collection of users that should be notified
      */
     public function getNotificationRecipients(User $user)
     {
         $author = $this->author;
+        // All commenters should receive notification,
+        // unless they are the comment author.
+        // We also remove the proposal author for now.
         $recipients = $this->comments
             ->filter(function ($comment) use ($user, $author) {
                 return $comment->author->id !== $user->id
                     && $comment->author->id !== $author->id;
-            })
-            ->map(function ($commentAuthor) {
-                return $commentAuthor->email;
             });
 
+        // Here we add the proposal author again, unless he's
+        // the same user as the comment author.
         if ($user->id !== $author->id) {
-            $recipients->push($this->author->email);
+            $recipients->push($this->author);
         }
 
-        return $recipients->toArray();
+        return $recipients;
     }
 
     /**

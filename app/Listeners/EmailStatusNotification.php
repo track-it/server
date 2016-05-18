@@ -2,13 +2,12 @@
 
 namespace Trackit\Listeners;
 
+use Mail;
+use Trackit\Events\StatusWasChanged;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Mail;
 
-use Trackit\Events\CommentWasPosted;
-
-class EmailCommentNotification
+class EmailStatusNotification
 {
     /**
      * Create the event listener.
@@ -23,19 +22,21 @@ class EmailCommentNotification
     /**
      * Handle the event.
      *
-     * @param  CommentWasPosted  $event
+     * @param  StatusWasChanged  $event
      * @return void
      */
-    public function handle(CommentWasPosted $event)
+    public function handle(StatusWasChanged $event)
     {
-        $comment = $event->comment;
+        $model = $event->model;
+        $user = $event->user;
 
         $data = [
-            'author' => $comment->author->displayname,
-            'url' => $comment->commentable->url,
+            'user'      => $user->displayname,
+            'status'    => $model->status,
+            'url'       => $model->url,
         ];
 
-        $recipients = $comment->commentable->getNotificationRecipients($comment->author);
+        $recipients = $model->getNotificationRecipients($user);
 
         $emails = $recipients
             ->map(function ($recipient) {
@@ -43,10 +44,10 @@ class EmailCommentNotification
             })
             ->toArray();
 
-        Mail::queue('emails.notifications.comment', $data, function ($m) use ($emails) {
+        Mail::queue('emails.notifications.status', $data, function ($m) use ($emails) {
             $m->from('notifications@trackit', 'Trackit Notifications');
 
-            $m->to($emails)->subject('Comment was posted!');
+            $m->to($emails)->subject('Status was changed!');
         });
     }
 }

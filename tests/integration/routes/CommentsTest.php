@@ -7,6 +7,7 @@ use Trackit\Models\Comment;
 use Trackit\Models\User;
 use Trackit\Models\Proposal;
 use Trackit\Models\Project;
+use Trackit\Events\CommentWasPosted;
 
 class CommentsTest extends TestCase
 {
@@ -26,6 +27,21 @@ class CommentsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('This is a body.', $jsonObject->data->body);
+    }
+
+    /** @test */
+    public function it_should_send_an_event_when_creating_comment()
+    {
+        $this->expectsEvents(CommentWasPosted::class);
+
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
+        $user = factory(User::class)->create();
+        $content = ['body' => 'This is a body.'];
+
+        $header = $this->createAuthHeader();
+        $url = 'proposals/'.$proposal->id.'/comments';
+        $response = $this->post($url, $content, $header)->response;
+        $jsonObject = json_decode($response->getContent());
     }
 
     /** @test */

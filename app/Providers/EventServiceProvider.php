@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'Trackit\Events\CommentWasPosted' => [
             'Trackit\Listeners\EmailCommentNotification',
         ],
+        'Trackit\Events\StatusWasChanged' => [
+            'Trackit\Listeners\EmailStatusNotification'
+        ],
         'Aacotroneo\Saml2\Events\Saml2LoginEvent' => [
             'Trackit\Listeners\Saml2LoginListener',
         ],
