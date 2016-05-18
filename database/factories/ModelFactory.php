@@ -24,6 +24,7 @@ $factory->define(Trackit\Models\User::class, function (Faker\Generator $faker) {
         'displayname' => $faker->name,
         'email' => $faker->email,
         'role_id' => Trackit\Models\Role::byName('teacher')->first()->id,
+        'type' => Trackit\Models\User::LOCAL,
     ];
 });
 
