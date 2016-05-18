@@ -15,6 +15,13 @@ class Team extends Model implements RestrictsAccess
     ];
 
     /**
+     * @var array
+     */
+    protected $with = [
+        'proposal',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function allowsActionFrom($action, $user)
