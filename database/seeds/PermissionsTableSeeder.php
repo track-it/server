@@ -18,6 +18,7 @@ class PermissionsTableSeeder extends Seeder
             'proposal:list',
             'proposal:view',
             'proposal:edit',
+            'proposal:edit:status',
             'proposal:delete',
             'proposal:submit',
             'proposal:approve',

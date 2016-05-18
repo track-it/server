@@ -36,6 +36,7 @@ class PermissionRoleTableSeeder extends Seeder
                 'proposal:approve',
                 'proposal:categorize',
                 'proposal:comment',
+                'proposal:edit:status',
                 'project:create',
                 'project:view',
                 'project:list',
