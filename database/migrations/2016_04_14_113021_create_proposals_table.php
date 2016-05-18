@@ -19,6 +19,7 @@ class CreateProposalsTable extends Migration
             $table->integer('author_id')->unsigned()->index();
             $table->integer('status')->unsigned()->index();
             $table->integer('course_id')->unsigned()->index();
+            $table->integer('category')->unsigned()->index();
             $table->timestamps();
         });
     }

@@ -34,6 +34,7 @@ $factory->define(Trackit\Models\Proposal::class, function (Faker\Generator $fake
         'status' => collect(Trackit\Models\Proposal::STATUSES)->random(),
         'author_id' => factory(Trackit\Models\User::class)->create()->id,
         'created_at' => $faker->dateTimeThisMonth(),
+        'category' => collect(Trackit\Models\Proposal::CATEGORIES)->random(),
     ];
 });
 
