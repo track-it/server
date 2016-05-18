@@ -42,7 +42,7 @@ class ProposalController extends Controller
         $statuses = $this->user->role->accessTo('global:proposal:list');
         // If searching for projects
         if ($request->has('search')) {
-            $allProposals = Proposal::search($request->search, $statuses);
+            $allProposals = Proposal::search($request->search, $this->user, $statuses);
 
         } else {
             // Get all proposals with statuses you have access to
