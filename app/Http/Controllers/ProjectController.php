@@ -134,6 +134,7 @@ class ProjectController extends Controller
 
         $project->load('tags');
 
+        $project->load('participants', 'attachments', 'tags');
         return Response::json($project);
     }
 
