@@ -49,6 +49,30 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
     ];
 
     /**
+     * @var int
+     */
+    const PROJECT = 1;
+
+    /**
+     * @var int
+     */
+    const BACHELOR = 2;
+
+    /**
+     * @var int
+     */
+    const MASTER = 3;
+
+    /**
+     * @var array
+     */
+    const CATEGORIES = [
+        self::PROJECT,
+        self::BACHELOR,
+        self::MASTER,
+    ];
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -56,6 +80,7 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
         'description',
         'author_id',
         'status',
+        'category',
     ];
 
     /**
