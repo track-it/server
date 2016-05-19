@@ -253,6 +253,42 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function it_should_allow_student_to_publish_project()
+    {
+        $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('student', $user);
+        $project->status = Project::COMPLETED;
+        $project->save();
+
+        $header = $this->createAuthHeader();
+        $response = $this->post('projects/'.$project->id.'/publish', ['publish' => true], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Project::PUBLISHED, $jsonObject->data->status);
+    }
+
+    /** @test */
+    public function it_should_allow_student_to_unpublish_project()
+    {
+        $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('student', $user);
+        $project->status = Project::PUBLISHED;
+        $project->save();
+
+        $header = $this->createAuthHeader();
+        $response = $this->post('projects/'.$project->id.'/publish', ['publish' => false], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Project::COMPLETED, $jsonObject->data->status);
+    }
+
+    /** @test */
     public function it_should_return_a_collection_of_projects_matching_search_criteria()
     {
         $user = $this->getUser();

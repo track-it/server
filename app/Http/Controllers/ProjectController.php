@@ -158,7 +158,12 @@ class ProjectController extends Controller
      */
     public function publish(Project $project, PublishProjectRequest $request)
     {
-        $project->status = Project::PUBLISHED;
+        if ($request->publish) {
+            $project->status = Project::PUBLISHED;
+        } else {
+            $project->status = Project::COMPLETED;
+        }
+
         $project->save();
 
         return Response::json($project);
