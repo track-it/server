@@ -26,7 +26,6 @@ class PermissionRoleTableSeeder extends Seeder
                 'proposal:apply',
                 'proposal:submit',
                 'proposal:view',
-                'proposal:publish',
                 'project:view',
                 'project:list',
             ],
