@@ -145,6 +145,9 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
             ->filter(function ($comment) use ($user, $author) {
                 return $comment->author->id !== $user->id
                     && $comment->author->id !== $author->id;
+            })
+            ->map(function ($comment) {
+                return $comment->author;
             });
 
         // Here we add the proposal author again, unless he's
