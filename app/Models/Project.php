@@ -87,14 +87,17 @@ class Project extends Model implements Attachmentable, Commentable, Searchable, 
         return env('APP_URL').'/projects/'.$this->id;
     }
 
-    public static function search($string, $statuses)
+    public static function search($string, $user, $statuses)
     {
         return self::where('title', 'like', "%$string%")
-                    ->orWhereHas('tags', function ($query) use ($string) {
-                        $query->where('name', 'LIKE', "%$string%");
-                    })->get()->filter(function ($proposal) use ($statuses) {
-                        return in_array($proposal->status, $statuses);
-                    });
+            ->orWhereHas('tags', function ($query) use ($string) {
+                $query->where('name', 'LIKE', "%$string%");
+            })
+            ->get()
+            ->filter(function ($project) use ($statuses, $user) {
+                return in_array($project->status, $statuses)
+                    || $project->participants()->find($user->id);
+            });
     }
 
     /**

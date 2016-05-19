@@ -98,14 +98,17 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
      * @param $string search string
      * @return collection
      */
-    public static function search($string, $statuses)
+    public static function search($string, $user, $statuses)
     {
         return self::where('title', 'like', "%$string%")
-                    ->orWhereHas('tags', function ($query) use ($string) {
-                        $query->where('name', 'LIKE', "%$string%");
-                    })->get()->filter(function ($proposal) use ($statuses) {
-                        return in_array($proposal->status, $statuses);
-                    });
+            ->orWhereHas('tags', function ($query) use ($string) {
+                $query->where('name', 'LIKE', "%$string%");
+            })
+            ->get()
+            ->filter(function ($proposal) use ($statuses, $user) {
+                return in_array($proposal->status, $statuses)
+                    || $proposal->author_id == $user->id;
+            });
     }
 
     /**

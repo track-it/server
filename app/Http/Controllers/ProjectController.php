@@ -47,10 +47,11 @@ class ProjectController extends Controller
         $statuses = $this->user->role->accessTo('global:project:list');
         // If searching for projects
         if ($request->has('search')) {
-            $allProjects = Project::search($request->search, $statuses);
+            $allProjects = Project::search($request->search, $this->user, $statuses);
         // Else list all projects
         } else if (!$proposal->exists) {
             $allProjects = Project::whereIn('status', $statuses)->get();
+            $allProjects = $allProjects->merge($this->user->projects);
         } else {
             $allProjects = $proposal->projects;
         }
@@ -58,6 +59,7 @@ class ProjectController extends Controller
         $allProjects = $allProjects->sortByDesc(function ($project) {
             return $project->updated_at;
         });
+
         // Create a paginator
         $paginator = $this->simplePaginate($allProjects, 20);
 
