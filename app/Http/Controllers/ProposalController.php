@@ -14,6 +14,7 @@ use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\ShowProposalRequest;
 use Trackit\Http\Requests\CreateProposalRequest;
 use Trackit\Http\Requests\UpdateProposalRequest;
+use Trackit\Events\StatusWasChanged;
 
 class ProposalController extends Controller
 {
@@ -112,6 +113,11 @@ class ProposalController extends Controller
      */
     public function update(Proposal $proposal, UpdateProposalRequest $request)
     {
+        $statusChanged = false;
+        if ($request->status && $request->status !== $proposal->status) {
+            $statusChanged = true;
+        }
+
         $proposal->update($request->all());
 
         if ($request->tags) {
@@ -124,6 +130,10 @@ class ProposalController extends Controller
         }
 
         $proposal->load(['tags', 'attachments']);
+
+        if ($statusChanged) {
+            event(new StatusWasChanged($this->user, $proposal));
+        }
 
         return Response::json($proposal);
     }

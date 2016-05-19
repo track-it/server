@@ -3,6 +3,7 @@
 use Trackit\Models\Tag;
 use Trackit\Models\Role;
 use Trackit\Models\Proposal;
+use Trackit\Events\StatusWasChanged;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -203,6 +204,21 @@ class ProposalsTest extends TestCase
         $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ZXC'));
         $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'QWE'));
         $this->assertFalse($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ASD'));
+    }
+
+    /** @test */
+    public function it_should_send_an_event_when_updating_status()
+    {
+        $header = $this->createAuthHeader();
+        $data = [
+            'status' => Proposal::APPROVED,
+        ];
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id, 'status' => Proposal::NOT_APPROVED]);
+
+        $this->expectsEvents(StatusWasChanged::class);
+
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
     }
 
     /** @test */

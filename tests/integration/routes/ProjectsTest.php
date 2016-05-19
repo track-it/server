@@ -11,6 +11,7 @@ use Trackit\Models\Role;
 use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
+use Trackit\Events\StatusWasChanged;
 
 class ProjectsTest extends TestCase
 {
@@ -236,6 +237,21 @@ class ProjectsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ZXC'));
         $this->assertFalse($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ASD'));
+    }
+
+    /** @test */
+    public function it_should_send_event_when_status_is_changed()
+    {
+        $project = factory(Project::class)->create(['status' => Project::NOT_COMPLETED]);
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('teacher', $user);
+        $header = $this->createAuthHeader();
+
+        $this->expectsEvents(StatusWasChanged::class);
+
+        $response = $this->put('projects/'.$project->id, ['status' => Project::COMPLETED], $header)->response;
+        $jsonObject = json_decode($response->getContent());
     }
 
     /** @test */
