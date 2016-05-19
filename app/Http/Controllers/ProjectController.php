@@ -166,6 +166,7 @@ class ProjectController extends Controller
 
         $project->save();
 
+        $project->load('participants', 'attachments', 'tags');
         return Response::json($project);
     }
 
