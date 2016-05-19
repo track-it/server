@@ -126,6 +126,6 @@ class PublishProjectRequestTest extends TestCase
         $response = $this->json('POST', 'projects/'.$project->id.'/publish', $data, $header)->response;
         $jsonObject = json_decode($response->getContent());
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }
