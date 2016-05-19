@@ -144,6 +144,7 @@ class ProjectController extends Controller
             event(new StatusWasChanged($this->user, $project));
         }
 
+        $project->load('participants', 'attachments', 'tags');
         return Response::json($project);
     }
 
@@ -168,9 +169,15 @@ class ProjectController extends Controller
      */
     public function publish(Project $project, PublishProjectRequest $request)
     {
-        $project->status = Project::PUBLISHED;
+        if ($request->publish) {
+            $project->status = Project::PUBLISHED;
+        } else {
+            $project->status = Project::COMPLETED;
+        }
+
         $project->save();
 
+        $project->load('participants', 'attachments', 'tags');
         return Response::json($project);
     }
 
