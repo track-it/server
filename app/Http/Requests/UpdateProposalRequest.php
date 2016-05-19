@@ -29,13 +29,15 @@ class UpdateProposalRequest extends Request
     {
         $proposal = $this->route('proposal');
 
+        if ($proposal->allowsActionFrom('proposal:edit', $this->user)) {
+            return true;
         // If status is the only field in request, check if user has permission
         // to update it.
-        if (sizeof($this->all()) == 1 && $this->status) {
+        } else if (sizeof($this->all()) == 1 && $this->status) {
             return $proposal->allowsActionFrom('proposal:edit:status', $this->user);
+        } else {
+            return false;
         }
-
-        return $proposal->allowsActionFrom('proposal:edit', $this->user);
     }
 
     /**
