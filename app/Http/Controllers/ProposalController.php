@@ -61,7 +61,7 @@ class ProposalController extends Controller
         });
 
         // Create a paginator
-        $paginator = $this->simplePaginate($allProposals, 20);
+        $paginator = $this->simplePaginate($allProposals, 10);
 
         return Response::json($paginator);
     }
