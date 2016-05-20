@@ -25,7 +25,6 @@ class ProjectPermissionRoleTableSeeder extends Seeder
                 'project:comment',
                 'project:submit',
                 'project:publish',
-                'attachment:delete',
             ],
             'supervisor' => [
                 'project:view',
