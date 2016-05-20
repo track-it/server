@@ -61,7 +61,7 @@ class ProjectController extends Controller
         });
 
         // Create a paginator
-        $paginator = $this->simplePaginate($allProjects, 20);
+        $paginator = $this->simplePaginate($allProjects, 10);
 
         return Response::json($paginator);
     }

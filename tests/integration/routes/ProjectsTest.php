@@ -37,9 +37,9 @@ class ProjectsTest extends TestCase
         $user = $this->getUser();
         $user->role()->associate(Role::byName('teacher')->first());
         $user->save();
-        factory(Project::class, 10)->create(['status' => Project::NOT_COMPLETED]);
+        factory(Project::class, 1)->create(['status' => Project::NOT_COMPLETED]);
         factory(Project::class, 3)->create(['status' => Project::COMPLETED]);
-        factory(Project::class, 5)->create(['status' => Project::PUBLISHED]);
+        factory(Project::class, 2)->create(['status' => Project::PUBLISHED]);
 
         $header = $this->createAuthHeader();
         $response = $this->json('GET', 'projects', [], $header)->response;
@@ -48,7 +48,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(18, $jsonObject->to);
+        $this->assertEquals(6, $jsonObject->to);
     }
 
     /** @test */
