@@ -7,9 +7,10 @@ use Trackit\Contracts\Searchable;
 use Trackit\Contracts\Commentable;
 use Trackit\Contracts\Attachmentable;
 use Trackit\Contracts\RestrictsAccess;
+use Trackit\Contracts\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 
-class Proposal extends Model implements Attachmentable, Taggable, Searchable, Commentable, RestrictsAccess
+class Proposal extends Model implements Attachmentable, Taggable, Searchable, Commentable, RestrictsAccess, HasStatus
 {
     /**
      * @var int
@@ -48,6 +49,30 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
     ];
 
     /**
+     * @var int
+     */
+    const PROJECT = 1;
+
+    /**
+     * @var int
+     */
+    const BACHELOR = 2;
+
+    /**
+     * @var int
+     */
+    const MASTER = 3;
+
+    /**
+     * @var array
+     */
+    const CATEGORIES = [
+        self::PROJECT,
+        self::BACHELOR,
+        self::MASTER,
+    ];
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -55,6 +80,7 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
         'description',
         'author_id',
         'status',
+        'category',
     ];
 
     /**
@@ -63,6 +89,24 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
     protected $with = [
         'author',
     ];
+
+    /**
+     * @var array
+     */
+    protected $appends = [
+        'url'
+    ];
+
+    /**
+     * Add an attribute mutator to the model to get its
+     * url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return env('APP_URL').'/proposals/'.$this->id;
+    }
 
     /**
      * Get the proposal's id.
@@ -111,6 +155,33 @@ class Proposal extends Model implements Attachmentable, Taggable, Searchable, Co
         }
 
         return false;
+    }
+
+    /**
+     * Returns a collection of users that should be notified
+     */
+    public function getNotificationRecipients(User $user)
+    {
+        $author = $this->author;
+        // All commenters should receive notification,
+        // unless they are the comment author.
+        // We also remove the proposal author for now.
+        $recipients = $this->comments
+            ->filter(function ($comment) use ($user, $author) {
+                return $comment->author->id !== $user->id
+                    && $comment->author->id !== $author->id;
+            })
+            ->map(function ($comment) {
+                return $comment->author;
+            });
+
+        // Here we add the proposal author again, unless he's
+        // the same user as the comment author.
+        if ($user->id !== $author->id) {
+            $recipients->push($this->author);
+        }
+
+        return $recipients;
     }
 
     /**

@@ -18,17 +18,27 @@ class ProposalTest extends TestCase
     public function it_has_a_status()
     {
         $proposal = factory(Proposal::class)->create();
-        
+
         $hasStatus = in_array($proposal->status, Proposal::STATUSES);
 
         $this->assertTrue($hasStatus);
     }
 
     /** @test */
+    public function it_has_a_category()
+    {
+        $proposal = factory(Proposal::class)->create();
+
+        $hasCategory = in_array($proposal->category, Proposal::CATEGORIES);
+
+        $this->assertTrue($hasCategory);
+    }
+
+    /** @test */
     public function it_has_an_author()
     {
         $proposal = factory(Proposal::class)->create();
-        
+
         $hasAuthor = !! $proposal->author();
 
         $this->assertTrue($hasAuthor);
@@ -40,7 +50,7 @@ class ProposalTest extends TestCase
         $attachment = factory(Attachment::class)->create();
 
         $proposal = factory(Proposal::class)->create();
-        
+
         $proposal->attachments()->save($attachment);
 
         $this->assertEquals(1, $proposal->attachments->count());
@@ -51,7 +61,7 @@ class ProposalTest extends TestCase
     {
         $proposal = factory(Proposal::class)->create();
         $course = factory(Course::class)->create();
-        
+
         $proposal->course()->associate($course);
         $hasCourse = !! $proposal->course();
 

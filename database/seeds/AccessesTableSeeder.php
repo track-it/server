@@ -65,6 +65,7 @@ class AccessesTableSeeder extends Seeder
             ],
             'project:publish' => [
                 Project::COMPLETED,
+                Project::PUBLISHED,
             ],
         ];
         $teacherStatuses = [

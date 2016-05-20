@@ -3,6 +3,7 @@
 use Trackit\Models\Tag;
 use Trackit\Models\Role;
 use Trackit\Models\Proposal;
+use Trackit\Events\StatusWasChanged;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -135,6 +136,34 @@ class ProposalsTest extends TestCase
     }
 
     /** @test */
+    public function it_should_create_a_new_proposal_with_a_category()
+    {
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('customer')->first())->save();
+        $header = $this->createAuthHeader();
+        $proposalContent = [
+            'title' => 'This is a title',
+            'description' => 'This is a description',
+            'tags' => [
+                [
+                    'name' => 'ZXC',
+                ],
+                [
+                    'name' => 'QWE',
+                ],
+            ],
+            'category' => Proposal::PROJECT,
+        ];
+
+        $response = $this->json('POST', 'proposals', $proposalContent, $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('This is a title', $jsonObject->data->title);
+        $this->assertEquals(Proposal::PROJECT, $jsonObject->data->category);
+    }
+
+    /** @test */
     public function it_should_update_an_existing_proposal()
     {
         $header = $this->createAuthHeader();
@@ -175,6 +204,21 @@ class ProposalsTest extends TestCase
         $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ZXC'));
         $this->assertTrue($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'QWE'));
         $this->assertFalse($this->assertArrayContainsSameObjectWithValue($jsonObject->data->tags, 'name', 'ASD'));
+    }
+
+    /** @test */
+    public function it_should_send_an_event_when_updating_status()
+    {
+        $header = $this->createAuthHeader();
+        $data = [
+            'status' => Proposal::APPROVED,
+        ];
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id, 'status' => Proposal::NOT_APPROVED]);
+
+        $this->expectsEvents(StatusWasChanged::class);
+
+        $response = $this->json('PUT', 'proposals/'.$proposal->id, $data, $header)->response;
+        $jsonObject = json_decode($response->getContent());
     }
 
     /** @test */
