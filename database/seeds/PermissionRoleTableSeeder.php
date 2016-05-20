@@ -62,6 +62,9 @@ class PermissionRoleTableSeeder extends Seeder
                 'team:view',
                 'team:edit',
                 'team:delete',
+                'attachment:delete',
+                'attachment:edit',
+                'attachment:view',
             ],
             'guest' => [
                 'proposal:view',
