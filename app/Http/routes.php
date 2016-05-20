@@ -99,7 +99,7 @@ Route::group([], function () {
         $user = Auth::guard()->user();
 
         if ($user) {
-            $sitemap['user'] = $user;
+            $sitemap['user'] = $user->withApiToken();
         }
 
         return $sitemap;
