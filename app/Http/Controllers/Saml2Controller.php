@@ -18,7 +18,7 @@ class Saml2Controller extends Controller
     /**
      * @param Saml2Auth $saml2Auth injected.
      */
-    function __construct(Saml2Auth $saml2Auth)
+    public function __construct(Saml2Auth $saml2Auth)
     {
         $this->saml2Auth = $saml2Auth;
     }
@@ -79,6 +79,13 @@ class Saml2Controller extends Controller
         $error = $this->saml2Auth->sls(config('saml2_settings.retrieveParametersFromServer'));
         if (!empty($error)) {
             throw new \Exception("Could not log out");
+        }
+
+        $user = $this->saml2Auth->getSaml2User();
+        $redirectUrl = $user->getIntendedUrl();
+
+        if ($redirectUrl !== null) {
+            return redirect($redirectUrl);
         }
 
         return redirect(config('saml2_settings.logoutRoute')); //may be set a configurable default

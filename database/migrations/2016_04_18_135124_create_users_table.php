@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration
             $table->boolean('confirmed');
             $table->string('api_token', 128)->unique();
             $table->integer('role_id')->unsigned()->index();
+            $table->integer('type')->unsigned();
+            $table->string('session_index');
             $table->timestamps();
         });
     }
