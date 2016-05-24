@@ -34,6 +34,8 @@ return $settings = array(
      */
     'errorRoute' => '/error',
 
+    'retrieveParametersFromServer' => true,
+
 
 
 
@@ -59,7 +61,7 @@ return $settings = array(
         // represent the requested subject.
         // Take a look on lib/Saml2/Constants.php to see the NameIdFormat supported
         //'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-	'NameIDFormat' => null,
+       'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
 
         // Usually x509cert and privateKey of the SP are provided by files placed at
         // the certs folder. But we can also provide them with the following parameters
@@ -68,12 +70,12 @@ return $settings = array(
 
         //LARAVEL - You don't need to change anything else on the sp
         // Identifier of the SP entity  (must be a URI)
-        'entityId' => '', //LARAVEL: This would be set to saml_metadata route
+        'entityId' => 'https://trackit.albertkaaman.se:1234/saml2/metadata', //LARAVEL: This would be set to saml_metadata route
         // Specifies info about where and how the <AuthnResponse> message MUST be
         // returned to the requester, in this case our SP.
         'assertionConsumerService' => array(
             // URL Location where the <Response> from the IdP will be returned
-            'url' => 'acs', //LARAVEL: This would be set to saml_acs route
+            'url' => '', //LARAVEL: This would be set to saml_acs route
             // SAML protocol binding to be used when returning the <Response>
             // message.  Onelogin Toolkit supports for this endpoint the
             // HTTP-Redirect binding only
@@ -145,11 +147,11 @@ return $settings = array(
 
         // Indicates whether the <samlp:logoutRequest> messages sent by this SP
         // will be signed.
-        'logoutRequestSigned' => false,
+        'logoutRequestSigned' => true,
 
         // Indicates whether the <samlp:logoutResponse> messages sent by this SP
         // will be signed.
-        'logoutResponseSigned' => false,
+        'logoutResponseSigned' => true,
 
         /* Sign the Metadata
          False || True (use sp certs) || array (

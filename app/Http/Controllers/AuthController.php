@@ -53,6 +53,8 @@ class AuthController extends Controller
         $user = User::create($credentials);
         $user->role()->associate(Role::byName('customer')->first())->save();
         $user->confirmed = false;
+        $user->type = User::LOCAL;
+        $user->save();
 
         return Response::json($user->withApiToken());
     }
@@ -83,6 +85,19 @@ class AuthController extends Controller
     public function saml(Request $request)
     {
         return Saml2::login($request->input('callback'), [ 'key' => 'asdasdasd' ]);
+    }
+
+    /**
+     *
+     */
+    public function samlLogout(Request $request)
+    {
+        $returnTo = $request->input('callback');
+        $user = User::where('api_token', '=', $request->input('api_token'))->first();
+        $nameId = $user->username;
+        $sessionIndex = $user->session_index;
+
+        Saml2::logout($returnTo, $nameId, $sessionIndex);
     }
 
     /**

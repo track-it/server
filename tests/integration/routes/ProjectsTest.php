@@ -11,6 +11,7 @@ use Trackit\Models\Role;
 use Trackit\Models\Project;
 use Trackit\Models\Proposal;
 use Trackit\Models\Attachment;
+use Trackit\Events\StatusWasChanged;
 
 class ProjectsTest extends TestCase
 {
@@ -36,9 +37,9 @@ class ProjectsTest extends TestCase
         $user = $this->getUser();
         $user->role()->associate(Role::byName('teacher')->first());
         $user->save();
-        factory(Project::class, 10)->create(['status' => Project::NOT_COMPLETED]);
+        factory(Project::class, 1)->create(['status' => Project::NOT_COMPLETED]);
         factory(Project::class, 3)->create(['status' => Project::COMPLETED]);
-        factory(Project::class, 5)->create(['status' => Project::PUBLISHED]);
+        factory(Project::class, 2)->create(['status' => Project::PUBLISHED]);
 
         $header = $this->createAuthHeader();
         $response = $this->json('GET', 'projects', [], $header)->response;
@@ -47,7 +48,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertObjectHasAttribute('data', $jsonObject);
         $this->assertInternalType('array', $jsonObject->data);
-        $this->assertEquals(18, $jsonObject->to);
+        $this->assertEquals(6, $jsonObject->to);
     }
 
     /** @test */
@@ -239,6 +240,21 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function it_should_send_event_when_status_is_changed()
+    {
+        $project = factory(Project::class)->create(['status' => Project::NOT_COMPLETED]);
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('teacher', $user);
+        $header = $this->createAuthHeader();
+
+        $this->expectsEvents(StatusWasChanged::class);
+
+        $response = $this->put('projects/'.$project->id, ['status' => Project::COMPLETED], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+    }
+
+    /** @test */
     public function it_should_delete_an_existing_project()
     {
         $header = $this->createAuthHeader();
@@ -250,6 +266,42 @@ class ProjectsTest extends TestCase
         $response = $this->delete('projects/'.$project->id, [], $header)->response;
 
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_should_allow_student_to_publish_project()
+    {
+        $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('student', $user);
+        $project->status = Project::COMPLETED;
+        $project->save();
+
+        $header = $this->createAuthHeader();
+        $response = $this->post('projects/'.$project->id.'/publish', ['publish' => true], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Project::PUBLISHED, $jsonObject->data->status);
+    }
+
+    /** @test */
+    public function it_should_allow_student_to_unpublish_project()
+    {
+        $project = factory(Project::class)->create();
+        $user = $this->getUser();
+        $user->role()->associate(Role::byName('student')->first())->save();
+        $project->addParticipant('student', $user);
+        $project->status = Project::PUBLISHED;
+        $project->save();
+
+        $header = $this->createAuthHeader();
+        $response = $this->post('projects/'.$project->id.'/publish', ['publish' => false], $header)->response;
+        $jsonObject = json_decode($response->getContent());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Project::COMPLETED, $jsonObject->data->status);
     }
 
     /** @test */

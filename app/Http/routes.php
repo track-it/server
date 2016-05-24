@@ -41,6 +41,7 @@ Route::group([], function () {
 
     // Saml2
     Route::get('login', 'AuthController@saml');
+    Route::get('logout', 'AuthController@samlLogout');
     Route::get('error', function () {
         dd($this);
     });
@@ -101,7 +102,7 @@ Route::group([], function () {
         $user = Auth::guard()->user();
 
         if ($user) {
-            $sitemap['user'] = $user;
+            $sitemap['user'] = $user->withApiToken();
         }
 
         return $sitemap;

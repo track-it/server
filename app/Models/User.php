@@ -12,6 +12,16 @@ class User extends Model implements Authenticatable
     use AuthenticatableTrait;
 
     /**
+     * @var int
+     */
+    const LOCAL = 1;
+
+    /**
+     * @var int
+     */
+    const ADFS = 2;
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -22,6 +32,8 @@ class User extends Model implements Authenticatable
         'api_token',
         'confirmed',
         'role_id',
+        'type',
+        'session_index',
     ];
 
     /**

@@ -55,7 +55,7 @@ class UserController extends Controller
             $user->load(['proposals', 'role', 'teams', 'projects']);
         }
 
-        return Response::json($this->user);
+        return Response::json($this->user->withApiToken());
     }
 
     /**
