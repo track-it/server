@@ -14,6 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        \Trackit\Http\Middleware\RemoveUrlParam::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Barryvdh\Cors\HandleCors::class,
     ];
