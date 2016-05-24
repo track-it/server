@@ -11,6 +11,8 @@ use Trackit\Models\Proposal;
 use Trackit\Contracts\Commentable;
 use Trackit\Http\Requests\CreateCommentRequest;
 use Trackit\Http\Requests\UpdateCommentRequest;
+use Trackit\Http\Requests\ShowCommentRequest;
+use Trackit\Http\Requests\IndexCommentRequest;
 use Trackit\Events\CommentWasPosted;
 
 class CommentController extends Controller
@@ -37,7 +39,7 @@ class CommentController extends Controller
      * @param  \Trackit\Contracts\Commentable  $commentable
      * @return \Illuminate\Http\Response
      */
-    public function index(Commentable $commentable)
+    public function index(Commentable $commentable, IndexCommentRequest $request)
     {
         $comments = $commentable->comments;
 
@@ -50,7 +52,7 @@ class CommentController extends Controller
      * @param  \Trackit\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show(Comment $comment)
+    public function show(Comment $comment, ShowCommentRequest $request)
     {
         return Response::json($comment);
     }
