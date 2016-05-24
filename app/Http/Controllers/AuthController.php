@@ -97,8 +97,6 @@ class AuthController extends Controller
         $nameId = $user->username;
         $sessionIndex = $user->session_index;
 
-        //dd(compact('returnTo', 'nameId', 'sessionIndex'));
-        
         Saml2::logout($returnTo, $nameId, $sessionIndex);
     }
 
