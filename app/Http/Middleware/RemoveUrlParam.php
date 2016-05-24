@@ -21,13 +21,13 @@ class RemoveUrlParam
      */
     public function handle($request, Closure $next, $guard = null)
     {
-	foreach ($request->all() as $key => $value) {
-	    $url = explode("?", $request->server('REQUEST_URI'))[0];
-	    if (strpos($url, $key) !== false) {
-		$request->query->remove($key);
-	    }
-	}
+        foreach ($request->all() as $key => $value) {
+            $url = explode("?", $request->server('REQUEST_URI'))[0];
+            if (strpos($url, $key) !== false) {
+                $request->query->remove($key);
+            }
+        }
 
-	return $next($request);
+        return $next($request);
     }
 }
