@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class SitemapTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function it_should_return_a_sitemap()
     {

@@ -121,9 +121,11 @@ class AttachmentsTest extends TestCase
     {
         $attachment = factory(Attachment::class)->create([
             'path' => 'attachments/test_123/test.txt',
-            'attachmentable_type' => 'Test',
-            'attachmentable_id' => 123,
         ]);
+
+        $proposal = factory(Proposal::class)->create();
+        $proposal->attachments()->save($attachment);
+        $proposal->save();
 
         $content = file_get_contents(base_path() . '/tests/files/test.txt');
         Storage::put($attachment->path, $content);

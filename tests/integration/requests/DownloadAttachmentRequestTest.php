@@ -12,6 +12,8 @@ use Trackit\Models\Role;
 
 class DownloadAttachmentRequestTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function it_should_allow_guest_to_download_approved_proposal_attachment()
     {
