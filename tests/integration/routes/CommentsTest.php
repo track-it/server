@@ -47,7 +47,7 @@ class CommentsTest extends TestCase
     /** @test */
     public function it_should_return_all_comments_on_a_proposal()
     {
-        $proposal = factory(Proposal::class)->create();
+        $proposal = factory(Proposal::class)->create(['author_id' => $this->getUser()->id]);
         $user = factory(User::class)->create();
         $comment1 = factory(Comment::class)->create(['body' => 'This is a body.']);
         $comment2 = factory(Comment::class)->create(['body' => 'This is another body.']);
@@ -90,6 +90,7 @@ class CommentsTest extends TestCase
         $comment2 = factory(Comment::class)->create(['body' => 'This is another body.']);
         $project->comments()->save($comment1);
         $project->comments()->save($comment2);
+        $project->addParticipant('student', $this->getUser());
 
         $header = $this->createAuthHeader();
         $url = 'projects/'.$project->id.'/comments';
@@ -129,7 +130,7 @@ class CommentsTest extends TestCase
     /** @test */
     public function it_should_return_an_existing_comment()
     {
-        $comment = factory(Comment::class)->create();
+        $comment = factory(Comment::class)->create(['author_id' => $this->getUser()->id]);
 
         $header = $this->createAuthHeader();
 
