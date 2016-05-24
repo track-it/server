@@ -57,6 +57,9 @@ Route::group([], function () {
     Route::get('projects', 'ProjectController@index');
     Route::get('projects/{project}', 'ProjectController@show');
 
+    // Attachments
+    Route::get('attachments/{attachment}', 'AttachmentController@download');
+
     // Sitemap
     Route::get('site', function (Request $request) {
         $sitemap = [
@@ -157,10 +160,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('proposals/{proposal}/teams', 'TeamController@store');
 
     // Global Attachment routes
-    Route::get('attachments/{attachment}', 'AttachmentController@show');
     Route::put('attachments/{attachment}', 'AttachmentController@update');
     Route::delete('attachments/{attachment}', 'AttachmentController@destroy');
-    Route::get('attachments/{attachment}/download', 'AttachmentController@download');
     Route::delete('attachments', 'AttachmentController@massDestroy');
 
     // User routes

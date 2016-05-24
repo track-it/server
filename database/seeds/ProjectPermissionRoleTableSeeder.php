@@ -19,12 +19,15 @@ class ProjectPermissionRoleTableSeeder extends Seeder
             'stakeholder' => [
                 'project:view',
                 'project:comment',
+                'project:attachment:download',
             ],
             'student' => [
                 'project:view',
                 'project:comment',
                 'project:submit',
                 'project:publish',
+                'attachment:delete',
+                'project:attachment:download',
             ],
             'supervisor' => [
                 'project:view',
@@ -32,6 +35,7 @@ class ProjectPermissionRoleTableSeeder extends Seeder
                 'project:submit',
                 'project:approve',
                 'attachment:delete',
+                'project:attachment:download',
             ],
             'teacher' => [
                 'project:view',
@@ -40,6 +44,7 @@ class ProjectPermissionRoleTableSeeder extends Seeder
                 'project:edit',
                 'project:approve',
                 'attachment:delete',
+                'project:attachment:download',
             ],
         ];
 

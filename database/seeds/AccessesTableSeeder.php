@@ -35,6 +35,12 @@ class AccessesTableSeeder extends Seeder
             'global:project:view' => [
                 Project::PUBLISHED,
             ],
+            'global:project:attachment:download' => [
+                Project::PUBLISHED,
+            ],
+            'global:proposal:attachment:download' => [
+                Proposal::APPROVED,
+            ],
         ];
         $customerStatuses = [
             'global:proposal:list' => [
@@ -48,6 +54,12 @@ class AccessesTableSeeder extends Seeder
             ],
             'global:project:view' => [
                 Project::PUBLISHED,
+            ],
+            'global:project:attachment:download' => [
+                Project::PUBLISHED,
+            ],
+            'global:proposal:attachment:download' => [
+                Proposal::APPROVED,
             ],
         ];
         $studentStatuses = [
@@ -66,6 +78,12 @@ class AccessesTableSeeder extends Seeder
             'project:publish' => [
                 Project::COMPLETED,
                 Project::PUBLISHED,
+            ],
+            'global:project:attachment:download' => [
+                Project::PUBLISHED,
+            ],
+            'global:proposal:attachment:download' => [
+                Proposal::APPROVED,
             ],
         ];
         $teacherStatuses = [

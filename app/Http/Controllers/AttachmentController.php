@@ -14,6 +14,7 @@ use Trackit\Http\Requests\CreateAttachmentRequest;
 use Trackit\Http\Requests\UpdateAttachmentRequest;
 use Trackit\Http\Requests\DeleteRequest;
 use Trackit\Http\Requests\MassDeleteAttachmentRequest;
+use Trackit\Http\Requests\DownloadAttachmentRequest;
 
 class AttachmentController extends Controller
 {
@@ -71,31 +72,14 @@ class AttachmentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \Trackit\Models\Attachment  $attachment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Attachment $attachment)
-    {
-        return Response::file(storage_path('app/'.$attachment->path));
-    }
-
-    /**
      * Download a file attached to an attachment.
      *
      * @param  \Trackit\Models\Attachment  $attachment
      * @return \Illuminate\Http\Response
      */
-    public function download(Attachment $attachment)
+    public function download(Attachment $attachment, DownloadAttachmentRequest $request)
     {
-        $content = Storage::get($attachment->url);
-
-        $headers = [
-          'Content-Type' => $attachment->mime_type,
-        ];
-
-        return response($content, 200, $headers);
+        return Response::file(storage_path('app/'.$attachment->path));
     }
 
     /**

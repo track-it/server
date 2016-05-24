@@ -21,6 +21,8 @@ class PermissionRoleTableSeeder extends Seeder
                 'proposal:list',
                 'project:view',
                 'project:list',
+                'project:attachment:download',
+                'proposal:attachment:download',
             ],
             'student' => [
                 'proposal:apply',
@@ -28,6 +30,8 @@ class PermissionRoleTableSeeder extends Seeder
                 'proposal:view',
                 'project:view',
                 'project:list',
+                'project:attachment:download',
+                'proposal:attachment:download',
             ],
             'teacher' => [
                 'proposal:submit',
@@ -39,6 +43,8 @@ class PermissionRoleTableSeeder extends Seeder
                 'project:create',
                 'project:view',
                 'project:list',
+                'project:attachment:download',
+                'proposal:attachment:download',
             ],
             'administrator' => [
                 'proposal:submit',
@@ -62,6 +68,8 @@ class PermissionRoleTableSeeder extends Seeder
                 'team:view',
                 'team:edit',
                 'team:delete',
+                'project:attachment:download',
+                'proposal:attachment:download',
                 'attachment:delete',
                 'attachment:edit',
                 'attachment:view',
@@ -71,6 +79,8 @@ class PermissionRoleTableSeeder extends Seeder
                 'proposal:list',
                 'project:view',
                 'project:list',
+                'project:attachment:download',
+                'proposal:attachment:download',
             ],
         ];
 

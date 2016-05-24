@@ -33,6 +33,9 @@ class ProjectPermissionsTableSeeder extends Seeder
             ],
             [
                 'name'      => 'attachment:delete'
+            ],
+            [
+                'name'      => 'project:attachment:download'
             ]
         ];
 
