@@ -51,102 +51,148 @@ class TestSeeder extends Seeder
         $student4 = factory(User::class)->create([
             'role_id' => Role::byName('student')->first()->id,
         ]);
+        $customer2 = factory(User::class)->create([
+            'role_id' => Role::byName('customer')->first()->id,
+        ]);
+        $teacher2 = factory(User::class)->create([
+            'role_id' => Role::byName('teacher')->first()->id,
+        ]);
 
         // Proposals
         $proposal1 = factory(Proposal::class)->create([
             'title' => 'Supercalifragilisticexpialidocious title!',
+            'category' => Proposal::PROJECT,
             'author_id' => $student->id,
             'status' => Proposal::APPROVED,
         ]);
         $proposal2 = factory(Proposal::class)->create([
+            'title' => 'Awesome project',
+            'category' => Proposal::PROJECT,
             'author_id' => $customer->id,
             'status' => Proposal::UNDER_REVIEW,
         ]);
         $proposal3 = factory(Proposal::class)->create([
+            'title' => 'Idea for bachelor\'s thesis',
             'author_id' => $student->id,
+            'category' => Proposal::BACHELOR,
             'status' => Proposal::NOT_APPROVED,
         ]);
         $proposal4 = factory(Proposal::class)->create([
-            'author_id' => $student->id,
+            'title' => 'MAH Project #2',
+            'category' => Proposal::PROJECT,
+            'author_id' => $teacher->id,
             'status' => Proposal::APPROVED,
         ]);
         $proposal5 = factory(Proposal::class)->create([
-            'author_id' => $student->id,
+            'title' => 'Prototype proposal',
+            'category' => Proposal::PROJECT,
+            'author_id' => $customer2->id,
             'status' => Proposal::ARCHIVED,
         ]);
         $proposal6 = factory(Proposal::class)->create([
+            'title' => 'Security in Cisco routers',
+            'category' => Proposal::MASTER,
             'author_id' => $student2->id,
             'status' => Proposal::NOT_REVIEWED,
         ]);
         $proposal7 = factory(Proposal::class)->create([
+            'title' => 'Agile development in practice',
+            'category' => Proposal::MASTER,
             'author_id' => $student3->id,
             'status' => Proposal::APPROVED,
         ]);
 
         // Projects
         $project1 = factory(Project::class)->create([
+            'title' => 'Agile development in practice',
+            'proposal_id' => $proposal7->id,
             'status' => Project::NOT_COMPLETED,
         ]);
         $project2 = factory(Project::class)->create([
+            'title' => 'Prototype - Hybrid web app',
+            'proposal_id' => $proposal5->id,
             'status' => Project::COMPLETED,
         ]);
         $project3 = factory(Project::class)->create([
+            'title' => 'MAH Project #2',
+            'proposal_id' => $proposal4->id,
             'status' => Project::PUBLISHED,
         ]);
 
-        $project1->proposal()->associate($proposal1)->save();
+        $project1->addParticipant('student', $student3);
+        $project1->addParticipant('teacher', $teacher);
 
-        $project1->addParticiPant('student', $student);
-        $project1->addParticiPant('student', $student2);
-        $project1->addParticiPant('student', $student3);
-        $project1->addParticiPant('teacher', $teacher);
-        $project1->addParticiPant('stakeholder', $customer);
+        $project2->addParticipant('student', $student2);
+        $project2->addParticipant('student', $student3);
+        $project2->addParticipant('teacher', $teacher2);
+        $project2->addParticipant('stakeholder', $customer2);
 
-        $project2->addParticiPant('teacher', $teacher);
+        $project3->addParticipant('stakeholder', $teacher);
+        $project3->addParticipant('teacher', $teacher2);
+        $project3->addParticipant('student', $student4);
+        $project3->addParticipant('student', $student3);
 
         // Comments
-        $comment1 = factory(Comment::class)->create();
-        $comment2 = factory(Comment::class)->create();
-        $comment3 = factory(Comment::class)->create();
-        $comment4 = factory(Comment::class)->create();
-        $comment5 = factory(Comment::class)->create();
-        $comment6 = factory(Comment::class)->create();
-        $comment7 = factory(Comment::class)->create();
-        $comment8 = factory(Comment::class)->create();
+        $project1->comments()->save(factory(Comment::class)->create([
+            'author_id' => $student3
+        ]));
 
-        $comment1->author()->associate($student)->save();
-        $comment2->author()->associate($teacher)->save();
-        $comment3->author()->associate($customer)->save();
-        $comment4->author()->associate($admin)->save();
-        $comment5->author()->associate($student)->save();
-        $comment6->author()->associate($teacher)->save();
-        $comment7->author()->associate($customer)->save();
-        $comment8->author()->associate($admin)->save();
+        $project1->comments()->save(factory(Comment::class)->create([
+            'author_id' => $teacher
+        ]));
 
-        $proposal1->comments()->save($comment1);
-        $proposal1->comments()->save($comment2);
-        $proposal1->comments()->save($comment3);
-        $proposal1->comments()->save($comment4);
+        $project2->comments()->save(factory(Comment::class)->create([
+            'author_id' => $student2
+        ]));
 
-        $project1->comments()->save($comment5);
-        $project1->comments()->save($comment6);
-        $project1->comments()->save($comment7);
-        $project1->comments()->save($comment8);
+        $project2->comments()->save(factory(Comment::class)->create([
+            'author_id' => $teacher2
+        ]));
+
+        $project2->comments()->save(factory(Comment::class)->create([
+            'author_id' => $customer2
+        ]));
+
+        $project3->comments()->save(factory(Comment::class)->create([
+            'author_id' => $teacher
+        ]));
+
+        $project3->comments()->save(factory(Comment::class)->create([
+            'author_id' => $student3
+        ]));
+
+        $project3->comments()->save(factory(Comment::class)->create([
+            'author_id' => $student4
+        ]));
+
+        $proposal1->comments()->save(factory(Comment::class)->create([
+            'author_id' => $teacher
+        ]));
+
+        $proposal1->comments()->save(factory(Comment::class)->create([
+            'author_id' => $student
+        ]));
+
+        $proposal2->comments()->save(factory(Comment::class)->create([
+            'author_id' => $teacher2
+        ]));
+
+        $proposal2->comments()->save(factory(Comment::class)->create([
+            'author_id' => $customer
+        ]));
 
         // Attachments
-        $attachment1 = factory(Attachment::class)->create();
-        $attachment2 = factory(Attachment::class)->create();
-        $attachment3 = factory(Attachment::class)->create();
-        $attachment4 = factory(Attachment::class)->create();
-        $attachment5 = factory(Attachment::class)->create();
-        $attachment6 = factory(Attachment::class)->create();
+        $proposal1->attachments()->save(factory(Attachment::class)->create([
+            'path'  => 'attachments/proposal_1/Proposal.pdf',
+            'title' => 'Proposal.pdf',
+            'mime_type'  => 'application/pdf',
+        ]));
 
-        $proposal1->attachments()->save($attachment1);
-        $proposal1->attachments()->save($attachment2);
-        $proposal1->attachments()->save($attachment3);
+        $project1->attachments()->save(factory(Attachment::class)->create([
+            'path'  => 'attachments/project_1/Kravspec.pdf',
+            'title' => 'Kravspec.pdf',
+            'mime_type'  => 'application/pdf',
+        ]));
 
-        $project1->attachments()->save($attachment4);
-        $project1->attachments()->save($attachment5);
-        $project1->attachments()->save($attachment6);
     }
 }
