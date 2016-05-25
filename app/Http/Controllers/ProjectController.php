@@ -60,6 +60,10 @@ class ProjectController extends Controller
             return $project->updated_at;
         });
 
+        $allProjects = $allProjects->map(function ($project) {
+            return $project->load('proposal');
+        });
+
         // Create a paginator
         $paginator = $this->simplePaginate($allProjects, 10);
 
